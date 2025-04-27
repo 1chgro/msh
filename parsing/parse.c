@@ -5,7 +5,7 @@ char *read_line(void)
 	char *input;
 
 	input = NULL;
-	input = readline("minishell$ ");
+	input = readline("$ ");
 	if (!input) // hna ila kan ctrl +d 
 	{
 		rl_clear_history(); // kanmsh l history
@@ -19,17 +19,24 @@ char *read_line(void)
 	return (input);
 }
 
-t_ast *parse(void)
+t_ast *msh_parse(void)
 {
     char *line;
     t_ast *ast;
+    t_token *tokens;
 
     line = NULL;
     ast = NULL;
     line = read_line();
     if (line == NULL)
-        return;
-
+        return (NULL);
+    tokens = tokenizer(line);
+    t_token *tmp = tokens;
+    while(tmp)
+    {
+        printf("Token: %s\n", tmp->value);
+        tmp = tmp->next;
+    }
     free(line);
     return (ast);
 }
@@ -37,6 +44,7 @@ t_ast *parse(void)
 void msh_loop(void)
 {
     t_ast *ast = NULL;
+    msh_signals();
     // int status = 0;
     while(1)
     {

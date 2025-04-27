@@ -41,5 +41,7 @@ typedef struct s_token {
 } t_token;
 
 void    msh_loop(void);
+void    msh_signals(void);
+t_token *tokenizer(char *line);
 
 #endif

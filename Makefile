@@ -4,7 +4,7 @@ FLGS=-Werror -Wextra -Wall
 
 
 SRCS_PARSE= main.c\
-	parsing/parse.c
+	parsing/parse.c parsing/signals.c parsing/token.c
 
 OBJS=$(SRCS_PARSE:.c=.o) $(SRCS_EXEC:.c=.o)
 
