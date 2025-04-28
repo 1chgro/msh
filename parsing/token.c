@@ -232,6 +232,8 @@ t_token *tokenize(char *line)
             word[end - start] = '\0';
             add_token(&tokens, new_token(word, TOKEN_WORD));
             free(word);
+
+            
         }
     }
     return (tokens);
