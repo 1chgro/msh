@@ -30,21 +30,20 @@ t_ast *msh_parse(void)
     line = read_line();
     if (line == NULL)
         return (NULL);
-    tokens = tokenizer(line);
-    t_token *tmp = tokens;
-    while(tmp)
+    tokens = lexer(line);
+    t_token *tmp   = tokens;
+    while (tmp)
     {
-        printf("Token: %s\n", tmp->value);
+        printf("Token: %s\t|type: %u\n", tmp->value, tmp->type);
         tmp = tmp->next;
     }
-    free(line);
     return (ast);
 }
 
 void msh_loop(void)
 {
     t_ast *ast = NULL;
-    msh_signals();
+    // msh_signals();
     // int status = 0;
     while(1)
     {
