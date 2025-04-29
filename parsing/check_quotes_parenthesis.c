@@ -43,6 +43,8 @@ int check_parenthesis(char *line)
             count++;
         else if (line[i] == ')')
             count--;
+        if (count < 0)
+            return (0);
         i++;
     }
     return (count == 0);
