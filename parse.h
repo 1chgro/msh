@@ -46,5 +46,6 @@ t_token *lexer(char *line);
 void    free_tokens(t_token *tokens);
 int valid_quotes(char *s);
 int check_parenthesis(char *line);
+void    skip_quotes(char *s, int *i, char q);
 
 #endif

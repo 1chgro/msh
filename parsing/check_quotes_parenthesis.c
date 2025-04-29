@@ -1,8 +1,5 @@
 #include "../parse.h"
 
-
-
-
 int valid_quotes(char *s)
 {
     int i;

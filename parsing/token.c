@@ -230,8 +230,17 @@ t_token *tokenize(char *line)
         else if (line[i] && !is_space(line[i]) && !is_operator(line[i]))
         {
             start = i;
-            while(line[i] && !is_space(line[i]) && !is_operator(line[i]))
-                i++;
+            if (line[i] == '\'' || line[i] == '\"')
+            {
+                char q = line[i];
+                skip_quotes(line, &i, q);
+                end = i;
+            }
+            else
+            {
+                while(line[i] && !is_space(line[i]) && !is_operator(line[i]))
+                    i++;
+            }
             end = i;
             word = malloc(end - start + 1);
             if (!word)
