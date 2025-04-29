@@ -19,6 +19,32 @@ char *read_line(void)
 	return (input);
 }
 
+void print_token(t_token *token)
+{
+    if (token == NULL)
+        return;
+    if (token->type == TOKEN_WORD)
+        printf("WORD: %s\n", token->value);
+    else if (token->type == TOKEN_PIPE)
+        printf("PIPE: %s\n", token->value);
+    else if (token->type == TOKEN_APPEND)
+        printf("APPEND: %s\n", token->value);
+    else if (token->type == TOKEN_HEREDOC)
+        printf("HEREDOC: %s\n", token->value);
+    else if (token->type == TOKEN_REDIRECT_IN)
+        printf("REDIRECT_IN: %s\n", token->value);
+    else if (token->type == TOKEN_REDIRECT_OUT)
+        printf("REDIRECT_OUT: %s\n", token->value);
+    else if (token->type == TOKEN_OPEN_PAREN)
+        printf("OPEN_PAREN: %s\n", token->value);
+    else if (token->type == TOKEN_CLOSE_PAREN)
+        printf("CLOSE_PAREN: %s\n", token->value);
+    else if (token->type == TOKEN_OR)
+        printf("OR: %s\n", token->value);
+    else if (token->type == TOKEN_AND)
+        printf("AND: %s\n", token->value);
+}
+
 t_ast *msh_parse(void)
 {
     char *line;
@@ -34,7 +60,7 @@ t_ast *msh_parse(void)
     t_token *tmp   = tokens;
     while (tmp)
     {
-        printf("Token: %s\t|type: %u\n", tmp->value, tmp->type);
+        print_token(tmp);
         tmp = tmp->next;
     }
     return (ast);

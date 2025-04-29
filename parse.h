@@ -44,5 +44,7 @@ void    msh_loop(void);
 void    msh_signals(void);
 t_token *lexer(char *line);
 void    free_tokens(t_token *tokens);
+int valid_quotes(char *s);
+int check_parenthesis(char *line);
 
 #endif

@@ -42,25 +42,36 @@ char *ft_strncpy(char *dst, const char *src, size_t n)
     return (dst);
 }
 
+
+int ft_strcmp(const char *s1, const char *s2)
+{
+    while (*s1 && *s2 && *s1 == *s2)
+    {
+        s1++;
+        s2++;
+    }
+    return (*s1 - *s2);
+}
+
 t_token_type get_token_type(char *value)
 {
-    if (strcmp(value, "|") == 0)
+    if (ft_strcmp(value, "|") == 0)
         return TOKEN_PIPE;
-    else if (strcmp(value, ">>") == 0)
+    else if (ft_strcmp(value, ">>") == 0)
         return TOKEN_APPEND;
-    else if (strcmp(value, "<<") == 0)
+    else if (ft_strcmp(value, "<<") == 0)
         return TOKEN_HEREDOC;
-    else if (strcmp(value, "<") == 0)
+    else if (ft_strcmp(value, "<") == 0)
         return TOKEN_REDIRECT_IN;
-    else if (strcmp(value, ">") == 0)
+    else if (ft_strcmp(value, ">") == 0)
         return TOKEN_REDIRECT_OUT;
-    else if (strcmp(value, "(") == 0)
+    else if (ft_strcmp(value, "(") == 0)
         return TOKEN_OPEN_PAREN;
-    else if (strcmp(value, ")") == 0)
+    else if (ft_strcmp(value, ")") == 0)
         return TOKEN_CLOSE_PAREN;
-    else if (strcmp(value, "||") == 0)
+    else if (ft_strcmp(value, "||") == 0)
         return TOKEN_OR;
-    else if (strcmp(value, "&&") == 0)
+    else if (ft_strcmp(value, "&&") == 0)
         return TOKEN_AND;
     return TOKEN_WORD;
 }
@@ -90,11 +101,11 @@ void add_token(t_token **head, t_token *new_token)
     t_token *tmp;
 
     if (!new_token)
-        return;
+        return ;
     if (!*head)
     {
         *head = new_token;
-        return;
+        return ;
     }
     tmp = *head;
     while (tmp->next)
@@ -232,8 +243,6 @@ t_token *tokenize(char *line)
             word[end - start] = '\0';
             add_token(&tokens, new_token(word, TOKEN_WORD));
             free(word);
-
-            
         }
     }
     return (tokens);
@@ -241,17 +250,23 @@ t_token *tokenize(char *line)
 
 
 
+
 t_token *lexer(char *line)
 {
     t_token *tokens = NULL;
-    
+
     if (!line || !*line)
-        return NULL;
-        
+        return (NULL);
     line = trim_line(line);
     if (!line)
-        return NULL;
+        return (NULL);
+    if (!valid_quotes(line))
+        return (free(line), write(2, "quotess err\n", 13), NULL);
+    if (!check_parenthesis(line))
+        return (free(line), write(2, "parenthesis err\n", 16), NULL);
     tokens = tokenize(line);
+    if (!tokens)
+        return (free(line), NULL);
     free(line);
-    return tokens;
+    return (tokens);
 }
