@@ -24,11 +24,11 @@ int valid_quotes(char *s)
 
 void    skip_quotes(char *s, int *i, char q)
 {
-    *i += 1;
+    (*i)++;
     while (s[*i] && s[*i] != q)
-        *i += 1;
+        (*i)++;
     if (s[*i] != '\0')
-        *i +=1;
+       ( *i)++;
 }
 
 int check_parenthesis(char *line)

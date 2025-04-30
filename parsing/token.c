@@ -22,7 +22,7 @@ char *ft_strdup(char *str)
     return (dup);
 }
 
-char *ft_strncpy(char *dst, const char *src, size_t n)
+char *ft_stringcpy(char *dst, const char *src, size_t n)
 {
     size_t i;
 
@@ -34,11 +34,7 @@ char *ft_strncpy(char *dst, const char *src, size_t n)
         dst[i] = src[i];
         i++;
     }
-    while (i < n)
-    {
-        dst[i] = '\0';
-        i++;
-    }
+    dst[i] = '\0';
     return (dst);
 }
 
@@ -139,21 +135,16 @@ char *trim_line(char *line)
     int i;
 
     (1) && (start = 0, end = 0, i = 0, trimmed = NULL);
-    end = ft_strlen(line);
     while(line[start] && is_space(line[start]))
         start++;
+    end = ft_strlen(line) - 1;
     while(line[end] && is_space(line[end]))
         end--;
     trimmed = malloc(sizeof(char) * (end - start + 1));
     if (!trimmed)
         return (free(line), NULL);
-    i = 0;
-    while (start < end)
-    {
-        trimmed[i] = line[start];
-        i++;
-        start++;
-    }
+    while (start <= end)
+        trimmed[i++] = line[start++];
     trimmed[i] = '\0';
     return (trimmed);
 }
@@ -186,6 +177,7 @@ t_token *tokenize(char *line)
     int start = 0;
     int end = 0;
     char *op = NULL;
+    int len = 0;
 
     while(line[i])
     {
@@ -196,7 +188,7 @@ t_token *tokenize(char *line)
         }
         if (line[i] && is_operator(line[i]))
         {
-            int len = 1;
+            len = 1;
             if ((line[i] == '<' && line[i + 1] == '<')
             || (line[i] == '|' && line[i + 1] == '|')
             || (line[i] == '&' && line[i + 1] == '&')
@@ -209,7 +201,7 @@ t_token *tokenize(char *line)
                     free_tokens(tokens);
                     return (NULL);
                 }
-                ft_strncpy(op, &line[i], len);
+                ft_stringcpy(op, &line[i], len);
             }
             else
             {
@@ -248,7 +240,7 @@ t_token *tokenize(char *line)
                 free_tokens(tokens);
                 return (NULL);
             }
-            ft_strncpy(word, &line[start], end - start);
+            ft_stringcpy(word, &line[start], end - start);
             word[end - start] = '\0';
             add_token(&tokens, new_token(word, TOKEN_WORD));
             free(word);
@@ -269,10 +261,11 @@ t_token *lexer(char *line)
     line = trim_line(line);
     if (!line)
         return (NULL);
+        printf("line: |%s|\n", line);
     if (!valid_quotes(line))
-        return (free(line), write(2, "quotess err\n", 13), NULL);
+        return (free(line), write(2, "Error: Quotes err\n", 13), NULL);
     if (!check_parenthesis(line))
-        return (free(line), write(2, "parenthesis err\n", 16), NULL);
+        return (free(line), write(2, "Error: parenthesis err\n", 16), NULL);
     tokens = tokenize(line);
     if (!tokens)
         return (free(line), NULL);
