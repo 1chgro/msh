@@ -52,7 +52,6 @@ void    msh_signals(void);
 t_token *lexer(char *line);
 void    free_tokens(t_token *tokens);
 int valid_quotes(char *s);
-// int check_parenthesis(char *line);
 void    skip_quotes(char *s, int *i, char q);
 
 
@@ -61,5 +60,7 @@ void    skip_quotes(char *s, int *i, char q);
 char	*ft_strtrim(char const *s1, char const *set);
 char *ft_stringcpy(char *dst, const char *src, size_t n);
 size_t ft_strlen(const char *str);
+char *ft_strdup(char *str);
+int is_quote(char c);
 
 #endif

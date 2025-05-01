@@ -37,20 +37,6 @@ void print_token(t_token *token)
         printf("REDIRECT_OUT: %s\n", token->value);
 }
 
-void init_cmd(t_cmd **cmd)
-{
-    *cmd = malloc(sizeof(t_cmd));
-    if (*cmd == NULL)
-        return;
-    (*cmd)->argv = NULL;
-    (*cmd)->infile = NULL;
-    (*cmd)->outfile = NULL;
-    (*cmd)->append = 0;
-    (*cmd)->has_heredoc = 0;
-    (*cmd)->heredoc_input = NULL;
-    (*cmd)->next = NULL;
-}
-
 t_cmd *msh_parse(void)
 {
     char *line;
@@ -69,7 +55,6 @@ t_cmd *msh_parse(void)
         print_token(tmp);
         tmp = tmp->next;
     }
-    init_cmd(&cmd);
     return (cmd);
 }
 

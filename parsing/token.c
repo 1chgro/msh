@@ -1,26 +1,6 @@
 #include "../parse.h"
 
-char *ft_strdup(char *str)
-{
-    char *dup;
-    int i;
-    int len;
 
-    i = 0;
-    len = 0;
-    while (str[len])
-        len++;
-    dup = malloc(sizeof(char) * (len + 1));
-    if (!dup)
-        return (NULL);
-    while (str[i])
-    {
-        dup[i] = str[i];
-        i++;
-    }
-    dup[i] = '\0';
-    return (dup);
-}
 
 int ft_strcmp(const char *s1, const char *s2)
 {
@@ -108,88 +88,85 @@ void free_tokens(t_token *tokens)
     }
 }
 
+int handle_operator(char *line, int *i, t_token **tokens)
+{
+    char *op;
+    int len;
+    
+    len = 1;
+    if ((line[*i] == '<' && line[*i + 1] == '<') ||
+        (line[*i] == '>' && line[*i + 1] == '>'))
+        len = 2;
+    op = malloc(len + 1);
+    if (!op)
+        return (0);
+    ft_stringcpy(op, &line[*i], len);
+    add_token(tokens, new_token(op, get_token_type(op)));
+    free(op);
+    *i += len;
+    return (1);
+}
+
+
+int handle_word(char *line, int *i, t_token **tokens)
+{
+    int start;
+    int end;
+    char *word;
+    char q;
+
+    start = *i;
+    while (line[*i])
+    {
+        if (is_quote(line[*i]))
+        {
+            q = line[*i];
+            skip_quotes(line, i, q);
+        }
+        else if (!is_space(line[*i]) && !is_operator(line[*i]) && !is_quote(line[*i]))
+            (*i)++;
+        else
+            break;
+    }
+    (1) && (end = *i, word = malloc(end - start + 1));
+    if (!word)
+        return (0);
+    ft_stringcpy(word, &line[start], end - start);
+    word[end - start] = '\0';
+    add_token(tokens, new_token(word, TOKEN_WORD));
+    return (free(word), 1);
+}
+
+
 t_token *tokenize(char *line)
 {
-    t_token *tokens = NULL;
-    char *word = NULL;
-    int i = 0;
-    int start = 0;
-    int end = 0;
-    char *op = NULL;
-    int len = 0;
-
+    t_token *tokens;
+    int i;
+    
+    tokens = NULL;
+    i = 0;
     while (line[i])
     {
-        if (line[i] && is_space(line[i]))
+        if (is_space(line[i]))
         {
             i++;
             continue;
         }
-        if (line[i] && is_operator(line[i]))
+        if (is_operator(line[i]))
         {
-            len = 1;
-            if ((line[i] == '<' && line[i + 1] == '<') || (line[i] == '>' && line[i + 1] == '>'))
-            {
-                len = 2;
-                op = malloc(len + 1);
-                if (!op)
-                {
-                    free_tokens(tokens);
-                    return (NULL);
-                }
-                ft_stringcpy(op, &line[i], len);
-            }
-            else
-            {
-                op = malloc(2);
-                if (!op)
-                {
-                    free_tokens(tokens);
-                    return (NULL);
-                }
-                op[0] = line[i];
-                op[1] = '\0';
-            }
-            add_token(&tokens, new_token(op, get_token_type(op)));
-            free(op);
-            i += len;
-            continue;
+            if (!handle_operator(line, &i, &tokens))
+                return (free_tokens(tokens), NULL);
         }
-        else if (line[i] && !is_space(line[i]) && !is_operator(line[i]))
+        else
         {
-            start = i;
-            while (1)
-            {
-                if (line[i] == '\'' || line[i] == '\"')
-                {
-                    char q = line[i];
-                    skip_quotes(line, &i, q);
-                    end = i;
-                }
-                else
-                {
-                    while (line[i] && !is_space(line[i]) && !is_operator(line[i]) && line[i] != '\'' && line[i] != '\"')
-                        i++;
-                    if (line[i] == '\'' || line[i] == '\"')
-                        continue;
-                    break;
-                }
-            }
-            end = i;
-            word = malloc(end - start + 1);
-            if (!word)
-            {
-                free_tokens(tokens);
-                return (NULL);
-            }
-            ft_stringcpy(word, &line[start], end - start);
-            word[end - start] = '\0';
-            add_token(&tokens, new_token(word, TOKEN_WORD));
-            free(word);
+                if (!handle_word(line, &i, &tokens))
+                return (free_tokens(tokens), NULL);
         }
     }
     return (tokens);
 }
+
+
 
 void remove_quotes(t_token **tokens)
 {
@@ -218,7 +195,11 @@ t_token *lexer(char *line)
         return (NULL);
     printf("line: |%s|\n", line);
     if (!valid_quotes(line))
-        return (free(line), write(2, "Error: Quotes err\n", 13), NULL);
+    {
+        free(line);
+        write(2, "Error: Quotes err\n", 19);
+        exit(1);
+    };
     tokens = tokenize(line);
     if (!tokens)
         return (free(line), NULL);
