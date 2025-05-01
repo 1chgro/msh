@@ -19,6 +19,17 @@ typedef struct s_ast
     void            *data;
 } t_ast;
 
+typedef struct s_cmd
+{
+    char          **argv;           // execve-style args
+    char          *infile;          // for <
+    char          *outfile;         // for > or >>
+    int           append;           // 1 if >>, 0 if >
+    int           has_heredoc;      // flag for heredoc
+    char          *heredoc_input;   // raw heredoc content (core only)
+    struct s_cmd  *next;            // next command in pipeline
+} t_cmd;
+
 
 typedef enum
 {

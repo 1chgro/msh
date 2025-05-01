@@ -12,7 +12,7 @@ int valid_quotes(char *s)
         {
             q = s[i];
             i++;
-            while (s[i] && s[i] != q)
+            while (s[i]  && s[i] != q)
                 i++;
             if (s[i] == '\0')
                 return (0);

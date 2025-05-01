@@ -8,12 +8,12 @@ char *ft_strdup(char *str)
 
     i = 0;
     len = 0;
-    while(str[len])
+    while (str[len])
         len++;
     dup = malloc(sizeof(char) * (len + 1));
     if (!dup)
         return (NULL);
-    while(str[i])
+    while (str[i])
     {
         dup[i] = str[i];
         i++;
@@ -21,7 +21,6 @@ char *ft_strdup(char *str)
     dup[i] = '\0';
     return (dup);
 }
-
 
 int ft_strcmp(const char *s1, const char *s2)
 {
@@ -32,7 +31,6 @@ int ft_strcmp(const char *s1, const char *s2)
     }
     return (*s1 - *s2);
 }
-
 
 t_token_type get_token_type(char *value)
 {
@@ -52,7 +50,7 @@ t_token_type get_token_type(char *value)
 t_token *new_token(char *value, t_token_type type)
 {
     t_token *token;
-    
+
     if (!value || !*value)
         return (NULL);
     token = malloc(sizeof(t_token));
@@ -74,11 +72,11 @@ void add_token(t_token **head, t_token *new_token)
     t_token *tmp;
 
     if (!new_token)
-        return ;
+        return;
     if (!*head)
     {
         *head = new_token;
-        return ;
+        return;
     }
     tmp = *head;
     while (tmp->next)
@@ -99,7 +97,7 @@ int is_operator(char c)
 void free_tokens(t_token *tokens)
 {
     t_token *tmp;
-    
+
     while (tokens)
     {
         tmp = tokens;
@@ -109,7 +107,6 @@ void free_tokens(t_token *tokens)
         tmp = NULL;
     }
 }
-
 
 t_token *tokenize(char *line)
 {
@@ -121,7 +118,7 @@ t_token *tokenize(char *line)
     char *op = NULL;
     int len = 0;
 
-    while(line[i])
+    while (line[i])
     {
         if (line[i] && is_space(line[i]))
         {
@@ -131,8 +128,7 @@ t_token *tokenize(char *line)
         if (line[i] && is_operator(line[i]))
         {
             len = 1;
-            if ((line[i] == '<' && line[i + 1] == '<')
-            || (line[i] == '>' && line[i + 1] == '>'))
+            if ((line[i] == '<' && line[i + 1] == '<') || (line[i] == '>' && line[i + 1] == '>'))
             {
                 len = 2;
                 op = malloc(len + 1);
@@ -162,16 +158,22 @@ t_token *tokenize(char *line)
         else if (line[i] && !is_space(line[i]) && !is_operator(line[i]))
         {
             start = i;
-            if (line[i] == '\'' || line[i] == '\"')
+            while (1)
             {
-                char q = line[i];
-                skip_quotes(line, &i, q);
-                end = i;
-            }
-            else
-            {
-                while(line[i] && !is_space(line[i]) && !is_operator(line[i]))
-                    i++;
+                if (line[i] == '\'' || line[i] == '\"')
+                {
+                    char q = line[i];
+                    skip_quotes(line, &i, q);
+                    end = i;
+                }
+                else
+                {
+                    while (line[i] && !is_space(line[i]) && !is_operator(line[i]) && line[i] != '\'' && line[i] != '\"')
+                        i++;
+                    if (line[i] == '\'' || line[i] == '\"')
+                        continue;
+                    break;
+                }
             }
             end = i;
             word = malloc(end - start + 1);
@@ -188,7 +190,6 @@ t_token *tokenize(char *line)
     }
     return (tokens);
 }
-
 
 void remove_quotes(t_token **tokens)
 {
@@ -215,14 +216,12 @@ t_token *lexer(char *line)
     line = ft_strtrim(line, " \t\n\r\v\f");
     if (!line)
         return (NULL);
-        printf("line: |%s|\n", line);
+    printf("line: |%s|\n", line);
     if (!valid_quotes(line))
         return (free(line), write(2, "Error: Quotes err\n", 13), NULL);
     tokens = tokenize(line);
     if (!tokens)
         return (free(line), NULL);
-    //! this should be done int the expanding part this is just a test for now
-    remove_quotes(&tokens);
     free(line);
     return (tokens);
 }

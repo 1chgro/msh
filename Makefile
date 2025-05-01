@@ -1,6 +1,6 @@
 NAME=minishell
 
-FLGS=-Werror -Wextra -Wall
+FLGS=-Werror -Wextra -Wall -fsanitize=address
 
 
 SRCS_PARSE= main.c\
