@@ -28,10 +28,6 @@ typedef enum
     TOKEN_HEREDOC,
     TOKEN_REDIRECT_IN,
     TOKEN_REDIRECT_OUT,
-    TOKEN_OPEN_PAREN,
-    TOKEN_CLOSE_PAREN,
-    TOKEN_OR,
-    TOKEN_AND,
 } t_token_type;
 
 typedef struct s_token {
@@ -45,7 +41,14 @@ void    msh_signals(void);
 t_token *lexer(char *line);
 void    free_tokens(t_token *tokens);
 int valid_quotes(char *s);
-int check_parenthesis(char *line);
+// int check_parenthesis(char *line);
 void    skip_quotes(char *s, int *i, char q);
+
+
+
+// Utility functions
+char	*ft_strtrim(char const *s1, char const *set);
+char *ft_stringcpy(char *dst, const char *src, size_t n);
+size_t ft_strlen(const char *str);
 
 #endif

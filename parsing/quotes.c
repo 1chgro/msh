@@ -31,21 +31,21 @@ void    skip_quotes(char *s, int *i, char q)
        ( *i)++;
 }
 
-int check_parenthesis(char *line)
-{
-    int i = 0;
-    int count = 0;
-    while(line[i])
-    {
-        if (line[i] == '\'' || line[i] == '"')
-            skip_quotes(line, &i, line[i]);
-        if (line[i] == '(')
-            count++;
-        else if (line[i] == ')')
-            count--;
-        if (count < 0)
-            return (0);
-        i++;
-    }
-    return (count == 0);
-}
+// int check_parenthesis(char *line)
+// {
+//     int i = 0;
+//     int count = 0;
+//     while(line[i])
+//     {
+//         if (line[i] == '\'' || line[i] == '"')
+//             skip_quotes(line, &i, line[i]);
+//         if (line[i] == '(')
+//             count++;
+//         else if (line[i] == ')')
+//             count--;
+//         if (count < 0)
+//             return (0);
+//         i++;
+//     }
+//     return (count == 0);
+// }

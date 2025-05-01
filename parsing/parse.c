@@ -35,14 +35,6 @@ void print_token(t_token *token)
         printf("REDIRECT_IN: %s\n", token->value);
     else if (token->type == TOKEN_REDIRECT_OUT)
         printf("REDIRECT_OUT: %s\n", token->value);
-    else if (token->type == TOKEN_OPEN_PAREN)
-        printf("OPEN_PAREN: %s\n", token->value);
-    else if (token->type == TOKEN_CLOSE_PAREN)
-        printf("CLOSE_PAREN: %s\n", token->value);
-    else if (token->type == TOKEN_OR)
-        printf("OR: %s\n", token->value);
-    else if (token->type == TOKEN_AND)
-        printf("AND: %s\n", token->value);
 }
 
 t_ast *msh_parse(void)
