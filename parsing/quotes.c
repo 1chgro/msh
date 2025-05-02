@@ -1,10 +1,5 @@
 #include "../parse.h"
 
-int is_quote(char c)
-{
-    return (c == '\'' || c == '"');
-}
-
 int valid_quotes(char *s)
 {
     int i;

@@ -37,6 +37,29 @@ void print_token(t_token *token)
         printf("REDIRECT_OUT: %s\n", token->value);
 }
 
+t_token *lexer(char *line)
+{
+    t_token *tokens = NULL;
+
+    if (!line || !*line)
+        return (NULL);
+    line = ft_strtrim(line, " \t\n\r\v\f");
+    if (!line)
+        return (NULL);
+    printf("line: |%s|\n", line);
+    if (!valid_quotes(line))
+    {
+        free(line);
+        write(2, "Error: Quotes err\n", 19);
+        exit(1);
+    };
+    tokens = tokenize(line);
+    if (!tokens)
+        return (free(line), NULL);
+    free(line);
+    return (tokens);
+}
+
 t_cmd *msh_parse(void)
 {
     char *line;

@@ -4,7 +4,9 @@ FLGS=-Werror -Wextra -Wall -fsanitize=address
 
 
 SRCS_PARSE= main.c\
-	parsing/parse.c parsing/signals.c parsing/token.c parsing/quotes.c parsing/utils.c
+	parsing/parse.c parsing/signals.c parsing/token.c parsing/quotes.c parsing/ft_strtrim.c\
+	parsing/ft_strdup.c parsing/is_funs.c parsing/token_utils.c
+
 
 OBJS=$(SRCS_PARSE:.c=.o) $(SRCS_EXEC:.c=.o)
 
