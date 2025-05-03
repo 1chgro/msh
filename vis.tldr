@@ -78,8 +78,8 @@
 			"typeName": "shape"
 		},
 		{
-			"x": -4149.964498365229,
-			"y": 944.138991168858,
+			"x": -4255.834450851415,
+			"y": 944.16426449244,
 			"rotation": 0,
 			"isLocked": false,
 			"opacity": 1,
@@ -103,19 +103,21 @@
 		{
 			"id": "pointer:pointer",
 			"typeName": "pointer",
-			"x": -2409.672493069684,
-			"y": 1265.974680470199,
-			"lastActivityTimestamp": 1746172811412,
+			"x": -2291.3411159195607,
+			"y": 2343.3455290694033,
+			"lastActivityTimestamp": 1746265612934,
 			"meta": {}
 		},
 		{
 			"followingUserId": null,
 			"opacityForNextShape": 1,
-			"stylesForNextShape": {},
+			"stylesForNextShape": {
+				"tldraw:geo": "rectangle"
+			},
 			"brush": null,
 			"scribbles": [],
 			"cursor": {
-				"type": "cross",
+				"type": "move",
 				"rotation": 0
 			},
 			"isFocusMode": false,
@@ -125,8 +127,8 @@
 			"screenBounds": {
 				"x": 0,
 				"y": 0,
-				"w": 2253,
-				"h": 954
+				"w": 1620,
+				"h": 869
 			},
 			"insets": [
 				false,
@@ -156,7 +158,9 @@
 		{
 			"editingShapeId": null,
 			"croppingShapeId": null,
-			"selectedShapeIds": [],
+			"selectedShapeIds": [
+				"shape:_w3I1vXmFqgYFETAGaLe8"
+			],
 			"hoveredShapeId": null,
 			"erasingShapeIds": [],
 			"hintingShapeIds": [],
@@ -167,12 +171,65 @@
 			"typeName": "instance_page_state"
 		},
 		{
-			"x": 4555.347804416979,
-			"y": -574.7863021301919,
-			"z": 0.28493724528903935,
+			"x": 5913.210571849445,
+			"y": 945.6489819582248,
+			"z": 0.1545602020756093,
 			"meta": {},
 			"id": "camera:page:page",
 			"typeName": "camera"
+		},
+		{
+			"x": -2532.2732454683983,
+			"y": 1519.8778902814283,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:_w3I1vXmFqgYFETAGaLe8",
+			"type": "text",
+			"props": {
+				"color": "black",
+				"size": "m",
+				"w": 1277.2265625,
+				"text": "// int check_syntax_err(t_token *tokens)\n// {\n//     if (!tokens)\n//         return (1);\n//     t_token *prev;\n//     t_token *current;\n\n//     (1) && (current = tokens, prev = NULL);\n//     if (is_pipe(&current))\n//         return (prnt_sy_err(sy_token_type(&current, 0)), 0);\n//     while(current)\n//     {\n//         if (is_pipe(&current))\n//         {\n//             if (is_pipe(&prev))\n//             {\n//                 prnt_sy_err(sy_token_type(&current, 0));\n//                 return (0);\n//             }\n//             else if ((prev->type == TOKEN_REDIRECT_OUT) || (!is_redirection(&prev) && !current->next))\n//                 return (prnt_sy_err(sy_token_type(&current, 1)), 0);\n//             else if (!current->next && is_redirection(&prev))\n//                 return (prnt_sy_err(sy_token_type(&current, 0)), 0);\n            \n//         }\n//         if (is_redirection(&current))\n//         {\n//             if (!is_redirection(&prev) && !current->next)\n//                 return (prnt_sy_err(sy_token_type(&current, 1)), 0);\n//             if (is_redirection(&prev) && !current->next)\n//             {\n//                 if (prev->type == TOKEN_REDIRECT_IN && current->type == TOKEN_REDIRECT_OUT)\n//                     return (prnt_sy_err(sy_token_type(&current, 1)), 0);\n//                 else if (prev->type == TOKEN_HEREDOC && current->type == TOKEN_REDIRECT_IN)\n//                     return (prnt_sy_err(sy_token_type(&current, 1)), 0);\n//                 prnt_sy_err(sy_token_type(&current, 0));\n//                 return (0);\n//             }\n//         }\n//         prev  = current;\n//         current = current->next;\n//     }\n//     return (1);\n// }",
+				"font": "draw",
+				"textAlign": "start",
+				"autoSize": true,
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "a3AKm",
+			"typeName": "shape"
+		},
+		{
+			"x": -2581.349419085086,
+			"y": 1145.046939607183,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:VZWU-i4j_jkVI8TckPUJR",
+			"type": "geo",
+			"props": {
+				"w": 1770.4806427859012,
+				"h": 2084.795359855543,
+				"geo": "rectangle",
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"dash": "draw",
+				"size": "m",
+				"font": "draw",
+				"text": "",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"growY": 0,
+				"url": "",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "a45Ho",
+			"typeName": "shape"
 		}
 	]
 }

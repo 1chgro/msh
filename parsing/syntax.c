@@ -40,34 +40,60 @@ void prnt_sy_err(char *value)
 }
 
 
+int check_pipe_syntax(t_token *prev, t_token *current)
+{
+    if (is_pipe(&current))
+    {
+        if (is_pipe(&prev))
+        {
+            prnt_sy_err(sy_token_type(&current, 0));
+            return (0);
+        }
+        else if ((prev->type == TOKEN_REDIRECT_OUT) || (!is_redirection(&prev) && !current->next))
+            return (prnt_sy_err(sy_token_type(&current, 1)), 0);
+        else if (!current->next && is_redirection(&prev))
+            return (prnt_sy_err(sy_token_type(&current, 0)), 0);
+    }
+    return (1);
+}
+
+int check_redirection_syntax(t_token *prev, t_token *current)
+{
+    if (is_redirection(&current))
+    {
+        if (!is_redirection(&prev) && !current->next)
+            return (prnt_sy_err(sy_token_type(&current, 1)), 0);
+        if (is_redirection(&prev) && !current->next)
+        {
+            if (prev->type == TOKEN_REDIRECT_IN && current->type == TOKEN_REDIRECT_OUT)
+                return (prnt_sy_err(sy_token_type(&current, 1)), 0);
+            else if (prev->type == TOKEN_HEREDOC && current->type == TOKEN_REDIRECT_IN)
+                return (prnt_sy_err(sy_token_type(&current, 1)), 0);
+            prnt_sy_err(sy_token_type(&current, 0));
+            return (0);
+        }
+    }
+    return (1);
+}
+
 int check_syntax_err(t_token *tokens)
 {
     if (!tokens)
         return (1);
-    t_token *prev = NULL;
-    t_token *current = tokens;
+    t_token *prev;
+    t_token *current;
 
+    current = tokens;
+    prev = NULL;
     if (is_pipe(&current))
         return (prnt_sy_err(sy_token_type(&current, 0)), 0);
-    while(current)
+    while (current)
     {
-        if (is_pipe(&prev) && is_pipe(&current))
-        {
-            prnt_sy_err(sy_token_type(&current, 0));
+        if (!check_pipe_syntax(prev, current))
             return (0);
-        }
-        if (!is_redirection(&prev) && is_redirection(&current) && !current->next)
-            return (prnt_sy_err(sy_token_type(&current, 1)), 0);
-        if (is_redirection(&prev) && is_redirection(&current))
-        {
-            if (prev->type == TOKEN_REDIRECT_IN && current->type == TOKEN_REDIRECT_OUT)
-                return (prnt_sy_err(sy_token_type(&current,  1)), 0);
-            prnt_sy_err(sy_token_type(&current, 0));
+        if (!check_redirection_syntax(prev, current))
             return (0);
-        }
-        if (is_redirection(&prev) && is_pipe(&current))
-            return ( prnt_sy_err(sy_token_type(&current, 0)), 0);
-        prev  = current;
+        prev = current;
         current = current->next;
     }
     return (1);
