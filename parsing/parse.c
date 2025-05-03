@@ -9,6 +9,7 @@ char *read_line(void)
 	if (!input) // hna ila kan ctrl +d 
 	{
 		rl_clear_history(); // kanmsh l history
+        write(2, "exit\n", 5);
         // ltht atkon ft_exit blast exit
 		exit(0);
 	}
@@ -46,12 +47,11 @@ t_token *lexer(char *line)
     line = ft_strtrim(line, " \t\n\r\v\f");
     if (!line)
         return (NULL);
-    // printf("line: |%s|\n", line);
     if (!valid_quotes(line))
     {
         free(line);
-        write(2, "Error: Quotes err\n", 19);
-        exit(1);
+        write(2, "msh: syntax error near unexpected token `quotes'\n", 50);
+        return (NULL);
     };
     tokens = tokenize(line);
     if (!tokens)
