@@ -46,7 +46,7 @@ t_token *lexer(char *line)
     line = ft_strtrim(line, " \t\n\r\v\f");
     if (!line)
         return (NULL);
-    printf("line: |%s|\n", line);
+    // printf("line: |%s|\n", line);
     if (!valid_quotes(line))
     {
         free(line);
@@ -72,6 +72,13 @@ t_cmd *msh_parse(void)
     if (line == NULL)
         return (NULL);
     tokens = lexer(line);
+    if (!check_syntax_err(tokens))
+    {
+        free(line);
+        free_tokens(tokens);
+        // write(2, "Error: Syntax err\n", 19);
+        return (NULL);
+    }
     t_token *tmp   = tokens;
     while (tmp)
     {

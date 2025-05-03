@@ -37,10 +37,7 @@ t_token *new_token(char *value, t_token_type type)
         return (NULL);
     token->value = ft_strdup(value);
     if (!token->value)
-    {
-        free(token);
-        return (NULL);
-    }
+        return (free(token), NULL);
     token->type = type;
     token->next = NULL;
     return (token);
@@ -72,6 +69,7 @@ void free_tokens(t_token *tokens)
         tmp = tokens;
         tokens = tokens->next;
         free(tmp->value);
+        tmp->value = NULL;
         free(tmp);
         tmp = NULL;
     }

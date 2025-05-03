@@ -60,6 +60,10 @@ t_token		*new_token(char *value, t_token_type type);
 t_token_type		get_token_type(char *value);
 void		free_tokens(t_token *tokens);
 
+// syntax
+int check_syntax_err(t_token *tokens);
+
+
 // Utility functions
 char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_stringcpy(char *dst, const char *src, size_t n);
@@ -67,9 +71,11 @@ size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 
-int is_quote(char c);
-int is_operator(char c);
-int is_space(char c);
+int	is_quote(char c);
+int	is_operator(char c);
+int	is_space(char c);
+int	is_redirection(t_token **token);
+int	is_pipe(t_token **token);
 
 
 #endif

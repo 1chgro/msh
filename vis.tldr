@@ -48,23 +48,74 @@
 			"typeName": "page"
 		},
 		{
+			"x": -4311.27031782642,
+			"y": 823.9091394342227,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:Si91i3pPtuXI3Q2pzweWK",
+			"type": "geo",
+			"props": {
+				"w": 1540.7457218247887,
+				"h": 2898.883924992356,
+				"geo": "rectangle",
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"dash": "draw",
+				"size": "m",
+				"font": "draw",
+				"text": "",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"growY": 0,
+				"url": "",
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "a1",
+			"typeName": "shape"
+		},
+		{
+			"x": -4149.964498365229,
+			"y": 944.138991168858,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:V9SnLU-5-8qKW6-VvGbjJ",
+			"type": "text",
+			"props": {
+				"color": "black",
+				"size": "m",
+				"w": 1178.25,
+				"text": "\n// t_token *tokenize(char *line)\n// {\n//     t_token *tokens = NULL;\n//     char *word = NULL;\n//     int i = 0;\n//     int start = 0;\n//     int end = 0;\n//     char *op = NULL;\n//     int len = 0;\n\n//     while (line[i])\n//     {\n//         if (line[i] && is_space(line[i]))\n//         {\n//             i++;\n//             continue;\n//         }\n//         if (line[i] && is_operator(line[i]))\n//         {\n//             len = 1;\n//             if ((line[i] == '<' && line[i + 1] == '<') || (line[i] == '>' && line[i + 1] == '>'))\n//             {\n//                 len = 2;\n//                 op = malloc(len + 1);\n//                 if (!op)\n//                 {\n//                     free_tokens(tokens);\n//                     return (NULL);\n//                 }\n//                 ft_stringcpy(op, &line[i], len);\n//             }\n//             else\n//             {\n//                 op = malloc(2);\n//                 if (!op)\n//                 {\n//                     free_tokens(tokens);\n//                     return (NULL);\n//                 }\n//                 op[0] = line[i];\n//                 op[1] = '\\0';\n//             }\n//             add_token(&tokens, new_token(op, get_token_type(op)));\n//             free(op);\n//             i += len;\n//             continue;\n//         }\n//         else if (line[i] && !is_space(line[i]) && !is_operator(line[i]))\n//         {\n//             start = i;\n//             while (1)\n//             {\n//                 if (is_quote(line[i]))\n//                 {\n//                     char q = line[i];\n//                     skip_quotes(line, &i, q);\n//                     end = i;\n//                 }\n//                 else\n//                 {\n//                     while (line[i] && !is_space(line[i]) && !is_operator(line[i]) && !is_quote(line[i]))\n//                         i++;\n//                     if (is_quote(line[i]))\n//                         continue;\n//                     break;\n//                 }\n//             }\n//             end = i;\n//             word = malloc(end - start + 1);\n//             if (!word)\n//             {\n//                 free_tokens(tokens);\n//                 return (NULL);\n//             }\n//             ft_stringcpy(word, &line[start], end - start);\n//             word[end - start] = '\\0';\n//             add_token(&tokens, new_token(word, TOKEN_WORD));\n//             free(word);\n//         }\n//     }\n//     return (tokens);\n// }",
+				"font": "draw",
+				"textAlign": "start",
+				"autoSize": true,
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "a24cr",
+			"typeName": "shape"
+		},
+		{
 			"id": "pointer:pointer",
 			"typeName": "pointer",
-			"x": 877.935631647867,
-			"y": 3186.2643082252052,
-			"lastActivityTimestamp": 1746111612050,
+			"x": -2409.672493069684,
+			"y": 1265.974680470199,
+			"lastActivityTimestamp": 1746172811412,
 			"meta": {}
 		},
 		{
 			"followingUserId": null,
 			"opacityForNextShape": 1,
-			"stylesForNextShape": {
-				"tldraw:geo": "rectangle"
-			},
+			"stylesForNextShape": {},
 			"brush": null,
 			"scribbles": [],
 			"cursor": {
-				"type": "default",
+				"type": "cross",
 				"rotation": 0
 			},
 			"isFocusMode": false,
@@ -105,9 +156,7 @@
 		{
 			"editingShapeId": null,
 			"croppingShapeId": null,
-			"selectedShapeIds": [
-				"shape:Si91i3pPtuXI3Q2pzweWK"
-			],
+			"selectedShapeIds": [],
 			"hoveredShapeId": null,
 			"erasingShapeIds": [],
 			"hintingShapeIds": [],
@@ -118,65 +167,12 @@
 			"typeName": "instance_page_state"
 		},
 		{
-			"x": 2244.0984652049056,
-			"y": 130.65637718289122,
-			"z": 0.20705151031234353,
+			"x": 4555.347804416979,
+			"y": -574.7863021301919,
+			"z": 0.28493724528903935,
 			"meta": {},
 			"id": "camera:page:page",
 			"typeName": "camera"
-		},
-		{
-			"x": -1372.2185569711537,
-			"y": 799.3971631465488,
-			"rotation": 0,
-			"isLocked": false,
-			"opacity": 1,
-			"meta": {},
-			"id": "shape:Si91i3pPtuXI3Q2pzweWK",
-			"type": "geo",
-			"props": {
-				"w": 1540.7457218247887,
-				"h": 2898.883924992356,
-				"geo": "rectangle",
-				"color": "black",
-				"labelColor": "black",
-				"fill": "none",
-				"dash": "draw",
-				"size": "m",
-				"font": "draw",
-				"text": "",
-				"align": "middle",
-				"verticalAlign": "middle",
-				"growY": 0,
-				"url": "",
-				"scale": 1
-			},
-			"parentId": "page:page",
-			"index": "a1",
-			"typeName": "shape"
-		},
-		{
-			"x": -1210.9127375099633,
-			"y": 919.6270148811841,
-			"rotation": 0,
-			"isLocked": false,
-			"opacity": 1,
-			"meta": {},
-			"id": "shape:V9SnLU-5-8qKW6-VvGbjJ",
-			"type": "text",
-			"props": {
-				"color": "black",
-				"size": "m",
-				"w": 1178.25,
-				"text": "\n// t_token *tokenize(char *line)\n// {\n//     t_token *tokens = NULL;\n//     char *word = NULL;\n//     int i = 0;\n//     int start = 0;\n//     int end = 0;\n//     char *op = NULL;\n//     int len = 0;\n\n//     while (line[i])\n//     {\n//         if (line[i] && is_space(line[i]))\n//         {\n//             i++;\n//             continue;\n//         }\n//         if (line[i] && is_operator(line[i]))\n//         {\n//             len = 1;\n//             if ((line[i] == '<' && line[i + 1] == '<') || (line[i] == '>' && line[i + 1] == '>'))\n//             {\n//                 len = 2;\n//                 op = malloc(len + 1);\n//                 if (!op)\n//                 {\n//                     free_tokens(tokens);\n//                     return (NULL);\n//                 }\n//                 ft_stringcpy(op, &line[i], len);\n//             }\n//             else\n//             {\n//                 op = malloc(2);\n//                 if (!op)\n//                 {\n//                     free_tokens(tokens);\n//                     return (NULL);\n//                 }\n//                 op[0] = line[i];\n//                 op[1] = '\\0';\n//             }\n//             add_token(&tokens, new_token(op, get_token_type(op)));\n//             free(op);\n//             i += len;\n//             continue;\n//         }\n//         else if (line[i] && !is_space(line[i]) && !is_operator(line[i]))\n//         {\n//             start = i;\n//             while (1)\n//             {\n//                 if (is_quote(line[i]))\n//                 {\n//                     char q = line[i];\n//                     skip_quotes(line, &i, q);\n//                     end = i;\n//                 }\n//                 else\n//                 {\n//                     while (line[i] && !is_space(line[i]) && !is_operator(line[i]) && !is_quote(line[i]))\n//                         i++;\n//                     if (is_quote(line[i]))\n//                         continue;\n//                     break;\n//                 }\n//             }\n//             end = i;\n//             word = malloc(end - start + 1);\n//             if (!word)\n//             {\n//                 free_tokens(tokens);\n//                 return (NULL);\n//             }\n//             ft_stringcpy(word, &line[start], end - start);\n//             word[end - start] = '\\0';\n//             add_token(&tokens, new_token(word, TOKEN_WORD));\n//             free(word);\n//         }\n//     }\n//     return (tokens);\n// }",
-				"font": "draw",
-				"textAlign": "start",
-				"autoSize": true,
-				"scale": 1
-			},
-			"parentId": "page:page",
-			"index": "a24cr",
-			"typeName": "shape"
 		}
 	]
 }
