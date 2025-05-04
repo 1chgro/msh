@@ -67,13 +67,12 @@ void print_cmd(t_cmd *cmd)
     if (cmd->argv)
     {
         printf("Arguments:\n");
-        while (cmd->argv[i])
+        while (i < 3)
             printf(" %s\n", cmd->argv[i++]);
     }
     printf("Input file: %s\n", cmd->infile);
     printf("Output file: %s\n", cmd->outfile);
     printf("Append: %d\n", cmd->append);
-    printf("Has heredoc: %d\n", cmd->has_heredoc);
     printf("Next command: %p\n", cmd->next);
     printf("====================================\n");
 }

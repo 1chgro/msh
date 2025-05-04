@@ -10,7 +10,8 @@ int init_cmd_lst(t_cmd **cmd)
     (*cmd)->infile = NULL;
     (*cmd)->outfile = NULL;
     (*cmd)->append = 0;
-    (*cmd)->has_heredoc = 0;
+    // (*cmd)->has_heredoc = 0;
+    (*cmd)->heredoc = NULL;
     (*cmd)->next = NULL;
     return (1);
 }
@@ -36,14 +37,14 @@ t_cmd *create_cmd_lst(t_token *tokens)
     t_cmd *head;
     cmd = NULL;
     t_token *tmp = NULL;
-    int words;
     
     tmp = tokens;
     init_cmd_lst(&cmd);
     head = cmd;
-    words = count_words(tmp);
-    cmd->argv = malloc(sizeof(char *) * (words + 1));
-    int i = 0;
+    cmd->argv = malloc(sizeof(char *) * (3));
+    cmd->argv[0] = NULL;
+    cmd->argv[1] = NULL;
+    cmd->argv[2] = NULL;
     while(tokens)
     {
         if (is_redirection(&tokens))
@@ -55,25 +56,52 @@ t_cmd *create_cmd_lst(t_token *tokens)
                     cmd->append = 1;
                 tokens = tokens->next;
             }
+            if (tokens->type == TOKEN_REDIRECT_IN)
+            {
+                cmd->infile = ft_strdup(tokens->next->value);
+                tokens = tokens->next;
+            }
+            if (tokens->type == TOKEN_HEREDOC)
+            {
+                if (cmd->heredoc)
+                {
+                    t_heredoc *tmp_h = cmd->heredoc;
+                    cmd->heredoc = cmd->heredoc->next;
+                    cmd->heredoc->prev = tmp_h;
+                    cmd->heredoc = malloc(sizeof(t_heredoc));
+                    cmd->heredoc->delimiter = ft_strdup(tokens->next->value);
+                }
+                else if (!cmd->heredoc)
+                {
+                    cmd->heredoc = malloc(sizeof(t_heredoc));
+                    cmd->heredoc->delimiter = ft_strdup(tokens->next->value);
+                    cmd->heredoc->prev = NULL;
+                    cmd->heredoc->next = NULL;
+                }
+                tokens = tokens->next;
+            }
         }
-        else if (tokens->type == TOKEN_WORD && i < words)
+        if (tokens->type == TOKEN_WORD)
         {
-            cmd->argv[i] = ft_strdup(tokens->value);
-            i++;
+            if (!cmd->argv[0])
+                cmd->argv[0] = ft_strdup(tokens->value);
+            else if (cmd->argv[0])
+                cmd->argv[1] = ft_strjoin(cmd->argv[1], tokens->value);
         }
         if (tokens->type == TOKEN_PIPE)
         {
-            cmd->argv[i] = NULL;
             init_cmd_lst(&cmd->next);
             cmd = cmd->next;
-            tmp = tokens->next;
-            words = count_words(tmp);
-            cmd->argv =  malloc(sizeof(char *) * (words + 1));
-            i = 0;
+            cmd->argv =  malloc(sizeof(char *) * (3));
+            cmd->argv[0] = NULL;
+            cmd->argv[1] = NULL;
+            cmd->argv[2] = NULL;
         }
         tokens = tokens->next;
     }
-    cmd->argv[i] = NULL;
+    cmd->next = NULL;
+    if (cmd->next)
+        DEBUGG_CHECK;
     return (head);
 }
 

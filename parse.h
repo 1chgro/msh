@@ -14,13 +14,23 @@
 
 #define DEBUGG_CHECK write(2, "got to this point successfully\n", 32)
 
+typedef struct s_heredoc
+{
+	
+	struct s_heredoc *prev;	// next heredoc
+	char *delimiter;	// delimiter for heredoc
+	int fd;
+	struct s_heredoc *next;	// next heredoc
+} t_heredoc;
+
 typedef struct s_cmd
 {
-	char          **argv;           // execve-style args
+	char          **argv;       	// execve-style args
 	char          *infile;          // for <
 	char          *outfile;         // for > or >>
 	int           append;           // 1 if >>, 0 if >
-	int           has_heredoc;      // flag for heredoc, //! make sure there is less than 17 heredocs
+	// int           has_heredoc;   // flag for heredoc, //! make sure there is less than 17 heredocs
+	t_heredoc	*heredoc;      		// for heredoc
 	struct s_cmd  *next;            // next command in pipeline
 } t_cmd;
 
@@ -66,6 +76,7 @@ char	*ft_stringcpy(char *dst, const char *src, size_t n);
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *str);
 int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strjoin(char const *s1, char const *s2);
 
 int	is_quote(char c);
 int	is_operator(char c);
