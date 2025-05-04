@@ -12,12 +12,7 @@
 #include <readline/history.h>
 
 
-typedef struct s_ast
-{
-	struct s_ast    *left;
-	struct s_ast    *right;
-	void            *data;
-} t_ast;
+#define DEBUGG_CHECK write(2, "got to this point successfully\n", 32)
 
 typedef struct s_cmd
 {
@@ -25,8 +20,7 @@ typedef struct s_cmd
 	char          *infile;          // for <
 	char          *outfile;         // for > or >>
 	int           append;           // 1 if >>, 0 if >
-	int           has_heredoc;      // flag for heredoc
-	char          *heredoc_input;   // raw heredoc content (core only)
+	int           has_heredoc;      // flag for heredoc, //! make sure there is less than 17 heredocs
 	struct s_cmd  *next;            // next command in pipeline
 } t_cmd;
 
@@ -63,6 +57,8 @@ void		free_tokens(t_token *tokens);
 // syntax
 int check_syntax_err(t_token *tokens);
 
+//cmd create functions
+t_cmd *create_cmd(t_token *tokens);
 
 // Utility functions
 char	*ft_strtrim(char const *s1, char const *set);

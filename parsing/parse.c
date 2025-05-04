@@ -60,6 +60,24 @@ t_token *lexer(char *line)
     return (tokens);
 }
 
+void print_cmd(t_cmd *cmd)
+{
+    printf("Command:\n");
+    int i = 0;
+    if (cmd->argv)
+    {
+        printf("Arguments:\n");
+        while (cmd->argv[i])
+            printf(" %s\n", cmd->argv[i++]);
+    }
+    printf("Input file: %s\n", cmd->infile);
+    printf("Output file: %s\n", cmd->outfile);
+    printf("Append: %d\n", cmd->append);
+    printf("Has heredoc: %d\n", cmd->has_heredoc);
+    printf("Next command: %p\n", cmd->next);
+    printf("====================================\n");
+}
+
 t_cmd *msh_parse(void)
 {
     char *line;
@@ -73,18 +91,16 @@ t_cmd *msh_parse(void)
         return (NULL);
     tokens = lexer(line);
     if (!check_syntax_err(tokens))
+        return (free_tokens(tokens), NULL);
+    // create the cmd linekd list
+    cmd = create_cmd(tokens);
+    t_cmd *tmp_cmd = cmd;
+    while(tmp_cmd)
     {
-        free(line);
-        free_tokens(tokens);
-        // write(2, "Error: Syntax err\n", 19);
-        return (NULL);
+        print_cmd(tmp_cmd);
+        tmp_cmd = tmp_cmd->next;
     }
-    t_token *tmp   = tokens;
-    while (tmp)
-    {
-        print_token(tmp);
-        tmp = tmp->next;
-    }
+
     return (cmd);
 }
 

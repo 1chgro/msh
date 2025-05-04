@@ -35,7 +35,7 @@ int handle_word(char *line, int *i, t_token **tokens)
             q = line[*i];
             skip_quotes(line, i, q);
         }
-        else if (!is_space(line[*i]) && !is_operator(line[*i]) && !is_quote(line[*i]))
+        else if (!is_space(line[*i]) && !is_operator(line[*i]))
             (*i)++;
         else
             break;
@@ -44,7 +44,7 @@ int handle_word(char *line, int *i, t_token **tokens)
     if (!word)
         return (0);
     ft_stringcpy(word, &line[start], end - start);
-    word[end - start] = '\0';
+    // word[end - start] = '\0';
     add_token(tokens, new_token(word, TOKEN_WORD));
     return (free(word), 1);
 }
