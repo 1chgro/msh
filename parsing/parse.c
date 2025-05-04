@@ -70,11 +70,35 @@ void print_cmd(t_cmd *cmd)
         while (i < 3)
             printf(" %s\n", cmd->argv[i++]);
     }
-    printf("Input file: %s\n", cmd->infile);
-    printf("Output file: %s\n", cmd->outfile);
+    printf("Input file:\n");
+    if (cmd->infile)
+    {
+        i = 0;
+        while (cmd->infile[i])
+            printf(" %s\n", cmd->infile[i++]);
+    }
+    printf("Output file:\n");
+    if (cmd->outfile)
+    {
+        i = 0;
+        while (cmd->outfile[i])
+            printf(" %s\n", cmd->outfile[i++]);
+    }
+    printf("Heredoc:\n");
+    if (cmd->heredoc)
+    {
+        t_heredoc *tmp_h = cmd->heredoc;
+        while (tmp_h)
+        {
+            printf("delimiter: %s\n", tmp_h->delimiter);
+            printf("file_descriptor: %d\n", tmp_h->fd);
+            tmp_h = tmp_h->next;
+        }
+    }
     printf("Append: %d\n", cmd->append);
-    printf("Next command: %p\n", cmd->next);
-    printf("====================================\n");
+    printf("next: %p\n", cmd->next);
+    printf("---------------------\n");
+
 }
 
 t_cmd *msh_parse(void)

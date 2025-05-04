@@ -6,27 +6,44 @@ int init_cmd_lst(t_cmd **cmd)
     *cmd = malloc(sizeof(t_cmd));
     if (!*cmd)
         return (0);
-    (*cmd)->argv = NULL;
+    (*cmd)->argv = malloc(sizeof(char *) * 3);
+    if (!(*cmd)->argv)
+        return (0);
+    (*cmd)->argv[0] = NULL;
+    (*cmd)->argv[1] = NULL;
+    (*cmd)->argv[2] = NULL;
     (*cmd)->infile = NULL;
     (*cmd)->outfile = NULL;
     (*cmd)->append = 0;
-    // (*cmd)->has_heredoc = 0;
     (*cmd)->heredoc = NULL;
     (*cmd)->next = NULL;
     return (1);
 }
 
-int count_words(t_token *tokens)
+
+
+
+int count_redirections_in(t_token **tokens)
 {
     int count = 0;
-    t_token *prev = NULL;
-
-    while (tokens && tokens->type != TOKEN_PIPE)
+    t_token *tmp = *tokens;
+    while (tmp && !is_pipe(&tmp))
     {
-        if (tokens->type == TOKEN_WORD && !is_redirection(&prev))
+        if (tmp->type == TOKEN_REDIRECT_IN)
             count++;
-        prev = tokens;
-        tokens = tokens->next;
+        tmp = tmp->next;
+    }
+    return (count);
+}
+int count_redirections_out(t_token **tokens)
+{
+    int count = 0;
+    t_token *tmp = *tokens;
+    while (tmp && !is_pipe(&tmp))
+    {
+        if (tmp->type == TOKEN_REDIRECT_OUT || tmp->type == TOKEN_APPEND)
+            count++;
+        tmp = tmp->next;
     }
     return (count);
 }
@@ -36,67 +53,61 @@ t_cmd *create_cmd_lst(t_token *tokens)
     t_cmd *cmd;
     t_cmd *head;
     cmd = NULL;
-    t_token *tmp = NULL;
+    t_token *token_prev = NULL;
     
-    tmp = tokens;
+    int in_redirection_count = 0;
+    int out_redirection_count = 0;
+    int red_out_pos = 0;
+    int red_in_pos = 0;
+    in_redirection_count = count_redirections_in(&tokens);
+    out_redirection_count = count_redirections_out(&tokens);
+    token_prev = tokens;
     init_cmd_lst(&cmd);
     head = cmd;
-    cmd->argv = malloc(sizeof(char *) * (3));
-    cmd->argv[0] = NULL;
-    cmd->argv[1] = NULL;
-    cmd->argv[2] = NULL;
     while(tokens)
     {
         if (is_redirection(&tokens))
-        {   
-            if (tokens->type == TOKEN_REDIRECT_OUT || tokens->type == TOKEN_APPEND)
+        {
+            if (tokens->type ==  TOKEN_REDIRECT_OUT || tokens->type == TOKEN_APPEND)
             {
-                cmd->outfile = ft_strdup(tokens->next->value);
+                if (!cmd->outfile && out_redirection_count > 0)
+                {
+                    cmd->outfile = malloc(sizeof(char *) * (out_redirection_count + 1));
+                    cmd->outfile[0] = NULL;
+                }
+                cmd->outfile[red_out_pos++] = ft_strdup(tokens->next->value);
+                cmd->outfile[red_out_pos] = NULL;
                 if (tokens->type == TOKEN_APPEND)
                     cmd->append = 1;
-                tokens = tokens->next;
             }
-            if (tokens->type == TOKEN_REDIRECT_IN)
+            else if (tokens->type ==  TOKEN_REDIRECT_IN)
             {
-                cmd->infile = ft_strdup(tokens->next->value);
-                tokens = tokens->next;
-            }
-            if (tokens->type == TOKEN_HEREDOC)
-            {
-                if (cmd->heredoc)
+                if (!cmd->infile && out_redirection_count > 0)
                 {
-                    t_heredoc *tmp_h = cmd->heredoc;
-                    cmd->heredoc = cmd->heredoc->next;
-                    cmd->heredoc->prev = tmp_h;
-                    cmd->heredoc = malloc(sizeof(t_heredoc));
-                    cmd->heredoc->delimiter = ft_strdup(tokens->next->value);
+                    cmd->infile = malloc(sizeof(char *) * (in_redirection_count + 1));
+                    cmd->infile[0] = NULL;
                 }
-                else if (!cmd->heredoc)
-                {
-                    cmd->heredoc = malloc(sizeof(t_heredoc));
-                    cmd->heredoc->delimiter = ft_strdup(tokens->next->value);
-                    cmd->heredoc->prev = NULL;
-                    cmd->heredoc->next = NULL;
-                }
-                tokens = tokens->next;
+                cmd->infile[red_in_pos++] = ft_strdup(tokens->next->value);
+                cmd->infile[red_in_pos] = NULL;
             }
+            token_prev = tokens;
+            tokens = tokens->next;
         }
-        if (tokens->type == TOKEN_WORD)
+        else if (tokens->type == TOKEN_WORD && !is_redirection(&token_prev))
         {
             if (!cmd->argv[0])
                 cmd->argv[0] = ft_strdup(tokens->value);
             else if (cmd->argv[0])
                 cmd->argv[1] = ft_strjoin(cmd->argv[1], tokens->value);
         }
-        if (tokens->type == TOKEN_PIPE)
+        else if (tokens->type == TOKEN_PIPE)
         {
             init_cmd_lst(&cmd->next);
+            in_redirection_count = count_redirections_in(&tokens->next);
+            out_redirection_count = count_redirections_out(&tokens->next);
             cmd = cmd->next;
-            cmd->argv =  malloc(sizeof(char *) * (3));
-            cmd->argv[0] = NULL;
-            cmd->argv[1] = NULL;
-            cmd->argv[2] = NULL;
         }
+        token_prev = tokens;
         tokens = tokens->next;
     }
     cmd->next = NULL;

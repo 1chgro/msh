@@ -26,8 +26,8 @@ typedef struct s_heredoc
 typedef struct s_cmd
 {
 	char          **argv;       	// execve-style args
-	char          *infile;          // for <
-	char          *outfile;         // for > or >>
+	char          **infile;          // for <
+	char          **outfile;         // for > or >>
 	int           append;           // 1 if >>, 0 if >
 	// int           has_heredoc;   // flag for heredoc, //! make sure there is less than 17 heredocs
 	t_heredoc	*heredoc;      		// for heredoc
