@@ -34,6 +34,11 @@ typedef struct s_cmd
 	struct s_cmd  *next;            // next command in pipeline
 } t_cmd;
 
+typedef struct s_env{
+    char    *key;
+    char    *value;
+    struct s_env *next;
+} t_env;
 
 typedef enum
 {
@@ -51,8 +56,8 @@ typedef struct s_token {
 	struct s_token	*next;
 } t_token;
 
-void	msh_loop(void);
-void	msh_signals(void);
+void	msh_loop(char **envp);
+void	msh_signals();
 int		valid_quotes(char *s);
 void		skip_quotes(char *s, int *i, char q);
 t_token		*lexer(char *line);
@@ -67,8 +72,13 @@ void		free_tokens(t_token *tokens);
 // syntax
 int check_syntax_err(t_token *tokens);
 
+// expand_env functions
+t_token *expand_env(t_token *tokens, t_env *env);
+
 //cmd create functions
 t_cmd *create_cmd(t_token *tokens);
+int copie_env(t_env **c_env, char **env);
+
 
 // Utility functions
 char	*ft_strtrim(char const *s1, char const *set);
@@ -77,6 +87,8 @@ size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strjoin(char const *s1, char const *s2);
+char	**ft_split(char const *s, char c);
+
 
 int	is_quote(char c);
 int	is_operator(char c);

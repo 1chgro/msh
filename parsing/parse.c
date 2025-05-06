@@ -101,11 +101,36 @@ void print_cmd(t_cmd *cmd)
 
 }
 
-t_cmd *msh_parse(void)
+
+void print_tokens(t_token *tokens, t_cmd *cmd, int flg)
+{
+    if (tokens == NULL)
+        return;
+    if (flg == 0)
+    {
+        while (tokens)
+        {
+            print_token(tokens);
+            tokens = tokens->next;
+        }
+    }
+    else if (flg == 1)
+    {
+        while(cmd)
+        {
+            print_cmd(cmd);
+            cmd = cmd->next;
+        }
+    }
+    
+}
+
+t_cmd *msh_parse(t_env *env)
 {
     char *line;
     t_cmd *cmd;
     t_token *tokens;
+    (void)env;
 
     line = NULL;
     cmd = NULL;
@@ -115,26 +140,40 @@ t_cmd *msh_parse(void)
     tokens = lexer(line);
     if (!check_syntax_err(tokens))
         return (free_tokens(tokens), NULL);
+    // here we can expand the env variables
+
+
     // create the cmd linekd list
     cmd = create_cmd(tokens);
-    t_cmd *tmp_cmd = cmd;
-    while(tmp_cmd)
-    {
-        print_cmd(tmp_cmd);
-        tmp_cmd = tmp_cmd->next;
-    }
+    print_tokens(tokens, cmd, 0);
+    // t_env *tmp_env = env;
+    // t_cmd *tmp_cmd = cmd;
+    // while(tmp_cmd)
+    // // {
+    // //     if (ft_strcmp(tmp_env->key, "USER") == 0)
+    // //         printf("env: %s=%s\n", tmp_env->key, tmp_env->value);
+        
+    // //     // printf("env: %s=%s\n", tmp_env->key, tmp_env->value);
+    // //     tmp_env = tmp_env->next;
+    // // }
+    // {
+    //     print_cmd(tmp_cmd);
+    //     tmp_cmd = tmp_cmd->next;
+    // }
 
     return (cmd);
 }
 
-void msh_loop(void)
+void msh_loop(char **envp)
 {
     t_cmd *cmd = NULL;
+    t_env *env = NULL;
+    (void)envp;
     // msh_signals();
     // int status = 0;
     while(1)
     {
-        cmd = msh_parse();
+        cmd = msh_parse(env);
         // status = msh_execute(ast);
         free(cmd);
     }
