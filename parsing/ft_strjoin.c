@@ -16,7 +16,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
     jnd_str = malloc(sizeof(char) * (total_len + 2));
     if (!jnd_str)
         return (free((char *)s1), NULL);
-    while(++i < strlen(s1))
+    while(++i < ft_strlen(s1))
         jnd_str[i] = s1[i];
     jnd_str[i] = ' ';
     i++;
