@@ -146,21 +146,6 @@ t_cmd *msh_parse(t_env *env)
     // create the cmd linekd list
     cmd = create_cmd(tokens);
     print_tokens(tokens, cmd, 0);
-    // t_env *tmp_env = env;
-    // t_cmd *tmp_cmd = cmd;
-    // while(tmp_cmd)
-    // // {
-    // //     if (ft_strcmp(tmp_env->key, "USER") == 0)
-    // //         printf("env: %s=%s\n", tmp_env->key, tmp_env->value);
-        
-    // //     // printf("env: %s=%s\n", tmp_env->key, tmp_env->value);
-    // //     tmp_env = tmp_env->next;
-    // // }
-    // {
-    //     print_cmd(tmp_cmd);
-    //     tmp_cmd = tmp_cmd->next;
-    // }
-
     return (cmd);
 }
 
