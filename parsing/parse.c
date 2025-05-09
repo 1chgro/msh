@@ -145,7 +145,8 @@ t_cmd *msh_parse(t_env *env)
 
     // create the cmd linekd list
     cmd = create_cmd(tokens);
-    print_tokens(tokens, cmd, 0);
+    // print_tokens(tokens, cmd, 0);
+    print_cmd(cmd);
     return (cmd);
 }
 

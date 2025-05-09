@@ -82,7 +82,7 @@ t_cmd *create_cmd_lst(t_token *tokens)
             }
             else if (tokens->type ==  TOKEN_REDIRECT_IN)
             {
-                if (!cmd->infile && out_redirection_count > 0)
+                if (!cmd->infile && in_redirection_count > 0)
                 {
                     cmd->infile = malloc(sizeof(char *) * (in_redirection_count + 1));
                     cmd->infile[0] = NULL;
@@ -111,8 +111,6 @@ t_cmd *create_cmd_lst(t_token *tokens)
         tokens = tokens->next;
     }
     cmd->next = NULL;
-    if (cmd->next)
-        DEBUGG_CHECK;
     return (head);
 }
 
