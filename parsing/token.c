@@ -1,4 +1,4 @@
-#include "../parse.h"
+#include "../minishell.h"
 
 int handle_operator(char *line, int *i, t_token **tokens)
 {

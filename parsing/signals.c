@@ -1,4 +1,4 @@
-#include "../parse.h"
+#include "../minishell.h"
 
 void handle_signals(int sig)
 {

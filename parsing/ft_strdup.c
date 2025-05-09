@@ -1,4 +1,4 @@
-#include "../parse.h"
+#include "../minishell.h"
 
 char *ft_strdup(char *str)
 {

@@ -1,4 +1,4 @@
-#include "../parse.h"
+#include "../minishell.h"
 
 char *read_line(void)
 {
@@ -130,7 +130,6 @@ t_cmd *msh_parse(t_env *env)
     char *line;
     t_cmd *cmd;
     t_token *tokens;
-    (void)env;
 
     line = NULL;
     cmd = NULL;
@@ -141,12 +140,11 @@ t_cmd *msh_parse(t_env *env)
     if (!check_syntax_err(tokens))
         return (free_tokens(tokens), NULL);
     // here we can expand the env variables
-
-
+    expand_env(tokens, env);
     // create the cmd linekd list
     cmd = create_cmd(tokens);
     // print_tokens(tokens, cmd, 0);
-    print_cmd(cmd);
+    // print_cmd(cmd);
     return (cmd);
 }
 
@@ -154,13 +152,13 @@ void msh_loop(char **envp)
 {
     t_cmd *cmd = NULL;
     t_env *env = NULL;
-    (void)envp;
+    copie_env(&env, envp);
     // msh_signals();
     // int status = 0;
     while(1)
     {
         cmd = msh_parse(env);
-        // status = msh_execute(ast);
+        msh_execute(cmd, env);
         free(cmd);
     }
 }

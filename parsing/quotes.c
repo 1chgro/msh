@@ -1,4 +1,4 @@
-#include "../parse.h"
+#include "../minishell.h"
 
 int valid_quotes(char *s)
 {

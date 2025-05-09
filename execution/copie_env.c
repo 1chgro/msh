@@ -1,4 +1,4 @@
-#include "../parse.h"
+#include "../minishell.h"
 
 void free_env(t_env *env)
 {
@@ -14,7 +14,20 @@ void free_env(t_env *env)
 	}
 }
 
-static t_env *create_node(char **split_env)
+void free_split(char **split)
+{
+    int i = 0;
+    if (!split)
+        return;
+    while (split[i])
+    {
+        free(split[i]);
+        i++;
+    }
+    free(split);
+}
+
+t_env *create_node(char **split_env)
 {
 	t_env *node;
 
@@ -22,13 +35,19 @@ static t_env *create_node(char **split_env)
 	if (!node)
 		return (NULL);
 	node->key = split_env[0];
+    if (!split_env[1])
+        node->value = ft_strdup("");
 	node->value = split_env[1];
+    node->flag = 0;
+    node->index = -1;
+    if (node->value)
+        node->flag = 1;
 	node->next = NULL;
-	free(split_env);
+	// free_split(split_env);
 	return (node);
 }
 
-static void append_node(t_env **head, t_env *node)
+void append_node(t_env **head, t_env *node)
 {
 	t_env *tail;
 

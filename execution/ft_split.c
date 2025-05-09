@@ -1,5 +1,4 @@
-#include "../parse.h"
-
+#include "../minishell.h"
 
 static size_t	len_words(char const *str, char c)
 {
