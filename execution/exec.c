@@ -35,6 +35,8 @@ long ft_atoi(const char *str)
 }
 static int  are_builtin(char    *cmd)
 {
+    if (!cmd)
+        return (0);
 	if (ft_strcmp(cmd, "cd") == 0)
 		return (1);
 	if (ft_strcmp(cmd, "echo") == 0)
