@@ -1,117 +1,88 @@
 #include "../minishell.h"
 
 
-int init_cmd_lst(t_cmd **cmd)
+void init_cmd(t_cmd **cmd)
 {
     *cmd = malloc(sizeof(t_cmd));
     if (!*cmd)
-        return (0);
-    (*cmd)->argv = malloc(sizeof(char *) * 3);
-    if (!(*cmd)->argv)
-        return (0);
-    (*cmd)->argv[0] = NULL;
-    (*cmd)->argv[1] = NULL;
-    (*cmd)->argv[2] = NULL;
-    (*cmd)->infile = NULL;
-    (*cmd)->outfile = NULL;
-    (*cmd)->append = 0;
-    (*cmd)->heredoc = NULL;
+        return;
+    (*cmd)->line = NULL;
+    (*cmd)->argv = NULL;
+    (*cmd)->files = NULL;
     (*cmd)->next = NULL;
-    return (1);
 }
 
-
-
-
-int count_redirections_in(t_token **tokens)
+int count_redirections(t_token *tokens)
 {
     int count = 0;
-    t_token *tmp = *tokens;
-    while (tmp && !is_pipe(&tmp))
+    t_token *current = tokens;
+
+    while (current && !is_pipe(&current))
     {
-        if (tmp->type == TOKEN_REDIRECT_IN)
+        if (is_redirection(&current))
             count++;
-        tmp = tmp->next;
+        current = current->next;
     }
     return (count);
 }
-int count_redirections_out(t_token **tokens)
+
+t_redirection_type get_cmd_red_type(t_token_type type)
 {
-    int count = 0;
-    t_token *tmp = *tokens;
-    while (tmp && !is_pipe(&tmp))
-    {
-        if (tmp->type == TOKEN_REDIRECT_OUT || tmp->type == TOKEN_APPEND)
-            count++;
-        tmp = tmp->next;
-    }
-    return (count);
+    if (type == TOKEN_REDIRECT_IN)
+        return (REDIRECT_IN);
+    else if (type == TOKEN_REDIRECT_OUT)
+        return (REDIRECT_OUT);
+    else if (type == TOKEN_APPEND)
+        return (APPEND);
+    else if (type == TOKEN_HEREDOC)
+        return (HEREDOC);
+    return (-1);
 }
 
 t_cmd *create_cmd_lst(t_token *tokens)
 {
     t_cmd *cmd;
-    t_cmd *head;
     cmd = NULL;
-    t_token *token_prev = NULL;
-    
-    int in_redirection_count = 0;
-    int out_redirection_count = 0;
-    int red_out_pos = 0;
-    int red_in_pos = 0;
-    in_redirection_count = count_redirections_in(&tokens);
-    out_redirection_count = count_redirections_out(&tokens);
-    token_prev = tokens;
-    init_cmd_lst(&cmd);
-    head = cmd;
-    while(tokens)
+    t_cmd *temp_cmd = NULL;
+    t_token *current = tokens;
+    t_token *prev = NULL;
+    // char *temp_line= NULL;
+    int count_red = 0;
+    int i = 0;
+
+    count_red = count_redirections(tokens);
+    printf("count red: %d\n", count_red);
+    init_cmd(&cmd);
+    temp_cmd = cmd;
+    while (current)
     {
-        if (is_redirection(&tokens))
+        if (current->type == TOKEN_WORD && !is_redirection(&prev))
+            temp_cmd->line = ft_strjoin(temp_cmd->line, current->value);
+        if (is_redirection(&current))
         {
-            if (tokens->type ==  TOKEN_REDIRECT_OUT || tokens->type == TOKEN_APPEND)
-            {
-                if (!cmd->outfile && out_redirection_count > 0)
-                {
-                    cmd->outfile = malloc(sizeof(char *) * (out_redirection_count + 1));
-                    cmd->outfile[0] = NULL;
-                }
-                cmd->outfile[red_out_pos++] = ft_strdup(tokens->next->value);
-                cmd->outfile[red_out_pos] = NULL;
-                if (tokens->type == TOKEN_APPEND)
-                    cmd->append = 1;
-            }
-            else if (tokens->type ==  TOKEN_REDIRECT_IN)
-            {
-                if (!cmd->infile && in_redirection_count > 0)
-                {
-                    cmd->infile = malloc(sizeof(char *) * (in_redirection_count + 1));
-                    cmd->infile[0] = NULL;
-                }
-                cmd->infile[red_in_pos++] = ft_strdup(tokens->next->value);
-                cmd->infile[red_in_pos] = NULL;
-            }
-            token_prev = tokens;
-            tokens = tokens->next;
+            if (temp_cmd->files == NULL)
+                temp_cmd->files = malloc(sizeof(t_red) * (count_red + 1));
+            if (!temp_cmd->files)
+                return (NULL);
+            temp_cmd->files[count_red] = (t_red){NULL, -1, -1};
+            temp_cmd->files[i].filename = ft_strdup(current->next->value);
+            temp_cmd->files[i].type = get_cmd_red_type(current->type);
+            temp_cmd->files[i].fd = -1;
+            i++;
         }
-        else if (tokens->type == TOKEN_WORD && !is_redirection(&token_prev))
+        if (is_pipe(&current))
         {
-            if (!cmd->argv[0])
-                cmd->argv[0] = ft_strdup(tokens->value);
-            else if (cmd->argv[0])
-                cmd->argv[1] = ft_strjoin(cmd->argv[1], tokens->value);
+            init_cmd(&temp_cmd->next);
+            temp_cmd = temp_cmd->next;
+            count_red = count_redirections(current->next);
+            i = 0;
         }
-        else if (tokens->type == TOKEN_PIPE)
-        {
-            init_cmd_lst(&cmd->next);
-            in_redirection_count = count_redirections_in(&tokens->next);
-            out_redirection_count = count_redirections_out(&tokens->next);
-            cmd = cmd->next;
-        }
-        token_prev = tokens;
-        tokens = tokens->next;
+        prev = current;
+        current = current->next;
     }
-    cmd->next = NULL;
-    return (head);
+    
+
+    return (cmd);
 }
 
 t_cmd *create_cmd(t_token *tokens)

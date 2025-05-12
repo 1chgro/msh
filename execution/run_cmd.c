@@ -144,6 +144,8 @@ void    run_cmd(t_cmd *cmd, t_env *env)
     int     i = 0;
     int     fd;
     (void)env;
+	if (cmd->argv[0][0] == '\0')
+			printf("hell Command not found\n");
     if (!cmd->next)
     {
         pid = fork();

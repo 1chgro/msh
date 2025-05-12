@@ -60,69 +60,40 @@ t_token *lexer(char *line)
     return (tokens);
 }
 
-void print_cmd(t_cmd *cmd)
+void print_tokens(t_token *tokens)
 {
-    printf("Command:\n");
-    int i = 0;
-    if (cmd->argv)
-    {
-        printf("Arguments:\n");
-        while (i < 3)
-            printf(" %s\n", cmd->argv[i++]);
-    }
-    printf("Input file:\n");
-    if (cmd->infile)
-    {
-        i = 0;
-        while (cmd->infile[i])
-            printf(" %s\n", cmd->infile[i++]);
-    }
-    printf("Output file:\n");
-    if (cmd->outfile)
-    {
-        i = 0;
-        while (cmd->outfile[i])
-            printf(" %s\n", cmd->outfile[i++]);
-    }
-    printf("Heredoc:\n");
-    if (cmd->heredoc)
-    {
-        t_heredoc *tmp_h = cmd->heredoc;
-        while (tmp_h)
-        {
-            printf("delimiter: %s\n", tmp_h->delimiter);
-            printf("file_descriptor: %d\n", tmp_h->fd);
-            tmp_h = tmp_h->next;
-        }
-    }
-    printf("Append: %d\n", cmd->append);
-    printf("next: %p\n", cmd->next);
-    printf("---------------------\n");
+    t_token *current = tokens;
 
+    while (current)
+    {
+        print_token(current);
+        current = current->next;
+    }
 }
 
-
-void print_tokens(t_token *tokens, t_cmd *cmd, int flg)
+void   print_cmd(t_cmd *cmd)
 {
-    if (tokens == NULL)
-        return;
-    if (flg == 0)
+    t_cmd *current = cmd;
+    while (current)
     {
-        while (tokens)
+        if (current->line)
+            printf("line: %s\n", current->line);
+        if (current->argv)
         {
-            print_token(tokens);
-            tokens = tokens->next;
+            printf("argv: ");
+            for (int i = 0; current->argv[i]; i++)
+                printf("%s ", current->argv[i]);
+            printf("\n");
         }
-    }
-    else if (flg == 1)
-    {
-        while(cmd)
+        if (current->files)
         {
-            print_cmd(cmd);
-            cmd = cmd->next;
+            printf("files: ");
+            for (int i = 0; current->files[i].filename; i++)
+                printf("filename: %s\t |type: %u\t|fd: %d\n", current->files[i].filename, current->files[i].type, current->files[i].fd);
         }
+        printf("---------------------\n");
+        current = current->next;
     }
-    
 }
 
 t_cmd *msh_parse(t_env *env)
@@ -130,6 +101,7 @@ t_cmd *msh_parse(t_env *env)
     char *line;
     t_cmd *cmd;
     t_token *tokens;
+    (void)env;
 
     line = NULL;
     cmd = NULL;
@@ -140,11 +112,12 @@ t_cmd *msh_parse(t_env *env)
     if (!check_syntax_err(tokens))
         return (free_tokens(tokens), NULL);
     // here we can expand the env variables
-    expand_env(tokens, env);
+    // expand_env(tokens, env);
     // create the cmd linekd list
     cmd = create_cmd(tokens);
     // print_tokens(tokens, cmd, 0);
-    // print_cmd(cmd);
+    // print_tokens(tokens);
+    print_cmd(cmd);
     return (cmd);
 }
 
@@ -154,11 +127,11 @@ void msh_loop(char **envp)
     t_env *env = NULL;
     copie_env(&env, envp);
     // msh_signals();
-    int status = 0;
+    // int status = 0;
     while(1)
     {
         cmd = msh_parse(env);
-        status = msh_execute(cmd, env);
+        // status = msh_execute(cmd, env);
         free(cmd);
     }
 }

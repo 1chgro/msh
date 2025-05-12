@@ -11,26 +11,29 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-#define DEBUGG_CHECK write(2, "got to this point successfully\n", 32)
+#define DEBUGG_CHECK write(2, "got to this point successfully\n", 32);
 
-typedef struct s_heredoc
+typedef enum
 {
-	
-	struct s_heredoc *prev;	// next heredoc
-	char *delimiter;	// delimiter for heredoc
-	int fd;
-	struct s_heredoc *next;	// next heredoc
-} t_heredoc;
+	REDIRECT_IN,
+	REDIRECT_OUT,
+	APPEND,
+	HEREDOC
+} t_redirection_type;
+
+typedef struct s_red
+{
+	char 					*filename;
+	int 					fd;
+	t_redirection_type 		type;
+} t_red;
 
 typedef struct s_cmd
 {
-	char          **argv;       	// execve-style args
-	char          **infile;          // for <
-	char          **outfile;         // for > or >>
-	int           append;           // 1 if >>, 0 if >
-	// int           has_heredoc;   // flag for heredoc, //! make sure there is less than 17 heredocs
-	t_heredoc	*heredoc;      		// for heredoc
-	struct s_cmd  *next;            // next command in pipeline
+	char 			*line;
+	char 			**argv;
+	t_red			*files;
+	struct s_cmd  	*next;
 } t_cmd;
 
 typedef enum
@@ -74,7 +77,7 @@ void		free_tokens(t_token *tokens);
 int check_syntax_err(t_token *tokens);
 
 // expand_env functions
-t_token *expand_env(t_token *tokens, t_env *env);
+
 
 //cmd create functions
 t_cmd *create_cmd(t_token *tokens);
@@ -88,7 +91,7 @@ size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strjoin(char const *s1, char const *s2);
-char	**ft_split(char const *s, char c);
+
 
 int	is_quote(char c);
 int	is_operator(char c);

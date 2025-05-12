@@ -44,7 +44,12 @@ int check_pipe_syntax(t_token *prev, t_token *current)
 {
     if (is_pipe(&current))
     {
-        if (is_pipe(&prev))
+        if (is_redirection(&prev))
+        {
+            prnt_sy_err(sy_token_type(&current, 0));
+            return (0);
+        }
+        else if (is_pipe(&prev))
         {
             prnt_sy_err(sy_token_type(&current, 0));
             return (0);
