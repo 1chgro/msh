@@ -37,11 +37,11 @@ void add_token(t_token **head, t_token *new_token)
     t_token *tmp;
 
     if (!new_token)
-        return;
+        return ;
     if (!*head)
     {
         *head = new_token;
-        return;
+        return ;
     }
     tmp = *head;
     while (tmp->next)

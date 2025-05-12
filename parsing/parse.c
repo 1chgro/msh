@@ -83,7 +83,6 @@ void   print_cmd(t_cmd *cmd)
             printf("argv: \n");
             for (int i = 0; current->argv[i]; i++)
                 printf("\t\t%s \n", current->argv[i]);
-            // printf("\n");
         }
         if (current->files)
         {
@@ -111,11 +110,8 @@ t_cmd *msh_parse(t_env *env)
     tokens = lexer(line);
     if (!check_syntax_err(tokens))
         return (free_tokens(tokens), NULL);
-    // here we can expand the env variables
-    // expand_env(tokens, env);
     // create the cmd linekd list
     cmd = create_cmd(tokens);
-    // print_tokens(tokens, cmd, 0);
     // print_tokens(tokens);
     print_cmd(cmd);
     return (cmd);
@@ -126,12 +122,12 @@ void msh_loop(char **envp)
     t_cmd *cmd = NULL;
     t_env *env = NULL;
     copie_env(&env, envp);
-    // msh_signals();
+    msh_signals();
     // int status = 0;
     while(1)
     {
         cmd = msh_parse(env);
-        // status = msh_execute(cmd, env);
+        msh_execute(cmd, env);
         free(cmd);
     }
 }
