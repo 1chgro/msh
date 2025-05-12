@@ -80,10 +80,10 @@ void   print_cmd(t_cmd *cmd)
             printf("line: %s\n", current->line);
         if (current->argv)
         {
-            printf("argv: ");
+            printf("argv: \n");
             for (int i = 0; current->argv[i]; i++)
-                printf("%s ", current->argv[i]);
-            printf("\n");
+                printf("\t\t%s \n", current->argv[i]);
+            // printf("\n");
         }
         if (current->files)
         {

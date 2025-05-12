@@ -80,8 +80,15 @@ t_cmd *create_cmd_lst(t_token *tokens)
         prev = current;
         current = current->next;
     }
-    
-
+    temp_cmd = cmd;
+    while (temp_cmd)
+    {
+        temp_cmd->argv = ft_split(temp_cmd->line, ' ');
+        if (!temp_cmd->argv)
+            return (NULL);
+        // temp_cmd->line = NULL;
+        temp_cmd = temp_cmd->next;
+    }
     return (cmd);
 }
 
