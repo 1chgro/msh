@@ -51,7 +51,7 @@ char    **struct_to_array(t_env *env)
     while (temp)
     {
         str = ft_strjoin_(temp->key, "=");
-        arr[i] = ft_strjoin_(str, temp->value);
+        arr[i++] = ft_strjoin_(str, temp->value);
         temp = temp->next;
     }
     arr[i] = NULL;
@@ -122,7 +122,6 @@ char	*get_path(char *cmd, t_env *env)
 void	exec(char **cmd, t_env *env)
 {
 	char	*path;
-
 	path = get_path(cmd[0], env);
 	if (!path)
 	{
@@ -140,12 +139,7 @@ void	exec(char **cmd, t_env *env)
 void    run_cmd(t_cmd *cmd, t_env *env)
 {
     pid_t   pid;
-    // int     fd[2];
-    int     i = 0;
-    int     fd;
-    (void)env;
-	if (cmd->argv[0][0] == '\0')
-			printf("hell Command not found\n");
+
     if (!cmd->next)
     {
         pid = fork();
@@ -153,17 +147,6 @@ void    run_cmd(t_cmd *cmd, t_env *env)
             return ;
         if (pid == 0)
         {
-            if (cmd->infile)
-            {
-                while (cmd->infile[i])
-                {
-                    fd = open(cmd->infile[i], O_RDONLY);
-                    dup2(fd, 0);
-                    close(fd);
-                    i++;
-                }
-                printf("dd");
-            }
             exec(cmd->argv, env);
             exit(0);
         }

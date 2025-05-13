@@ -73,6 +73,8 @@ static void	run_builtin(char **s_cmd, t_env *env)
 
 int    msh_execute(t_cmd *cmd, t_env *env)
 {
+    
+    
     if (!cmd)
         return (0);
 	while (cmd)
