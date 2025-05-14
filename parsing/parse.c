@@ -127,10 +127,10 @@ void msh_loop(char **envp)
     t_cmd *cmd = NULL;
     t_env *env = NULL;
     copie_env(&env, envp);
+    msh_signals();
     // int status = 0;
     while(1)
     {
-        msh_signals();
         cmd = msh_parse(env);
         msh_execute(cmd, env);
         free(cmd);
