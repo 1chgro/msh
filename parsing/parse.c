@@ -112,6 +112,11 @@ t_cmd *msh_parse(t_env *env)
         return (free_tokens(tokens), NULL);
     // create the cmd linekd list
     cmd = create_cmd(tokens);
+    if (!cmd)
+        return (free_tokens(tokens), NULL);
+    
+    
+    // if (is_export_or_unset(cmd->line))
     // print_tokens(tokens);
     print_cmd(cmd);
     return (cmd);
@@ -122,10 +127,10 @@ void msh_loop(char **envp)
     t_cmd *cmd = NULL;
     t_env *env = NULL;
     copie_env(&env, envp);
-    msh_signals();
     // int status = 0;
     while(1)
     {
+        msh_signals();
         cmd = msh_parse(env);
         msh_execute(cmd, env);
         free(cmd);

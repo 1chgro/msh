@@ -51,7 +51,7 @@ char    **struct_to_array(t_env *env)
     while (temp)
     {
         str = ft_strjoin_(temp->key, "=");
-        arr[i] = ft_strjoin_(str, temp->value);
+        arr[i++] = ft_strjoin_(str, temp->value);
         temp = temp->next;
     }
     arr[i] = NULL;
