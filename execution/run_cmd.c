@@ -140,9 +140,6 @@ void	exec(char **cmd, t_env *env)
 void    run_cmd(t_cmd *cmd, t_env *env)
 {
     pid_t   pid;
-    // int     fd[2];
-    // int     i = 0;
-    // int     fd;
     (void)env;
 	if (cmd->argv[0][0] == '\0')
 			printf("hell Command not found\n");
@@ -153,17 +150,6 @@ void    run_cmd(t_cmd *cmd, t_env *env)
             return ;
         if (pid == 0)
         {
-            // if (cmd->infile)
-            // {
-            //     while (cmd->infile[i])
-            //     {
-            //         fd = open(cmd->infile[i], O_RDONLY);
-            //         dup2(fd, 0);
-            //         close(fd);
-            //         i++;
-            //     }
-            //     printf("dd");
-            // }
             exec(cmd->argv, env);
             exit(0);
         }

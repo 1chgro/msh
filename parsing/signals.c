@@ -16,7 +16,7 @@ void handle_signals(int sig)
 
 void msh_signals(void)
 {
-    rl_catch_signals = 0;
     signal(SIGINT, handle_signals);
     signal(SIGQUIT, SIG_IGN);
+    rl_catch_signals = 0;
 }
