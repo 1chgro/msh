@@ -122,7 +122,6 @@ char	*get_path(char *cmd, t_env *env)
 void	exec(char **cmd, t_env *env)
 {
 	char	*path;
-
 	path = get_path(cmd[0], env);
 	if (!path)
 	{
@@ -140,9 +139,7 @@ void	exec(char **cmd, t_env *env)
 void    run_cmd(t_cmd *cmd, t_env *env)
 {
     pid_t   pid;
-    (void)env;
-	if (cmd->argv[0][0] == '\0')
-			printf("hell Command not found\n");
+
     if (!cmd->next)
     {
         pid = fork();
