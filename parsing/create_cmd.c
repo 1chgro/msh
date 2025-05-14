@@ -1,6 +1,5 @@
 #include "../minishell.h"
 
-
 void init_cmd(t_cmd **cmd)
 {
     *cmd = malloc(sizeof(t_cmd));
@@ -46,18 +45,20 @@ t_cmd *create_cmd_lst(t_token *tokens)
     t_cmd *temp_cmd = NULL;
     t_token *current = tokens;
     t_token *prev = NULL;
-    // char *temp_line= NULL;
     int count_red = 0;
     int i = 0;
 
+    // knahsb awal blocj ch7al fih men redirection o kan initializi cmd first node.
     count_red = count_redirections(tokens);
-    printf("count red: %d\n", count_red);
     init_cmd(&cmd);
     temp_cmd = cmd;
     while (current)
     {
+        // hna kangad string men l cmd o l args dyalo bach n splitihom f lkhr
+        // kola block kan3awd ndirha fih
         if (current->type == TOKEN_WORD && !is_redirection(&prev))
             temp_cmd->line = ft_strjoin(temp_cmd->line, current->value);
+        // hna redirections knakhd type dyalhommo kanstory l filename li ja men bbed redirection
         if (is_redirection(&current))
         {
             if (temp_cmd->files == NULL)
@@ -70,6 +71,7 @@ t_cmd *create_cmd_lst(t_token *tokens)
             temp_cmd->files[i].fd = -1;
             i++;
         }
+        // ila kant pipe go to next cmd o initializih o 3awd l count dyal redirections l fdak l block
         if (is_pipe(&current))
         {
             init_cmd(&temp_cmd->next);
@@ -80,6 +82,7 @@ t_cmd *create_cmd_lst(t_token *tokens)
         prev = current;
         current = current->next;
     }
+    // hna kangad cmd argv men line li jm3t
     temp_cmd = cmd;
     while (temp_cmd)
     {

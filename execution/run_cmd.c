@@ -152,7 +152,7 @@ void    run_cmd(t_cmd *cmd, t_env *env)
         }
         waitpid(pid, 0, 0);
     }
-    else
+    else	
     {
 
     }

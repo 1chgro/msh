@@ -44,7 +44,6 @@ int handle_word(char *line, int *i, t_token **tokens)
     if (!word)
         return (0);
     ft_stringcpy(word, &line[start], end - start);
-    // word[end - start] = '\0';
     add_token(tokens, new_token(word, TOKEN_WORD));
     return (free(word), 1);
 }
@@ -72,7 +71,7 @@ t_token *tokenize(char *line)
         else
         {
                 if (!handle_word(line, &i, &tokens))
-                return (free_tokens(tokens), NULL);
+                    return (free_tokens(tokens), NULL);
         }
     }
     return (tokens);
