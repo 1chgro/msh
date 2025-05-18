@@ -111,12 +111,12 @@ t_cmd *create_cmd(t_token *tokens, t_env *env)
     cmd = create_cmd_lst(tokens);
     if (!cmd)
         return (NULL);
-    t_cmd *temp_cmd = cmd;
-    while (temp_cmd)
-    {
-        printf("cmd: %s\n", temp_cmd->line);
-        temp_cmd = temp_cmd->next;
-    }
+    // t_cmd *temp_cmd = cmd;
+    // while (temp_cmd)
+    // {
+    //     printf("cmd: %s\n", temp_cmd->line);
+    //     temp_cmd = temp_cmd->next;
+    // }
     expand_env_vars(cmd, env);
     fill_cmd_argv(cmd);
     return (cmd);

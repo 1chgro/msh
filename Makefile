@@ -24,6 +24,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS) minishell.h
 	@cc $(FLGS) $(READLINE_COMPILE) $(OBJS) -o $(NAME) $(READLINE_LINK)
+	@echo "Compilation done;"
 
 %.o:%.c minishell.h
 	@cc $(FLGS) $(READLINE_COMPILE) -c $< -o $@

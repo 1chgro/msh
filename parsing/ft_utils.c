@@ -107,7 +107,7 @@ char	*ft_strjoin2(char const *s1, char const *s2)
         return (free((char *)s1), NULL);
     while(++i < ft_strlen(s1))
         jnd_str[i] = s1[i];
-    i++;
+    // i++;
     while (s2[j] && i < total_len)
         jnd_str[i++] = s2[j++];
     jnd_str[i] = '\0';
