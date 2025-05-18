@@ -38,6 +38,19 @@ t_redirection_type get_cmd_red_type(t_token_type type)
     return (-1);
 }
 
+void fill_cmd_argv(t_cmd *cmd)
+{
+    t_cmd *temp_cmd = cmd;
+
+    while (temp_cmd)
+    {
+        temp_cmd->argv = ft_split(temp_cmd->line, ' ');
+        if (!temp_cmd->argv)
+            return ;
+        temp_cmd = temp_cmd->next;
+    }
+}
+
 t_cmd *create_cmd_lst(t_token *tokens)
 {
     t_cmd *cmd;
@@ -82,20 +95,13 @@ t_cmd *create_cmd_lst(t_token *tokens)
         prev = current;
         current = current->next;
     }
-    // hna kangad cmd argv men line li jm3t
-    temp_cmd = cmd;
-    while (temp_cmd)
-    {
-        temp_cmd->argv = ft_split(temp_cmd->line, ' ');
-        if (!temp_cmd->argv)
-            return (NULL);
-        // temp_cmd->line = NULL;
-        temp_cmd = temp_cmd->next;
-    }
     return (cmd);
 }
 
-t_cmd *create_cmd(t_token *tokens)
+
+
+
+t_cmd *create_cmd(t_token *tokens, t_env *env)
 {
     t_cmd *cmd;
 
@@ -103,5 +109,15 @@ t_cmd *create_cmd(t_token *tokens)
     if (!tokens)
         return (NULL);
     cmd = create_cmd_lst(tokens);
+    if (!cmd)
+        return (NULL);
+    t_cmd *temp_cmd = cmd;
+    while (temp_cmd)
+    {
+        printf("cmd: %s\n", temp_cmd->line);
+        temp_cmd = temp_cmd->next;
+    }
+    expand_env_vars(cmd, env);
+    fill_cmd_argv(cmd);
     return (cmd);
 }

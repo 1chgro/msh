@@ -65,6 +65,7 @@ void	msh_signals();
 int		valid_quotes(char *s);
 void		skip_quotes(char *s, int *i, char q);
 t_token		*lexer(char *line);
+void free_arr(char **arr);
 
 // tokenization functions
 t_token		*tokenize(char *line);
@@ -80,7 +81,7 @@ int check_syntax_err(t_token *tokens);
 
 
 //cmd create functions
-t_cmd *create_cmd(t_token *tokens);
+t_cmd *create_cmd(t_token *tokens, t_env *env);
 int copie_env(t_env **c_env, char **env);
 
 
@@ -91,6 +92,7 @@ size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin2(char const *s1, char const *s2);
 
 
 int	is_quote(char c);
@@ -98,6 +100,10 @@ int	is_operator(char c);
 int	is_space(char c);
 int	is_redirection(t_token **token);
 int	is_pipe(t_token **token);
+
+//-------------------expanding-------------------//
+void   expand_env_vars(t_cmd *cmd, t_env *env);
+
 
 //--------------------------excution-------------------//
 int    msh_execute(t_cmd *cmd, t_env *env);
@@ -118,5 +124,7 @@ void    ft_echo(char **s_cmd);
 void    ft_cd(char  **s_cmd, t_env  **env);
 void free_split(char **split);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
+char    **struct_to_array(t_env *env);
+char *my_getenv(char *name, t_env *env);
 
 #endif
