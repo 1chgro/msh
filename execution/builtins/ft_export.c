@@ -29,15 +29,13 @@ void    ft_export(char  **s_cmd, t_env **env)
     int lst_size;
     t_env   *temp = NULL;
     t_env   *node;
-    char    **split_space;
-    char    **split_equals;
+    char    *key;
+    char    *value;
     int     i;
-    // char    *str;
 
     current_index = 0;
     lst_size = 0;
     i = 0;
-    
     make_index(env);
     temp = *env;
     if (!s_cmd[1])
@@ -66,44 +64,47 @@ void    ft_export(char  **s_cmd, t_env **env)
         }
     }
     else
-    {   
-        split_space = ft_split(s_cmd[1], ' ');
-        if (!split_space)
-            return ;
-        while (split_space[i])
+    {
+        i = 1;
+        while (s_cmd[i])
         {
-            split_equals = ft_split(split_space[i], '=');
-            if (!split_equals)
+            key = get_key(s_cmd[i]);
+            if (!key)
             {
-                free_split(split_space);
-                return ;
+                return;
             }
-            // if (ft_strcmp(strrchr(split_space[0], '+'), split_space[0]) != 0)
-
+            value = get_value(s_cmd[i]);
+            if (!value)
+            {
+                free(key);
+                return;
+            }
+            temp = *env;
             while (temp)
             {
-                if (ft_strcmp(temp->key, split_equals[0]) == 0)
+                if (ft_strcmp(temp->key, key) == 0)
                 {
-                    free(temp->value);
-                    temp->value = split_equals[1];
-                    temp->flag = 1;
-                    free(split_equals[0]);
+                    free(temp->value); 
+                    temp->value = value;
+                    temp->flag = (value[0] != '\0') ? 1 : 0;
+                    free(key); 
                     break;
                 }
                 temp = temp->next;
             }
             if (!temp)
             {
-                node = create_node(split_equals);
+                node = create_node(key, value);
                 if (!node)
                 {
-                    free_split(split_space);
-                    free_split(split_equals);
-                    return ;
+                    free(key);
+                    free(value);
+                    return;
                 }
                 append_node(env, node);
             }
-        i++;
+
+            i++;
         }
     }
 }

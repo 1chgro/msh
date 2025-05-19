@@ -113,8 +113,10 @@ int     copie_env(t_env **c_env, char **env);
 char    *ft_strchr(const char *s, int c);
 char    **ft_split(char const *s, char c);
 // int ft_strcmp(const char *s1, const char *s2);
-t_env *create_node(char **split_env);
+t_env *create_node(char *key, char *value);
 void append_node(t_env **head, t_env *node);
+int  are_builtin(char    *cmd);
+void	run_builtin(char **s_cmd, t_env *env);
 void    ft_pwd();
 void    ft_env(char **s_cmd, t_env *env);
 void    ft_exit(char **s_cmd);
@@ -125,7 +127,8 @@ void    ft_echo(char **s_cmd);
 void    ft_cd(char  **s_cmd, t_env  **env);
 void free_split(char **split);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
-char    **struct_to_array(t_env *env);
-char *my_getenv(char *name, t_env *env);
+void redirection(t_cmd *cmd);
+char	*get_key(char	*str);
+char	*get_value(char	*str);
 
 #endif

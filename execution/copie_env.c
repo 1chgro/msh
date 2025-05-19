@@ -27,58 +27,101 @@ void free_split(char **split)
     free(split);
 }
 
-t_env *create_node(char **split_env)
+char *get_key(char *str)
 {
-	t_env *node;
+    char *key;
+    int i = 0;
 
-	node = malloc(sizeof(t_env));
-	if (!node)
-		return (NULL);
-	node->key = split_env[0];
-    if (!split_env[1])
-        node->value = ft_strdup("");
-	node->value = split_env[1];
-    node->flag = 0;
+    while (str[i] && str[i] != '=')
+        i++;
+    key = malloc(i + 1);
+    if (!key)
+        return (NULL);
+    for (int j = 0; j < i; j++)
+        key[j] = str[j];
+    key[i] = '\0';
+    return (key);
+}
+
+char *get_value(char *str)
+{
+    char *value;
+    int i = 0;
+    int len = 0;
+
+    while (str[i] && str[i] != '=')
+        i++;
+    if (str[i] == '=')
+        i++;
+    len = strlen(str + i);
+    value = malloc(len + 1);
+    if (!value)
+        return (NULL);
+    for (int j = 0; j < len; j++)
+        value[j] = str[i + j];
+    value[len] = '\0';
+    return (value);
+}
+
+t_env *create_node(char *key, char *value)
+{
+    t_env *node = malloc(sizeof(t_env));
+    if (!node)
+        return (NULL);
+    node->key = key;
+    if (!value || value[0] == '\0')
+        node->value = strdup(" ");
+    else
+        node->value = value;
+    node->flag = (value && value[0] != '\0') ? 1 : 0;
     node->index = -1;
-    if (node->value)
-        node->flag = 1;
-	node->next = NULL;
-	// free_split(split_env);
-	return (node);
+    node->next = NULL;
+    return (node);
 }
 
 void append_node(t_env **head, t_env *node)
 {
-	t_env *tail;
+    t_env *tail;
 
-	if (!*head)
-	{
-		*head = node;
-		return ;
-	}
-	tail = *head;
-	while (tail->next)
-		tail = tail->next;
-	tail->next = node;
+    if (!*head)
+    {
+        *head = node;
+        return;
+    }
+    tail = *head;
+    while (tail->next)
+        tail = tail->next;
+    tail->next = node;
 }
 
 int copie_env(t_env **c_env, char **env)
 {
-	t_env *node;
-	char **split_env;
-	int i;
+    t_env *node;
+    char *key;
+    char *value;
+    int i = 0;
 
-	i = 0;
-	while (env[i])
-	{
-		split_env = ft_split(env[i], '=');
-		if (!split_env)
-			return (0);
-		node = create_node(split_env);
-		if (!node)
-			return (0);
-		append_node(c_env, node);
-		i++;
-	}
-	return (1);
+    *c_env = NULL;
+    while (env[i])
+    {
+        key = get_key(env[i]);
+        if (!key)
+            return (0);
+        value = get_value(env[i]);
+        if (!value)
+        {
+            free(key);
+            return (0);
+        }
+        node = create_node(key, value);
+        if (!node)
+        {
+            free(key);
+            free(value);
+            return (0);
+        }
+        append_node(c_env, node);
+        i++;
+    }
+    return (1);
 }

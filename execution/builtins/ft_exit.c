@@ -1,4 +1,5 @@
 #include "../../minishell.h"
+
 void    ft_exit(char **s_cmd)
 {
     int exit_num;

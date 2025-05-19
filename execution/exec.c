@@ -9,15 +9,10 @@ long ft_atoi(const char *str)
     i = 0;
     result = 0;
     sign = 1;
-	if (str[i] == '\"')
-		i++;
     while (str[i] == ' ')
 		i++;
-    if (str[i] == '-')
-    {
+    if (str[i++] == '-')
         sign = -1;
-        i++;
-    }
     else if (str[i] == '+')
         i++;
     while (str[i] >= '0' && str[i] <= '9')
@@ -27,16 +22,14 @@ long ft_atoi(const char *str)
     }
     while (str[i] == ' ')
         i++;
-	if (str[i] == '\"')
-	i++;
     if (str[i] != '\0')
         return (0);
     return (result * sign);
 }
-static int  are_builtin(char    *cmd)
+int  are_builtin(char    *cmd)
 {
     if (!cmd)
-        return (0);
+        {return (0);}
 	if (ft_strcmp(cmd, "cd") == 0)
 		return (1);
 	if (ft_strcmp(cmd, "echo") == 0)
@@ -53,7 +46,7 @@ static int  are_builtin(char    *cmd)
 		return (1);
 	return (0);
 }
-static void	run_builtin(char **s_cmd, t_env *env)
+void	run_builtin(char **s_cmd, t_env *env)
 {
 	if (ft_strcmp(s_cmd[0], "cd") == 0)
 		return (ft_cd(s_cmd, &env));
@@ -73,21 +66,33 @@ static void	run_builtin(char **s_cmd, t_env *env)
 
 int    msh_execute(t_cmd *cmd, t_env *env)
 {
-    
-    
+    int size = 0;
+    t_cmd   *temp = cmd;
+
     if (!cmd)
-        return (0);
-	while (cmd)
+        {return (0);}
+    while (temp)
     {
-        if (are_builtin(cmd->argv[0]))
+        size++;
+        temp = temp->next;
+    }
+    if (are_builtin(cmd->argv[0]) && size == 1)
+    {
+        int saved_stdout = dup(STDOUT_FILENO);
+        int saved_stdin = dup(STDIN_FILENO);
+        if (cmd->files)
         {
-            run_builtin(cmd->argv, env);
+            redirection(cmd);
         }
-        else
-        {
-            run_cmd(cmd, env);
-        }
-        cmd = cmd->next;
+        run_builtin(cmd->argv, env);
+        dup2(saved_stdout, STDOUT_FILENO);
+        dup2(saved_stdin, STDIN_FILENO);
+        close(saved_stdout);
+        close(saved_stdin);
+    }
+    else
+    {
+        run_cmd(cmd, env);
     }
     return (1);
 }
