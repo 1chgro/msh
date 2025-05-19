@@ -50,6 +50,11 @@ int is_valid_char(char c)
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')|| (c == '_');
 }
 
+int	ft_isdigit(int c)
+{
+	return (c >= '0' && c <= '9');
+}
+
 // char *expand_string(char *line, t_env *env)
 // {
 //     int i = 0;
@@ -181,6 +186,8 @@ char *remove_and_expand(char *line, t_env *env)
     char tmp[2];
     char *var = NULL;
 
+    if (!line)
+        return ( NULL);
     while (line[i])
     {
         if ((line[i] == '\'' || line[i] == '"') && quote == 0)
@@ -197,22 +204,21 @@ char *remove_and_expand(char *line, t_env *env)
         if (line[i] == '$' && quote != '\'')
         {
             i++;
-            if (isdigit(line[i]))
+            if (ft_isdigit(line[i]))
             {
                 i++;
                 tmp[0] = line[i];
                 tmp[1] = '\0';
-                result = ft_strjoin2(result, tmp);
+                result = ft_strjoin_ws(result, tmp);
                 i++;
                 continue;
             }
-
             j = i;
             while (line[j] && is_valid_char(line[j]))
                 j++;
             var = ft_strndup(&line[i], j - i);
             var_value = my_getenv2(var, env);
-            result = ft_strjoin2(result, var_value ? var_value : "");
+            result = ft_strjoin_ws(result, var_value ? var_value : "");
             free(var);
             i = j;
         }
@@ -220,7 +226,7 @@ char *remove_and_expand(char *line, t_env *env)
         {
             tmp[0] = line[i];
             tmp[1] = '\0';
-            result = ft_strjoin2(result, tmp);
+            result = ft_strjoin_ws(result, tmp);
             i++;
         }
     }
@@ -232,9 +238,11 @@ void expand_env_vars(t_cmd *cmd, t_env *env)
 {
     t_cmd *current = cmd;
     char *expanded = NULL;
+    int i = 0;
     while (current)
     {
-        if (!is_export_or_unset(current->line))
+        i = 0;
+        if (current->line && !is_export_or_unset(current->line))
         {
             // expanded = expand_var(current->line, env);
             expanded = remove_and_expand(current->line, env);
