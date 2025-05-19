@@ -10,20 +10,23 @@ long ft_atoi(const char *str)
     result = 0;
     sign = 1;
     while (str[i] == ' ')
-		i++;
-    if (str[i++] == '-')
+		{i++;}
+    if (str[i] == '-')
+    {
         sign = -1;
-    else if (str[i] == '+')
         i++;
+    }
+    else if (str[i] == '+')
+        {i++;}
     while (str[i] >= '0' && str[i] <= '9')
     {
         result = result * 10 + (str[i] - '0');
         i++;
     }
     while (str[i] == ' ')
-        i++;
+       { i++;}
     if (str[i] != '\0')
-        return (0);
+        {return (0);}
     return (result * sign);
 }
 int  are_builtin(char    *cmd)
@@ -76,7 +79,19 @@ int    msh_execute(t_cmd *cmd, t_env *env)
         size++;
         temp = temp->next;
     }
-    if (are_builtin(cmd->argv[0]) && size == 1)
+    if (!cmd->argv)
+    {
+        int saved_stdout = dup(STDOUT_FILENO);
+        int saved_stdin = dup(STDIN_FILENO);
+        if (cmd->files)
+            redirection(cmd);
+        dup2(saved_stdout, STDOUT_FILENO);
+        dup2(saved_stdin, STDIN_FILENO);
+        close(saved_stdout);
+        close(saved_stdin);
+
+    }
+    else if (are_builtin(cmd->argv[0]) && size == 1)
     {
         int saved_stdout = dup(STDOUT_FILENO);
         int saved_stdin = dup(STDIN_FILENO);

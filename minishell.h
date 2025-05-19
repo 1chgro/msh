@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <sys/wait.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -130,5 +131,6 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n);
 void redirection(t_cmd *cmd);
 char	*get_key(char	*str);
 char	*get_value(char	*str);
-
+char	*ft_strjoin_(char *s1, char *s2);
+int	ft_isdigit(int c);
 #endif

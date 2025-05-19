@@ -30,36 +30,51 @@ void free_split(char **split)
 char *get_key(char *str)
 {
     char *key;
-    int i = 0;
+    int i;
+    int j;
 
-    while (str[i] && str[i] != '=')
+    i = 0;
+    while (str[i] && str[i] != '=' && str[i] != '+')
         i++;
     key = malloc(i + 1);
     if (!key)
         return (NULL);
-    for (int j = 0; j < i; j++)
+    j = 0;
+    while (j < i)
+    {
         key[j] = str[j];
-    key[i] = '\0';
+        j++;
+    }
+    key[j] = '\0';
     return (key);
 }
 
 char *get_value(char *str)
 {
     char *value;
-    int i = 0;
-    int len = 0;
+    int i;
+    int len;
+    int j;
 
+    i = 0;
     while (str[i] && str[i] != '=')
         i++;
     if (str[i] == '=')
         i++;
-    len = strlen(str + i);
+    len = 0;
+    while (str[i + len])
+        len++;
     value = malloc(len + 1);
     if (!value)
         return (NULL);
-    for (int j = 0; j < len; j++)
-        value[j] = str[i + j];
-    value[len] = '\0';
+    j = 0;
+    while (str[i])
+    {
+        value[j] = str[i];
+        i++;
+        j++;
+    }
+    value[j] = '\0';
     return (value);
 }
 
@@ -70,10 +85,10 @@ t_env *create_node(char *key, char *value)
         return (NULL);
     node->key = key;
     if (!value || value[0] == '\0')
-        node->value = strdup(" ");
+        node->value = strdup("");
     else
         node->value = value;
-    node->flag = (value && value[0] != '\0') ? 1 : 0;
+    node->flag = (value) ? 1 : 0;
     node->index = -1;
     node->next = NULL;
     return (node);

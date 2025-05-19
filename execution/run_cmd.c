@@ -122,6 +122,8 @@ char	*get_path(char *cmd, t_env *env)
 void	exec(char **cmd, t_env *env)
 {
 	char	*path;
+    if (!cmd)
+        {return ;}
 	path = get_path(cmd[0], env);
 	if (!path)
 	{
