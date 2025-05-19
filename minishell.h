@@ -94,6 +94,7 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strjoin_ws(char const *s1, char const *s2);
 void	ft_putstr_fd(char *s, int fd);
+char *ft_strndup(const char *s, int n);
 
 int	is_quote(char c);
 int	is_operator(char c);

@@ -38,13 +38,95 @@ t_redirection_type get_cmd_red_type(t_token_type type)
 	return (-1);
 }
 
+
+
+static int count_args(const char *str) {
+	int count = 0, i = 0;
+	int in_quotes = 0;
+	char quote_char = '\0';
+
+	while (str[i]) {
+		if (str[i] == ' ') {
+			i++;
+			continue;
+		}
+		count++;
+		while (str[i]) {
+			if (is_quote(str[i])) {
+				if (!in_quotes)
+				{
+					quote_char = str[i];
+					in_quotes = 1;
+				}
+				else if (str[i] == quote_char)
+					in_quotes = 0;
+			} else if (str[i] == ' ' && !in_quotes) {
+				break;
+			}
+			i++;
+		}
+	}
+	return count;
+}
+
+static char *extract_arg(const char *str, int *i) {
+	int start = *i;
+	int in_quotes = 0;
+	char quote_char = '\0';
+
+	while (str[*i]) {
+		if (is_quote(str[*i])) {
+			if (!in_quotes)
+			{
+				quote_char = str[*i];
+				in_quotes = 1;
+			}
+			else if (str[*i] == quote_char)
+				in_quotes = 0;
+		} 
+		else if (str[*i] == ' ' && !in_quotes) 
+			break;
+		(*i)++;
+	}
+	return (ft_strndup(str + start, *i - start));
+}
+
+char **split_line_to_args(char *line) {
+	int i = 0;
+	int arg_count = count_args(line);
+	char **args = malloc(sizeof(char *) * (arg_count + 1));
+	if (!args)
+		return NULL;
+	int j = 0;
+	while ( j < arg_count) 
+	{
+		while (line[i] == ' ')
+			i++;
+		args[j] = extract_arg(line, &i);
+		if (!args[j])
+		{
+			while (--j >= 0)
+				free(args[j]);
+			free(args);
+			return NULL;
+		}
+		if (line[i] == ' ')
+			i++;
+		j++;
+	}
+	args[arg_count] = NULL;
+	return args;
+}
+
+
 void fill_cmd_argv(t_cmd *cmd)
 {
 	t_cmd *temp_cmd = cmd;
 
 	while (temp_cmd)
 	{
-		temp_cmd->argv = ft_split(temp_cmd->line, ' ');
+		// temp_cmd->argv = ft_split(temp_cmd->line, ' ');
+		temp_cmd->argv = split_line_to_args(temp_cmd->line);
 		if (!temp_cmd->argv)
 			return ;
 		temp_cmd = temp_cmd->next;
