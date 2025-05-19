@@ -41,11 +41,13 @@ t_redirection_type get_cmd_red_type(t_token_type type)
 
 
 static int count_args(const char *str) {
-	int count = 0, i = 0;
+	int count = 0;
+	int i = 0;
 	int in_quotes = 0;
 	char quote_char = '\0';
 
-	while (str[i]) {
+	while (str[i])
+	{
 		if (str[i] == ' ') {
 			i++;
 			continue;
@@ -93,6 +95,9 @@ static char *extract_arg(const char *str, int *i) {
 
 char **split_line_to_args(char *line) {
 	int i = 0;
+
+	if (!line)
+		return (NULL);
 	int arg_count = count_args(line);
 	char **args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!args)
