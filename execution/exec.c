@@ -71,12 +71,32 @@ int    msh_execute(t_cmd *cmd, t_env *env)
 {
     int size = 0;
     t_cmd   *temp = cmd;
+    int i;
 
     if (!cmd)
         {return (0);}
     while (temp)
     {
         size++;
+        temp = temp->next;
+    }
+    temp = cmd;
+    while (temp)
+    {
+        if (temp->files)
+        {
+            i = 0;
+            while (temp->files[i].filename)
+            {
+                if (temp->files[i].type == HEREDOC)
+                {
+                    here_doc(temp->files[i].filename, &temp->files[i].fd);
+                    if (temp->files[i].fd < 0)
+                        return (0);
+                }
+                i++;
+            }
+        }
         temp = temp->next;
     }
     if (!cmd->argv)
@@ -108,6 +128,21 @@ int    msh_execute(t_cmd *cmd, t_env *env)
     else
     {
         run_cmd(cmd, env);
+    }
+    temp = cmd;
+    while (temp)
+    {
+        if (temp->files)
+        {
+            int i = 0;
+            while (temp->files[i].filename)
+            {
+                if (temp->files[i].type == HEREDOC && temp->files[i].fd >= 0)
+                    close(temp->files[i].fd);
+                i++;
+            }
+        }
+        temp = temp->next;
     }
     return (1);
 }
