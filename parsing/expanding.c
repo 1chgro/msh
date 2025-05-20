@@ -252,6 +252,11 @@ void expand_env_vars(t_cmd *cmd, t_env *env)
             current->line = expanded;
             // printf("current: %s\n", current->line);
         }
+        while (current->files && current->files[i].filename)
+        {
+            current->files[i].filename = remove_and_expand(current->files[i].filename, env);
+            i++;
+        }
         current = current->next;
     }
 }
