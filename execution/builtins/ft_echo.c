@@ -19,23 +19,19 @@ int check_newline(char  *str)
     return (0);
 }
 
-void    ft_handle_echo_arg(char *args)
+void    ft_handle_echo_arg(char **args)
 {
-    char    **splited;
     int     i;
     int     new_line;
 
-    i = 0;
-    splited = ft_split(args, ' ');
-    if (!splited)
-        return ;
-    new_line = check_newline(splited[0]);
+    i = 1;
+    new_line = check_newline(args[1]);
     if (new_line)
     {
-        while (splited[i])
+        while (args[i])
         {
-            printf("%s", splited[i]);
-            if (splited[i + 1])
+            printf("%s", args[i]);
+            if (args[i + 1])
                 printf(" ");
             i++;
         }
@@ -43,16 +39,15 @@ void    ft_handle_echo_arg(char *args)
     }
     else
     {
-        i = 1;
-        while (splited[i])
+        i = 2;
+        while (args[i])
         {
-            printf("%s", splited[i]);
-            if (splited[i + 1])
+            printf("%s", args[i]);
+            if (args[i + 1])
                 printf(" ");
             i++;
         }
     }
-    free_split(splited);
 }
 
 void    ft_echo(char    **s_cmd)
@@ -63,6 +58,6 @@ void    ft_echo(char    **s_cmd)
     }
     else
     {
-        ft_handle_echo_arg(s_cmd[1]);
+        ft_handle_echo_arg(s_cmd);
     }
 }

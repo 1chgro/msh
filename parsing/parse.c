@@ -100,7 +100,7 @@ t_cmd *msh_parse(t_env *env)
     char *line;
     t_cmd *cmd;
     t_token *tokens;
-    (void)env;
+    // (void)env;
 
     line = NULL;
     cmd = NULL;
@@ -111,7 +111,7 @@ t_cmd *msh_parse(t_env *env)
     if (!check_syntax_err(tokens))
         return (free_tokens(tokens), NULL);
     // create the cmd linekd list
-    cmd = create_cmd(tokens);
+    cmd = create_cmd(tokens, env);
     if (!cmd)
         return (free_tokens(tokens), NULL);
     
@@ -121,6 +121,46 @@ t_cmd *msh_parse(t_env *env)
     print_cmd(cmd);
     return (cmd);
 }
+void free_arr(char **arr)
+{
+    int i = 0;
+    if (!arr)
+        return ;
+    while (arr[i])
+    {
+        free(arr[i]);
+        i++;
+    }
+    free(arr);
+}
+
+void free_cmd_files(t_red *files)
+{
+    int i = 0;
+    if (!files)
+        return ;
+    while (files[i].filename)
+    {
+        free(files[i].filename);
+        i++;
+    }
+    free(files);
+}
+
+void free_cmd(t_cmd *cmd)
+{
+    t_cmd *temp;
+    while (cmd)
+    {
+        free(cmd->line);
+        free_arr(cmd->argv);
+        free_cmd_files(cmd->files);
+        temp = cmd;
+        cmd = cmd->next;
+        free(temp);
+    }
+}
+
 
 void msh_loop(char **envp)
 {
@@ -133,6 +173,6 @@ void msh_loop(char **envp)
     {
         cmd = msh_parse(env);
         msh_execute(cmd, env);
-        free(cmd);
+        free_cmd(cmd);
     }
 }

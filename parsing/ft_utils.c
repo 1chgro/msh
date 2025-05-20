@@ -1,13 +1,13 @@
 #include "../minishell.h"
 
-size_t ft_strlen(const char *str)
+size_t	ft_strlen(const char *str)
 {
-    size_t len;
+	size_t	len;
 
-    len = 0;
-    while (str[len])
-        len++;
-    return (len);
+	len = 0;
+	while (str[len])
+		len++;
+	return (len);
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -26,20 +26,20 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char *ft_stringcpy(char *dst, const char *src, size_t n)
+char	*ft_stringcpy(char *dst, const char *src, size_t n)
 {
-    size_t i;
+	size_t	i;
 
-    if (!dst || !src)
-        return (NULL);
-    i = 0;
-    while (i < n && src[i])
-    {
-        dst[i] = src[i];
-        i++;
-    }
-    dst[i] = '\0';
-    return (dst);
+	if (!dst || !src)
+		return (NULL);
+	i = 0;
+	while (i < n && src[i])
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (dst);
 }
 
 char	*ft_strtrim(char const *s1, char const *set)
@@ -65,28 +65,28 @@ char	*ft_strtrim(char const *s1, char const *set)
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-    size_t  total_len;
-    char	*jnd_str;
-    size_t  i;
-    size_t  j;
+	char		*jnd_str;
+	size_t		total_len;
+	size_t		i;
+	size_t		j;
 
-    if (!s1)
-        return (ft_strdup((char *)s2));
-    if (!s2)
-        return (ft_strdup((char *)s1));
-    (1) && (i = -1, j = 0);
-    total_len = ft_strlen(s1) + ft_strlen(s2);
-    jnd_str = malloc(sizeof(char) * (total_len + 2));
-    if (!jnd_str)
-        return (free((char *)s1), NULL);
-    while(++i < ft_strlen(s1))
-        jnd_str[i] = s1[i];
-    jnd_str[i] = ' ';
-    i++;
-    while (s2[j] && i <= total_len)
-        jnd_str[i++] = s2[j++];
-    jnd_str[i] = '\0';
-    if (s1)
-        free((char *)s1);
+	if (!s1)
+		return (ft_strdup((char *)s2));
+	if (!s2)
+		return (ft_strdup((char *)s1));
+	(1) && (i = -1, j = 0);
+	total_len = ft_strlen(s1) + ft_strlen(s2);
+	jnd_str = malloc(sizeof(char) * (total_len + 2));
+	if (!jnd_str)
+		return (free((char *)s1), NULL);
+	while (++i < ft_strlen(s1))
+		jnd_str[i] = s1[i];
+	jnd_str[i] = ' ';
+	i++;
+	while (s2[j] && i <= total_len)
+		jnd_str[i++] = s2[j++];
+	jnd_str[i] = '\0';
+	free((char *)s1);
 	return (jnd_str);
 }
+

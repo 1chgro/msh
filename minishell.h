@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <sys/wait.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -65,6 +66,7 @@ void	msh_signals();
 int		valid_quotes(char *s);
 void		skip_quotes(char *s, int *i, char q);
 t_token		*lexer(char *line);
+void free_arr(char **arr);
 
 // tokenization functions
 t_token		*tokenize(char *line);
@@ -80,7 +82,7 @@ int check_syntax_err(t_token *tokens);
 
 
 //cmd create functions
-t_cmd *create_cmd(t_token *tokens);
+t_cmd *create_cmd(t_token *tokens, t_env *env);
 int copie_env(t_env **c_env, char **env);
 
 
@@ -91,13 +93,19 @@ size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strjoin(char const *s1, char const *s2);
-
+char	*ft_strjoin_ws(char const *s1, char const *s2);
+void	ft_putstr_fd(char *s, int fd);
+char *ft_strndup(const char *s, int n);
 
 int	is_quote(char c);
 int	is_operator(char c);
 int	is_space(char c);
 int	is_redirection(t_token **token);
 int	is_pipe(t_token **token);
+
+//-------------------expanding-------------------//
+void   expand_env_vars(t_cmd *cmd, t_env *env);
+
 
 //--------------------------excution-------------------//
 int    msh_execute(t_cmd *cmd, t_env *env);
@@ -106,8 +114,10 @@ int     copie_env(t_env **c_env, char **env);
 char    *ft_strchr(const char *s, int c);
 char    **ft_split(char const *s, char c);
 // int ft_strcmp(const char *s1, const char *s2);
-t_env *create_node(char **split_env);
+t_env *create_node(char *key, char *value);
 void append_node(t_env **head, t_env *node);
+int  are_builtin(char    *cmd);
+void	run_builtin(char **s_cmd, t_env *env);
 void    ft_pwd();
 void    ft_env(char **s_cmd, t_env *env);
 void    ft_exit(char **s_cmd);
@@ -118,5 +128,9 @@ void    ft_echo(char **s_cmd);
 void    ft_cd(char  **s_cmd, t_env  **env);
 void free_split(char **split);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
-
+void redirection(t_cmd *cmd);
+char	*get_key(char	*str);
+char	*get_value(char	*str);
+char	*ft_strjoin_(char *s1, char *s2);
+int	ft_isdigit(int c);
 #endif
