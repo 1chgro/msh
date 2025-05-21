@@ -122,7 +122,61 @@ char **split_line_to_args(char *line) {
 	args[arg_count] = NULL;
 	return args;
 }
+#define MAX_LEN 1024
 
+char *remove_outer_quotes(char *s) {
+    int i = 0, j = 0;
+    char quote = 0;
+    char output[ft_strlen(s) + 1];
+
+
+    while (s[i]) {
+        if (!quote && (s[i] == '"' || s[i] == '\'')) {
+            quote = s[i];  // opening quote
+            i++;
+            continue;
+        }
+        if (quote && s[i] == quote) {
+            quote = 0;  // closing quote
+            i++;
+            continue;
+        }
+        output[j++] = s[i++];
+    }
+    output[j] = '\0'; 
+    return (ft_strdup(output));
+}
+
+
+
+char **remove_quotes(char **argv)
+{
+	int i = 0;
+	int j = 0;
+	char **new_argv = NULL;
+	int len = 0;
+	while (argv[len])
+		len++;
+
+	new_argv = malloc(sizeof(char *) * (len + 1));
+	if (!new_argv)
+		return (NULL);
+	while (argv[i])
+	{
+		new_argv[i] = remove_outer_quotes(argv[i]);
+		free(argv[i]);
+		if (!new_argv)
+		{
+			while (--j >= 0)
+				free(new_argv[j]);
+			free(new_argv);
+			return (NULL);
+		}
+		i++;
+	}
+	new_argv[i] = NULL;
+	return (new_argv);
+}
 
 void fill_cmd_argv(t_cmd *cmd)
 {
@@ -130,10 +184,11 @@ void fill_cmd_argv(t_cmd *cmd)
 
 	while (temp_cmd)
 	{
-		// temp_cmd->argv = ft_split(temp_cmd->line, ' ');
 		temp_cmd->argv = split_line_to_args(temp_cmd->line);
+		temp_cmd->argv = remove_quotes(temp_cmd->argv);
 		if (!temp_cmd->argv)
 			return ;
+		
 		temp_cmd = temp_cmd->next;
 	}
 }

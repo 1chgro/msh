@@ -176,7 +176,7 @@ int	ft_isdigit(int c)
 //     return (result);
 // }
 
-char *remove_and_expand(char *line, t_env *env)
+char *expand(char *line, t_env *env)
 {
     char *result = malloc(1);
     char *var_value = NULL;
@@ -184,6 +184,7 @@ char *remove_and_expand(char *line, t_env *env)
     char quote = 0;
     result[0] = '\0';
     char tmp[2];
+    int pos = 0;
     char *var = NULL;
 
     if (!line)
@@ -192,16 +193,15 @@ char *remove_and_expand(char *line, t_env *env)
     {
         if ((line[i] == '\'' || line[i] == '"') && quote == 0)
         {
-            quote = line[i++];
+            pos = i;
+            quote = line[i];
             continue;
         }
-        if (line[i] == quote)
-        {
+        
+        if (line[i] == quote && i != pos)
             quote = 0;
-            i++;
-            continue;
-        }
-        if (line[i] == '$' && quote != '\'')
+
+        if (line[i] == '$' && is_valid_char(line[i + 1]) && quote != '\'')
         {
             i++;
             if (ft_isdigit(line[i]))
@@ -245,18 +245,18 @@ void expand_env_vars(t_cmd *cmd, t_env *env)
         if (current->line && !is_export_or_unset(current->line))
         {
             // expanded = expand_var(current->line, env);
-            expanded = remove_and_expand(current->line, env);
+            expanded = expand(current->line, env);
 
             // printf("expanded: %s\n", expanded);
             // free(current->line);    \\ seg fault when freeing
             current->line = expanded;
             // printf("current: %s\n", current->line);
         }
-        while (current->files && current->files[i].filename)
-        {
-            current->files[i].filename = remove_and_expand(current->files[i].filename, env);
-            i++;
-        }
+        // while (current->files && current->files[i].filename)
+        // {
+        //     current->files[i].filename = remove_and_expand(current->files[i].filename, env);
+        //     i++;
+        // }
         current = current->next;
     }
 }
