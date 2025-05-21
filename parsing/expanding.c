@@ -238,10 +238,10 @@ void expand_env_vars(t_cmd *cmd, t_env *env)
 {
     t_cmd *current = cmd;
     char *expanded = NULL;
-    int i = 0;
+    // int i = 0;
     while (current)
     {
-        i = 0;
+        // i = 0;
         if (current->line && !is_export_or_unset(current->line))
         {
             // expanded = expand_var(current->line, env);

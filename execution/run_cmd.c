@@ -142,7 +142,17 @@ void redirection(t_cmd *cmd)
     int i = 0;
     while (cmd->files[i].filename)
     {
-        if (cmd->files[i].type == REDIRECT_IN)
+		if (cmd->files[i].type == HEREDOC)
+		{
+			if (cmd->files[i].fd < 0 || dup2(cmd->files[i].fd, STDIN_FILENO) < 0)
+            {
+                perror("dup2 or heredoc failed");
+                if (cmd->files[i].fd >= 0)
+                    close(cmd->files[i].fd);
+                exit(1);
+            }
+		}
+        else if (cmd->files[i].type == REDIRECT_IN)
         {
             cmd->files[i].fd = open(cmd->files[i].filename, O_RDONLY);
             if (cmd->files[i].fd < 0)
