@@ -122,9 +122,9 @@ char **split_line_to_args(char *line) {
 	args[arg_count] = NULL;
 	return args;
 }
-#define MAX_LEN 1024
 
-char *remove_outer_quotes(char *s) {
+char *remove_outer_quotes(char *s)
+{
     int i = 0, j = 0;
     char quote = 0;
     char output[ft_strlen(s) + 1];
@@ -147,9 +147,7 @@ char *remove_outer_quotes(char *s) {
     return (ft_strdup(output));
 }
 
-
-
-char **remove_quotes(char **argv)
+char **remove_quotes_arr(char **argv)
 {
 	int i = 0;
 	int j = 0;
@@ -185,7 +183,7 @@ void fill_cmd_argv(t_cmd *cmd)
 	while (temp_cmd)
 	{
 		temp_cmd->argv = split_line_to_args(temp_cmd->line);
-		temp_cmd->argv = remove_quotes(temp_cmd->argv);
+		temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
 		if (!temp_cmd->argv)
 			return ;
 		
