@@ -141,4 +141,6 @@ int	ft_isdigit(int c);
 void	here_doc(char *limiter, int *fd);
 char	*ft_substr(char *s, unsigned int index, size_t bytes);
 char	*get_next_line(int fd);
+char	*ft_itoa(int n);
+void update_node_value(t_env *node, char *value, int append);
 #endif

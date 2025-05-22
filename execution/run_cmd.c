@@ -26,27 +26,20 @@ char	*ft_strjoin_(char *s1, char *s2)
 	// free(s1);
 	return (str);
 }
-char    *get_shlvl(t_env *env)
+t_env    *get_shlvl(t_env *env)
 {
     t_env   *temp;
 
     temp = env;
     while (temp)
     {
-        if (ft_strcmp(temp->key, "SHLLVL") == 0)
-            return (temp->value);
+        if (ft_strcmp(temp->key, "SHLVL") == 0)
+            return (temp);
         temp =temp->next;
     }
     return (NULL);
 }
-// void    handle_shell_level(t_env *env)
-// {
-//     int shell_level;
-//     // char    *shlvl;
-    
-//     shell_level = ft_atoi(get_shlvl(env));
-//     printf("%d\n", shell_level);
-// }
+
 char    **struct_to_array(t_env *env)
 {
     int i;
@@ -138,6 +131,25 @@ char	*get_path(char *cmd, t_env *env)
 	return (NULL);
 }
 
+void    handle_shell_level(t_env *env)
+{
+    int shell_level;
+    int new_shlvl;
+    t_env *shlvl_node = get_shlvl(env);
+
+    shell_level = ft_atoi(shlvl_node->value);
+    // if (!is_valid_numeric(shlvl_node->value))
+    // {
+    //     shell_level = 1;
+    // }
+    if (shell_level >= 999) {
+        new_shlvl = 1;
+    } else {
+        new_shlvl = shell_level + 1;
+    }
+    update_node_value(shlvl_node, ft_itoa(new_shlvl), 0);
+}
+
 void	exec(char **cmd, t_env *env)
 {
 	char	*path;
@@ -150,10 +162,10 @@ void	exec(char **cmd, t_env *env)
 		perror(cmd[0]);
 		exit(127);
 	}
-    // if (ft_strcmp(path, "./minishel"))
-    // {
-    //     handle_shell_level(env);
-    // }
+    if (ft_strcmp(path, "./minishell") == 0)
+    {
+        handle_shell_level(env);
+    }
 	if (execve(path, cmd, struct_to_array(env)) == -1)
 	{
 		free(path);
