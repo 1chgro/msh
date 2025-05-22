@@ -88,7 +88,7 @@ t_env *create_node(char *key, char *value)
         node->value = ft_strdup("");
     else
         node->value = value;
-    node->flag = (value) ? 1 : 0;
+    node->flag = (value && value[0] != '\0') ? 1 : 0;
     node->index = -1;
     node->next = NULL;
     return (node);
