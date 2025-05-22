@@ -110,8 +110,8 @@ int	is_pipe(t_token **token);
 
 //-------------------expanding-------------------//
 void   expand_env_vars(t_cmd *cmd, t_env *env);
+char	*expand(char *line, t_env *env);
 char *remove_outer_quotes(char *s);
-
 
 //--------------------------excution-------------------//
 int    msh_execute(t_cmd *cmd, t_env *env);
