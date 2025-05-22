@@ -27,6 +27,26 @@ void free_split(char **split)
     free(split);
 }
 
+char    *check_dolar(char *str)
+{
+    int i;
+    char *key;
+
+    i = 0;
+
+    if (ft_strchr(str, '$'))
+    {
+        key = ft_strdup("");
+        while (str[i] && str[i] != '$')
+        {
+            key[i] = str[i];
+            i++;
+        }
+        free(str);
+        return (key);
+    }
+    return(str);
+}
 char *get_key(char *str)
 {
     char *key;
@@ -46,7 +66,8 @@ char *get_key(char *str)
         j++;
     }
     key[j] = '\0';
-    return (key);
+
+    return (check_dolar(key));
 }
 
 char *get_value(char *str)

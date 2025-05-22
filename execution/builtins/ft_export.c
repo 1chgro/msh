@@ -187,7 +187,7 @@ static int is_valid_identifier(char *key)
     i = 0;
     while (key[i])
     {
-        if (!ft_isalnum(key[i]) && key[i] != '_')
+        if (!ft_isalnum(key[i]) && key[i] != '_' && key[i] != '$')
             return (0);
         i++;
     }
