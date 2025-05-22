@@ -68,7 +68,7 @@ char *expand(char *line, t_env *env)
     char *var = NULL;
 
     if (!line)
-        return ( NULL);
+        {return ( NULL);}
     while (line[i])
     {
         if ((line[i] == '\'' || line[i] == '"') && quote == 0)
@@ -80,9 +80,6 @@ char *expand(char *line, t_env *env)
         
         if (line[i] == quote && i != pos)
             quote = 0;
-        
-        if (line[i] == '$' && line[i + 1] == '$')
-            result = 
         if (line[i] == '$' && is_valid_char(line[i + 1]) && quote != '\'')
         {
             i++;
