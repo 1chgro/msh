@@ -207,6 +207,8 @@ static void print_export(t_env *env, int lst_size)
         {
             if (temp->index == current_index)
             {
+                if((!ft_strcmp(temp->key, "PATH") && temp->flag == 2) || !ft_strcmp(temp->key, "_"))
+                    break;
                 ft_putstr_fd("declare -x ", 1);
                 ft_putstr_fd(temp->key, 1);
                 if (temp->flag)
