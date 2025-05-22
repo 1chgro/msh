@@ -26,6 +26,27 @@ char	*ft_strjoin_(char *s1, char *s2)
 	// free(s1);
 	return (str);
 }
+char    *get_shlvl(t_env *env)
+{
+    t_env   *temp;
+
+    temp = env;
+    while (temp)
+    {
+        if (ft_strcmp(temp->key, "SHLLVL") == 0)
+            return (temp->value);
+        temp =temp->next;
+    }
+    return (NULL);
+}
+// void    handle_shell_level(t_env *env)
+// {
+//     int shell_level;
+//     // char    *shlvl;
+    
+//     shell_level = ft_atoi(get_shlvl(env));
+//     printf("%d\n", shell_level);
+// }
 t_env    *get_shlvl(t_env *env)
 {
     t_env   *temp;
