@@ -9,10 +9,15 @@
 #include <string.h>
 #include <ctype.h>
 #include <sys/wait.h>
+#include <limits.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
 #define DEBUGG_CHECK write(2, "got to this point successfully\n", 32);
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 
 typedef enum
 {
@@ -105,7 +110,8 @@ int	is_pipe(t_token **token);
 
 //-------------------expanding-------------------//
 void   expand_env_vars(t_cmd *cmd, t_env *env);
-
+char	*expand(char *line, t_env *env);
+char *remove_outer_quotes(char *s);
 
 //--------------------------excution-------------------//
 int    msh_execute(t_cmd *cmd, t_env *env);
@@ -133,4 +139,9 @@ char	*get_key(char	*str);
 char	*get_value(char	*str);
 char	*ft_strjoin_(char *s1, char *s2);
 int	ft_isdigit(int c);
+void	here_doc(char *limiter, int *fd);
+char	*ft_substr(char *s, unsigned int index, size_t bytes);
+char	*get_next_line(int fd);
+char	*ft_itoa(int n);
+void update_node_value(t_env *node, char *value, int append);
 #endif

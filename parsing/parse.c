@@ -117,7 +117,7 @@ t_cmd *msh_parse(t_env *env)
     
     
     // if (is_export_or_unset(cmd->line))
-    // print_tokens(tokens);
+    print_tokens(tokens);
     print_cmd(cmd);
     return (cmd);
 }

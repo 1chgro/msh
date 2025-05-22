@@ -1,6 +1,6 @@
 NAME=minishell
 
-FLGS=-Werror -Wextra -Wall -g -fsanitize=address
+FLGS=-Werror -Wextra -Wall #-g -fsanitize=address
 
 
 SRCS_PARSE= main.c\
@@ -10,7 +10,8 @@ SRCS_PARSE= main.c\
 
 
 SRCS_EXEC=execution/ft_strcmp.c execution/exec.c execution/run_cmd.c  execution/builtins/ft_unset.c execution/builtins/ft_pwd.c\
-		execution/builtins/ft_export.c execution/builtins/ft_exit.c execution/builtins/ft_env.c execution/builtins/ft_echo.c execution/builtins/ft_cd.c
+		execution/builtins/ft_export.c execution/builtins/ft_exit.c execution/builtins/ft_env.c execution/builtins/ft_echo.c execution/builtins/ft_cd.c \
+		execution/here_doc.c execution/get_next_line.c execution/next_line_utils.c execution/run_cmd_utils.c 
 
 OBJS=$(SRCS_PARSE:.c=.o) $(SRCS_EXEC:.c=.o)
 

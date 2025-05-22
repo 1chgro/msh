@@ -54,34 +54,98 @@ char *get_current_pwd(void)
     return pwd;
 }
 
+static char *ft_cd_resolve_parent(char *old_pwd)
+{
+    char *resolved_path;
+    char *last_slash;
+
+    resolved_path = ft_strdup(old_pwd);
+    if (!resolved_path)
+        return (NULL);
+    last_slash = strrchr(resolved_path, '/');
+    if (last_slash && last_slash != resolved_path)
+        *last_slash = '\0';
+    else
+    {
+        free(resolved_path);
+        resolved_path = ft_strdup("/");
+        if (!resolved_path)
+            return (NULL);
+    }
+    return (resolved_path);
+}
+
 void    ft_cd(char  **s_cmd, t_env  **env)
 {
     char    *new_pwd;
     char    *path;
     char    *old_pwd;
-    char    **splited;
+    char    *temp;
 
-    if (!s_cmd[1] || s_cmd[1][0] == '~')
+    if (!s_cmd[1])
     {
         path = get_home(*env);
         printf("%s\n", path);
         if (!path)
         {
-            perror("msh: cd: HOME not set\n");
+            perror("msh: cd:");
+            return ;
+        }
+    }
+    else if (s_cmd[1][0] == '~' && ft_strlen(s_cmd[1]) == 1)
+    {
+        path = get_home(*env);
+        printf("%s\n", path);
+        if (!path)
+        {
+            perror("msh: cd:");
+            return ;
+        }
+    }
+    else if (s_cmd[1][0] == '~' && ft_strlen(s_cmd[1]) > 1)
+    {
+        path = ft_strjoin_(get_home(*env), s_cmd[1] + 1);
+
+        printf("%s\n", path);
+        if (!path)
+        {
+            perror("msh: cd:");
             return ;
         }
     }
     else
     {
-        splited = ft_split(s_cmd[1], ' ');
-        path = splited[0];
+        if (!s_cmd[2])
+            path = s_cmd[1];
+        else
+        {
+            ft_putstr_fd("msh: cd: too many arguments\n", 2);
+            return ;
+        }
     }
     old_pwd = get_current_pwd();
     if (!old_pwd)
         return ;
+    if (ft_strcmp(path, "..") == 0)
+    {
+        temp = ft_cd_resolve_parent(get_current_pwd());
+        if (temp && access(temp, F_OK) == 0)
+        {
+            if (path != s_cmd[1])
+                free(path);
+            path = temp;
+        }
+        else
+        {
+            free(temp);
+            perror("msh: cd: parent directory does not exist");
+            free(old_pwd);
+            return;
+        }
+    }
     if(chdir(path) == -1)
     {
-        printf("msh: cd: %s: No such file or directory\n", path);
+        perror("msh: cd");
         free(old_pwd);
         return ;
     }

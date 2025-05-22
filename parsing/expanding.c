@@ -55,128 +55,8 @@ int	ft_isdigit(int c)
 	return (c >= '0' && c <= '9');
 }
 
-// char *expand_string(char *line, t_env *env)
-// {
-//     int i = 0;
-//     char quote = 0;
-//     char *result = malloc(1);
-//     char *varname, *value, *tmp;
 
-//     if (!line || !result)
-//         return (NULL);
-
-//     result[0] = '\0';
-
-//     while (line[i])
-//     {
-        
-//     }
-
-//     return result;
-// }
-
-
-// char *expand_one_var(char *line, t_env *env)
-// {
-//     char *varname = NULL;
-//     char *value = NULL;
-//     char *result = NULL;
-//     int i = 0;
-//     int expandable = 1;
-//     char q = 0;
-//     int start = 0;
-//     int end = 0;
-//     char *prefix = NULL;
-
-//     if (!line)
-//         return (line);
-//     if (line[0] && is_quote(line[0]))
-//     {
-//         q = line[0];
-//         if (q == '\'')
-//             expandable = 0;
-//         else
-//             expandable = 1;
-//         i++;
-//     }
-//     start = i;
-//     while (line[i] && line[i] != '$' && line[i] != q)
-//         i++;
-//     end  = i;
-//     prefix = ft_strndup(&line[start], end - start);
-//     if (line[i] && line[i] == '$' && expandable) 
-//     {
-//         i++;
-//         if (line[i] >= '0' && line[i] <= '9')
-//         {
-//             i++;
-//             result = expand_one_var(&line[i], env);
-//             return (result);
-//         }
-//         start = i;
-//         end = start;
-//         while (line[end] && is_valid_char(line[end]) && !is_quote(line[end]) && !is_space(line[end]))
-//             end++;
-//         varname = ft_strndup(&line[start], end - start);
-//         if (!varname)
-//             return (NULL);
-//         value = my_getenv2(varname, env);
-//         result = ft_strdup(prefix);
-//         result = ft_strjoin2(result, value);
-//         result = ft_strjoin2(result, strdup(expand_one_var(&line[end], env)));
-//         free(varname);
-//         return (result);
-//     }
-//     else
-//     {
-//         result = ft_strndup(prefix, end - start);
-//         free(prefix);
-//         if (line[i] && line[i] == q)
-//             i++;
-//         if (line[i])
-//             result = ft_strjoin2(result, expand_one_var(&line[i], env));
-//         return (result);
-//     }
-//     return (line);
-// }
-
-// char *expand_var(char *line, t_env *env)
-// {
-//     char *result = NULL;
-//     // printf("line: %s\n", line);
-//     if (!line)
-//         return (NULL);
-    
-//     if (!strchr(line, ' '))
-//     {
-//         result = expand_one_var(line, env);
-//         return (result);
-//     }
-
-//     char **parts = ft_split(line, ' ');
-//     if (!parts)
-//         return (NULL);
-//     int i = 0;
-//     while (parts[i])
-//     {
-//         parts[i] = expand_one_var(parts[i], env);
-//         i++;
-//     }
-    
-//     i = 0;
-//     while (parts[i])
-//     {
-//         result = ft_strjoin(result, parts[i]);
-//         printf("result: %s\n", result);
-//         i++;
-//     }
-//     free_arr(parts);
-    
-
-//     return (result);
-// }
-
-char *remove_and_expand(char *line, t_env *env)
+char *expand(char *line, t_env *env)
 {
     char *result = malloc(1);
     char *var_value = NULL;
@@ -184,6 +64,7 @@ char *remove_and_expand(char *line, t_env *env)
     char quote = 0;
     result[0] = '\0';
     char tmp[2];
+    int pos = 0;
     char *var = NULL;
 
     if (!line)
@@ -192,16 +73,15 @@ char *remove_and_expand(char *line, t_env *env)
     {
         if ((line[i] == '\'' || line[i] == '"') && quote == 0)
         {
-            quote = line[i++];
+            pos = i;
+            quote = line[i];
             continue;
         }
-        if (line[i] == quote)
-        {
+        
+        if (line[i] == quote && i != pos)
             quote = 0;
-            i++;
-            continue;
-        }
-        if (line[i] == '$' && quote != '\'')
+
+        if (line[i] == '$' && is_valid_char(line[i + 1]) && quote != '\'')
         {
             i++;
             if (ft_isdigit(line[i]))
@@ -234,6 +114,7 @@ char *remove_and_expand(char *line, t_env *env)
 }
 
 
+
 void expand_env_vars(t_cmd *cmd, t_env *env)
 {
     t_cmd *current = cmd;
@@ -245,7 +126,7 @@ void expand_env_vars(t_cmd *cmd, t_env *env)
         if (current->line && !is_export_or_unset(current->line))
         {
             // expanded = expand_var(current->line, env);
-            expanded = remove_and_expand(current->line, env);
+            expanded = expand(current->line, env);
 
             // printf("expanded: %s\n", expanded);
             // free(current->line);    \\ seg fault when freeing
@@ -254,7 +135,8 @@ void expand_env_vars(t_cmd *cmd, t_env *env)
         }
         while (current->files && current->files[i].filename)
         {
-            current->files[i].filename = remove_and_expand(current->files[i].filename, env);
+            current->files[i].filename = expand(current->files[i].filename, env);
+            current->files[i].filename = remove_outer_quotes(current->files[i].filename);
             i++;
         }
         current = current->next;

@@ -26,7 +26,19 @@ char	*ft_strjoin_(char *s1, char *s2)
 	// free(s1);
 	return (str);
 }
+t_env    *get_shlvl(t_env *env)
+{
+    t_env   *temp;
 
+    temp = env;
+    while (temp)
+    {
+        if (ft_strcmp(temp->key, "SHLVL") == 0)
+            return (temp);
+        temp =temp->next;
+    }
+    return (NULL);
+}
 
 char    **struct_to_array(t_env *env)
 {
@@ -119,6 +131,25 @@ char	*get_path(char *cmd, t_env *env)
 	return (NULL);
 }
 
+void    handle_shell_level(t_env *env)
+{
+    int shell_level;
+    int new_shlvl;
+    t_env *shlvl_node = get_shlvl(env);
+
+    shell_level = ft_atoi(shlvl_node->value);
+    // if (!is_valid_numeric(shlvl_node->value))
+    // {
+    //     shell_level = 1;
+    // }
+    if (shell_level >= 999) {
+        new_shlvl = 1;
+    } else {
+        new_shlvl = shell_level + 1;
+    }
+    update_node_value(shlvl_node, ft_itoa(new_shlvl), 0);
+}
+
 void	exec(char **cmd, t_env *env)
 {
 	char	*path;
@@ -131,6 +162,10 @@ void	exec(char **cmd, t_env *env)
 		perror(cmd[0]);
 		exit(127);
 	}
+    if (ft_strcmp(path, "./minishell") == 0)
+    {
+        handle_shell_level(env);
+    }
 	if (execve(path, cmd, struct_to_array(env)) == -1)
 	{
 		free(path);
@@ -142,7 +177,17 @@ void redirection(t_cmd *cmd)
     int i = 0;
     while (cmd->files[i].filename)
     {
-        if (cmd->files[i].type == REDIRECT_IN)
+		if (cmd->files[i].type == HEREDOC)
+		{
+			if (cmd->files[i].fd < 0 || dup2(cmd->files[i].fd, STDIN_FILENO) < 0)
+            {
+                perror("dup2 or heredoc failed");
+                if (cmd->files[i].fd >= 0)
+                    close(cmd->files[i].fd);
+                exit(1);
+            }
+		}
+        else if (cmd->files[i].type == REDIRECT_IN)
         {
             cmd->files[i].fd = open(cmd->files[i].filename, O_RDONLY);
             if (cmd->files[i].fd < 0)
