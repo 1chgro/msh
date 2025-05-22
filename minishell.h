@@ -110,8 +110,8 @@ int	is_pipe(t_token **token);
 
 //-------------------expanding-------------------//
 void   expand_env_vars(t_cmd *cmd, t_env *env);
+char	*expand(char *line, t_env *env);
 char *remove_outer_quotes(char *s);
-
 
 //--------------------------excution-------------------//
 int    msh_execute(t_cmd *cmd, t_env *env);
@@ -142,4 +142,6 @@ int	ft_isdigit(int c);
 void	here_doc(char *limiter, int *fd);
 char	*ft_substr(char *s, unsigned int index, size_t bytes);
 char	*get_next_line(int fd);
+char	*ft_itoa(int n);
+void update_node_value(t_env *node, char *value, int append);
 #endif
