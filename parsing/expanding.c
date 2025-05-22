@@ -98,7 +98,10 @@ char *expand(char *line, t_env *env)
                 j++;
             var = ft_strndup(&line[i], j - i);
             var_value = my_getenv2(var, env);
-            result = ft_strjoin_ws(result, var_value ? var_value : "");
+            if (var_value)
+                result = ft_strjoin_ws(result, var_value);
+            else
+                result = ft_strjoin_ws(result, "");
             free(var);
             i = j;
         }
