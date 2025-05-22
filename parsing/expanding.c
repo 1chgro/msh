@@ -80,11 +80,13 @@ char *expand(char *line, t_env *env)
         
         if (line[i] == quote && i != pos)
             quote = 0;
-
+        
+        if (line[i] == '$' && line[i + 1] == '$')
+            result = 
         if (line[i] == '$' && is_valid_char(line[i + 1]) && quote != '\'')
         {
             i++;
-            if (ft_isdigit(line[i]))
+            if (ft_isdigit(line[i]) && is_valid_char(line[i + 1]))
             {
                 i++;
                 tmp[0] = line[i];
