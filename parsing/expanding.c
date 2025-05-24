@@ -47,7 +47,8 @@ char *ft_strndup(const char *s, int n)
 
 int is_valid_char(char c)
 {
-    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')|| (c == '_');
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || \
+        (c >= '0' && c <= '9')|| (c == '_');
 }
 
 int	ft_isdigit(int c)

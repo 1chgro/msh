@@ -49,17 +49,3 @@ void	add_token(t_token **head, t_token *new_token)
 	tmp->next = new_token;
 }
 
-void	free_tokens(t_token *tokens)
-{
-	t_token	*tmp;
-
-	while (tokens)
-	{
-		tmp = tokens;
-		tokens = tokens->next;
-		free(tmp->value);
-		tmp->value = NULL;
-		free(tmp);
-		tmp = NULL;
-	}
-}
