@@ -25,6 +25,7 @@ int is_redirection(t_token **token)
         return (1);
     return (0);
 }
+
 int is_pipe(t_token **token)
 {
     if (!*token)

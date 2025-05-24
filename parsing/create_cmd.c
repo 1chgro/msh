@@ -39,22 +39,25 @@ t_redirection_type get_cmd_red_type(t_token_type type)
 }
 
 
-
-static int count_args(const char *str) {
+static int count_args(const char *str)
+{
 	int count = 0;
-	int i = 0;
+	int i = -1;
 	int in_quotes = 0;
 	char quote_char = '\0';
 
 	while (str[i])
 	{
-		if (str[i] == ' ') {
+		if (str[i] == ' ')
+		{
 			i++;
 			continue;
 		}
 		count++;
-		while (str[i]) {
-			if (is_quote(str[i])) {
+		while (str[++i])
+		{
+			if (is_quote(str[i]))
+			{
 				if (!in_quotes)
 				{
 					quote_char = str[i];
@@ -62,22 +65,24 @@ static int count_args(const char *str) {
 				}
 				else if (str[i] == quote_char)
 					in_quotes = 0;
-			} else if (str[i] == ' ' && !in_quotes) {
-				break;
 			}
-			i++;
+			else if (str[i] == ' ' && !in_quotes)
+				break;
 		}
 	}
 	return count;
 }
 
-static char *extract_arg(const char *str, int *i) {
+static char *extract_arg(const char *str, int *i)
+{
 	int start = *i;
 	int in_quotes = 0;
 	char quote_char = '\0';
 
-	while (str[*i]) {
-		if (is_quote(str[*i])) {
+	while (str[*i])
+	{
+		if (is_quote(str[*i]))
+		{
 			if (!in_quotes)
 			{
 				quote_char = str[*i];
@@ -93,90 +98,35 @@ static char *extract_arg(const char *str, int *i) {
 	return (ft_strndup(str + start, *i - start));
 }
 
-char **split_line_to_args(char *line) {
-	int i = 0;
+char **split_line_to_args(char *line)
+{
+	int i;
+	int arg_count;
+	char **args;
+	int j;
 
 	if (!line)
 		return (NULL);
-	int arg_count = count_args(line);
-	char **args = malloc(sizeof(char *) * (arg_count + 1));
+	i = 0;
+	arg_count = count_args(line);
+	args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!args)
-		return NULL;
-	int j = 0;
-	while ( j < arg_count) 
+		return (NULL);
+	j = 0;
+	while (j < arg_count) 
 	{
 		while (line[i] == ' ')
 			i++;
 		args[j] = extract_arg(line, &i);
 		if (!args[j])
-		{
-			while (--j >= 0)
-				free(args[j]);
-			free(args);
-			return NULL;
-		}
+			return (free_arr(args), NULL);
 		if (line[i] == ' ')
 			i++;
 		j++;
 	}
-	args[arg_count] = NULL;
-	return args;
+	return (args[arg_count] = NULL, args);
 }
 
-char *remove_outer_quotes(char *s)
-{
-    int i = 0, j = 0;
-    char quote = 0;
-    char output[ft_strlen(s) + 1];
-
-
-    while (s[i]) {
-        if (!quote && (s[i] == '"' || s[i] == '\'')) {
-            quote = s[i];  // opening quote
-            i++;
-            continue;
-        }
-        if (quote && s[i] == quote) {
-            quote = 0;  // closing quote
-            i++;
-            continue;
-        }
-        output[j++] = s[i++];
-    }
-    output[j] = '\0'; 
-    return (ft_strdup(output));
-}
-
-char **remove_quotes_arr(char **argv)
-{
-	int i = 0;
-	int j = 0;
-	char **new_argv = NULL;
-	int len = 0;
-
-	if (!argv)
-		return (NULL);
-	while (argv[len])
-		len++;
-	new_argv = malloc(sizeof(char *) * (len + 1));
-	if (!new_argv)
-		return (NULL);
-	while (argv[i])
-	{
-		new_argv[i] = remove_outer_quotes(argv[i]);
-		free(argv[i]);
-		if (!new_argv)
-		{
-			while (--j >= 0)
-				free(new_argv[j]);
-			free(new_argv);
-			return (NULL);
-		}
-		i++;
-	}
-	new_argv[i] = NULL;
-	return (new_argv);
-}
 
 void fill_cmd_argv(t_cmd *cmd)
 {
@@ -188,7 +138,6 @@ void fill_cmd_argv(t_cmd *cmd)
 		temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
 		if (!temp_cmd->argv)
 			return ;
-		
 		temp_cmd = temp_cmd->next;
 	}
 }
@@ -203,17 +152,13 @@ t_cmd *create_cmd_lst(t_token *tokens)
 	int count_red = 0;
 	int i = 0;
 
-	// knahsb awal blocj ch7al fih men redirection o kan initializi cmd first node.
 	count_red = count_redirections(tokens);
 	init_cmd(&cmd);
 	temp_cmd = cmd;
 	while (current)
 	{
-		// hna kangad string men l cmd o l args dyalo bach n splitihom f lkhr
-		// kola block kan3awd ndirha fih
 		if (current->type == TOKEN_WORD && !is_redirection(&prev))
 			temp_cmd->line = ft_strjoin(temp_cmd->line, current->value);
-		// hna redirections knakhd type dyalhommo kanstory l filename li ja men bbed redirection
 		if (is_redirection(&current))
 		{
 			if (temp_cmd->files == NULL)
@@ -226,7 +171,6 @@ t_cmd *create_cmd_lst(t_token *tokens)
 			temp_cmd->files[i].fd = -1;
 			i++;
 		}
-		// ila kant pipe go to next cmd o initializih o 3awd l count dyal redirections l fdak l block
 		if (is_pipe(&current))
 		{
 			init_cmd(&temp_cmd->next);
