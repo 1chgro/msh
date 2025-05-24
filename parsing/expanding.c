@@ -80,7 +80,7 @@ char *expand(char *line, t_env *env)
         
         if (line[i] == quote && i != pos)
             quote = 0;
-        if (line[i] == '$' && is_valid_char(line[i + 1]) && quote != '\'')
+        if (line[i] == '$' && (is_valid_char(line[i + 1]) || line[i + 1] == '?') && quote != '\'')
         {
             i++;
             if (ft_isdigit(line[i]) && is_valid_char(line[i + 1]))
@@ -89,6 +89,17 @@ char *expand(char *line, t_env *env)
                 tmp[0] = line[i];
                 tmp[1] = '\0';
                 result = ft_strjoin_ws(result, tmp);
+                i++;
+                continue;
+            }
+            if (line[i] == '?')
+            {
+                var_value = my_getenv2("?", env);
+                if (var_value)
+                    result = ft_strjoin_ws(result, var_value);
+                else
+                    result = ft_strjoin_ws(result, "");
+                free(var);
                 i++;
                 continue;
             }
