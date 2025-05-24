@@ -166,13 +166,25 @@ void msh_loop(char **envp)
 {
     t_cmd *cmd = NULL;
     t_env *env = NULL;
+    int status = 0;
+
     copie_env(&env, envp);
     msh_signals();
-    // int status = 0;
     while(1)
     {
         cmd = msh_parse(env);
-        msh_execute(cmd, env);
-        free_cmd(cmd);
+        if (!cmd)
+        {
+            status = 1;
+            update_node_value(get_exit(env), ft_itoa(status), 0);
+        }
+        else
+        {
+            status = msh_execute(cmd, env);
+            update_node_value(get_exit(env), ft_itoa(status), 0);
+            free_cmd(cmd);
+            cmd = NULL;
+        }
     }
+    free_env(env);
 }

@@ -186,7 +186,7 @@ void	exec(char **cmd, t_env *env)
 	path = get_path(cmd[0], env);
 	if (!path)
 	{
-		perror("msh: command not found: ");
+		ft_putstr_fd("msh : ", 2);
 		perror(cmd[0]);
 		exit(127);
 	}
@@ -200,7 +200,7 @@ void	exec(char **cmd, t_env *env)
 		exit(1);
 	}
 }
-void redirection(t_cmd *cmd)
+int redirection(t_cmd *cmd)
 {
     int i = 0;
     while (cmd->files[i].filename)
@@ -212,7 +212,7 @@ void redirection(t_cmd *cmd)
                 perror("dup2 or heredoc failed");
                 if (cmd->files[i].fd >= 0)
                     close(cmd->files[i].fd);
-                exit(1);
+                return (1);
             }
 		}
         else if (cmd->files[i].type == REDIRECT_IN)
@@ -221,7 +221,7 @@ void redirection(t_cmd *cmd)
             if (cmd->files[i].fd < 0)
             {
                 perror("open failed");
-                exit(1);
+                return (1);
             }
             dup2(cmd->files[i].fd, STDIN_FILENO);
             close(cmd->files[i].fd);
@@ -232,7 +232,7 @@ void redirection(t_cmd *cmd)
             if (cmd->files[i].fd < 0)
             {
                 perror("open failed");
-                exit(1);
+                return (1);
             }
             dup2(cmd->files[i].fd, STDOUT_FILENO);
             close(cmd->files[i].fd);
@@ -243,20 +243,24 @@ void redirection(t_cmd *cmd)
             if (cmd->files[i].fd < 0)
             {
                 perror("open failed");
-                exit(1);
+                return (1);
             }
             dup2(cmd->files[i].fd, STDOUT_FILENO);
             close(cmd->files[i].fd);
         }
         i++;
     }
+    return (0);
 }
 
-void run_pipeline(t_cmd *cmd, t_env *env)
+int run_pipeline(t_cmd *cmd, t_env *env)
 {
     pid_t pid;
     int p_fd[2];
     int prev_fd = -1;
+    pid_t last_pid;
+    int     status;
+    int     last_status;
 
     while (cmd)
     {
@@ -265,7 +269,7 @@ void run_pipeline(t_cmd *cmd, t_env *env)
             if (pipe(p_fd) == -1)
             {
                 perror("pipe error");
-                break;
+                return (1);
             }
         }
         pid = fork();
@@ -277,7 +281,7 @@ void run_pipeline(t_cmd *cmd, t_env *env)
                 close(p_fd[0]);
                 close(p_fd[1]);
             }
-            break;
+            return (1);
         }
         if (pid == 0)
         {
@@ -293,11 +297,16 @@ void run_pipeline(t_cmd *cmd, t_env *env)
                 close(p_fd[1]);
             }
             if (cmd->files)
-                redirection(cmd);
+            {
+                status = redirection(cmd);
+                if (status != 0)
+                    exit(status);
+            }
+                
             if (are_builtin(cmd->argv[0]))
             {
-                run_builtin(cmd->argv, env);
-                exit(0);
+                status = run_builtin(cmd->argv, env);
+                exit(status);
             }
             else
             {
@@ -316,40 +325,55 @@ void run_pipeline(t_cmd *cmd, t_env *env)
     }
     if (prev_fd != -1)
         close(prev_fd);
-    while (wait(NULL) > 0)
-        ;
+    last_pid = pid;
+    while (waitpid(-1, &status, 0) > 0)
+    {
+        if (WIFEXITED(status) && waitpid(last_pid, &status, 0) == last_pid)
+        {
+            last_status = WEXITSTATUS(status);
+        }
+    }
+    return (last_status);
 }
 
-void    run_single_cmd(t_cmd *cmd, t_env *env)
+int    run_single_cmd(t_cmd *cmd, t_env *env)
 {
     pid_t pid;
+    int status = 0;
 
     pid = fork();
     if (pid == -1)
     {
         perror("fork");
-        return ;
+        return (1);
     }
     if (pid == 0)
     {
         if (cmd->files)
-            redirection(cmd);
+        {
+            status = redirection(cmd);
+            if (status != 0)
+                exit(status);
+        }
         exec(cmd->argv, env);
         exit(1);
     }
-    waitpid(pid, 0, 0);
+    waitpid(pid, &status, 0);
+    if (WIFEXITED(status))
+        return (WEXITSTATUS(status));
+    return (status);
 }
 
-void    run_cmd(t_cmd *cmd, t_env *env)
+int run_cmd(t_cmd *cmd, t_env *env)
 {
-    if (!cmd)
+    if (!cmd || !cmd->argv || !cmd->argv[0])
     {
-        return ;
+        perror("invalid command");
+        return (1);
     }
     if (!cmd->next)
     {
-        run_single_cmd(cmd, env);
+        return (run_single_cmd(cmd, env));
     }
-    else
-        run_pipeline(cmd, env);
+    return (run_pipeline(cmd, env));
 }

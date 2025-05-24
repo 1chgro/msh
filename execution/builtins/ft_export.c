@@ -175,7 +175,10 @@ void update_node_value(t_env *node, char *value, int append)
     {
         free(node->value);
         node->value = value;
-        node->flag = (value && value[0] != '\0') ? 1 : 0;
+        if (node->key[0] == '?')
+            node->flag = 2;
+        else
+            node->flag = (value && value[0] != '\0') ? 1 : 0;
     }
 }
 static int is_valid_identifier(char *key)
@@ -207,7 +210,7 @@ static void print_export(t_env *env, int lst_size)
         {
             if (temp->index == current_index)
             {
-                if((!ft_strcmp(temp->key, "PATH") && temp->flag == 2) || !ft_strcmp(temp->key, "_"))
+                if((!ft_strcmp(temp->key, "PATH") && temp->flag == 2) || !ft_strcmp(temp->key, "_") || temp->flag == 2)
                     break;
                 ft_putstr_fd("declare -x ", 1);
                 ft_putstr_fd(temp->key, 1);
@@ -273,17 +276,17 @@ static int process_export_arg(char *arg, t_env **env)
     return (1);
 }
 
-void ft_export(char **s_cmd, t_env **env)
+int ft_export(char **s_cmd, t_env **env)
 {
     t_env *temp;
     int lst_size;
     int i;
-    // int status;
+    int status;
 
     make_index(env);
     temp = *env;
     lst_size = 0;
-    // status = 0;
+    status = 0;
     if (!s_cmd[1])
     {
         while (temp)
@@ -292,17 +295,15 @@ void ft_export(char **s_cmd, t_env **env)
             temp = temp->next;
         }
         print_export(*env, lst_size);
-        // return (0);
-        return ;
+        return (0);
     }
     i = 1;
     while (s_cmd[i])
     {
-        // if (!process_export_arg(s_cmd[i], env))
-        // if ()
-        process_export_arg(s_cmd[i], env);
+        if (!process_export_arg(s_cmd[i], env))
+            status = 1;
+        // process_export_arg(s_cmd[i], env);
         i++;
-        // status = 1;
     }
-    // return (status);
+    return (status);
 }

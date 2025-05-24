@@ -50,7 +50,7 @@ void    ft_handle_echo_arg(char **args)
     }
 }
 
-void    ft_echo(char    **s_cmd)
+int    ft_echo(char    **s_cmd)
 {
     if (!s_cmd[1])
     {
@@ -60,4 +60,5 @@ void    ft_echo(char    **s_cmd)
     {
         ft_handle_echo_arg(s_cmd);
     }
+    return(0);
 }

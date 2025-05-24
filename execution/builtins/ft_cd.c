@@ -75,7 +75,7 @@ static char *ft_cd_resolve_parent(char *old_pwd)
     return (resolved_path);
 }
 
-void    ft_cd(char  **s_cmd, t_env  **env)
+int    ft_cd(char  **s_cmd, t_env  **env)
 {
     char    *new_pwd;
     char    *path;
@@ -89,7 +89,7 @@ void    ft_cd(char  **s_cmd, t_env  **env)
         if (!path)
         {
             perror("msh: cd:");
-            return ;
+            return (1);
         }
     }
     else if (s_cmd[1][0] == '~' && ft_strlen(s_cmd[1]) == 1)
@@ -99,7 +99,7 @@ void    ft_cd(char  **s_cmd, t_env  **env)
         if (!path)
         {
             perror("msh: cd:");
-            return ;
+            return (1);
         }
     }
     else if (s_cmd[1][0] == '~' && ft_strlen(s_cmd[1]) > 1)
@@ -110,7 +110,7 @@ void    ft_cd(char  **s_cmd, t_env  **env)
         if (!path)
         {
             perror("msh: cd:");
-            return ;
+            return (1);
         }
     }
     else
@@ -120,12 +120,12 @@ void    ft_cd(char  **s_cmd, t_env  **env)
         else
         {
             ft_putstr_fd("msh: cd: too many arguments\n", 2);
-            return ;
+            return (1);
         }
     }
     old_pwd = get_current_pwd();
     if (!old_pwd)
-        return ;
+        return (1);
     if (ft_strcmp(path, "..") == 0)
     {
         temp = ft_cd_resolve_parent(get_current_pwd());
@@ -140,23 +140,24 @@ void    ft_cd(char  **s_cmd, t_env  **env)
             free(temp);
             perror("msh: cd: parent directory does not exist");
             free(old_pwd);
-            return;
+            return(1);
         }
     }
     if(chdir(path) == -1)
     {
         perror("msh: cd");
         free(old_pwd);
-        return ;
+        return (1);
     }
     new_pwd = get_current_pwd();
     if (!new_pwd)
     {
         free(old_pwd);
-        return ;
+        return (1);
     }
     set_env(env, "OLDPWD", old_pwd);
     set_env(env, "PWD", new_pwd);
     free(new_pwd);
     free(old_pwd);
+    return(0);
 }

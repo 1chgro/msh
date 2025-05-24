@@ -26,7 +26,7 @@ static void remove_variable(char *key, t_env **env)
     free(current->value);
     free(current);
 }
-void    ft_unset(char **s_cmd, t_env **env)
+int    ft_unset(char **s_cmd, t_env **env)
 {
     t_env   *temp;
     int     flag;
@@ -35,7 +35,7 @@ void    ft_unset(char **s_cmd, t_env **env)
     flag = 0;
     i = 0;
     if (!s_cmd[1])
-        return ;
+        return (0);
     while (s_cmd[i])
     {
         temp = *env;
@@ -48,8 +48,9 @@ void    ft_unset(char **s_cmd, t_env **env)
             }
             temp = temp->next;
         }
-        if (flag == 1)
+        if (flag == 1 && ft_strcmp(temp->key, "?"))
             remove_variable(s_cmd[i], env);
         i++;
     }
+    return (0);
 }

@@ -39,6 +39,7 @@ typedef struct s_cmd
 	char 			*line;
 	char 			**argv;
 	t_red			*files;
+	int				exit_status;
 	struct s_cmd  	*next;
 } t_cmd;
 
@@ -115,7 +116,7 @@ char *remove_outer_quotes(char *s);
 
 //--------------------------excution-------------------//
 int    msh_execute(t_cmd *cmd, t_env *env);
-void    run_cmd(t_cmd *cmd, t_env *env);
+int    run_cmd(t_cmd *cmd, t_env *env);
 int     copie_env(t_env **c_env, char **env);
 char    *ft_strchr(const char *s, int c);
 char    **ft_split(char const *s, char c);
@@ -123,25 +124,29 @@ char    **ft_split(char const *s, char c);
 t_env *create_node(char *key, char *value);
 void append_node(t_env **head, t_env *node);
 int  are_builtin(char    *cmd);
-void	run_builtin(char **s_cmd, t_env *env);
-void    ft_pwd();
-void    ft_env(char **s_cmd, t_env *env);
-void    ft_exit(char **s_cmd);
-void    ft_export(char **s_cmd, t_env **env);
-void    ft_unset(char **s_cmd, t_env **env);
+int	run_builtin(char **s_cmd, t_env *env);
+int    ft_pwd();
+int    ft_env(char **s_cmd, t_env *env);
+int    ft_exit(char **s_cmd);
+int    ft_export(char **s_cmd, t_env **env);
+int    ft_unset(char **s_cmd, t_env **env);
 long	ft_atoi(const char *str);
-void    ft_echo(char **s_cmd);
-void    ft_cd(char  **s_cmd, t_env  **env);
+int    ft_echo(char **s_cmd);
+int    ft_cd(char  **s_cmd, t_env  **env);
 void free_split(char **split);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
-void redirection(t_cmd *cmd);
+int redirection(t_cmd *cmd);
 char	*get_key(char	*str);
 char	*get_value(char	*str);
 char	*ft_strjoin_(char *s1, char *s2);
 int	ft_isdigit(int c);
-void	here_doc(char *limiter, int *fd);
+int	here_doc(char *limiter, int *fd, t_env	*env);
 char	*ft_substr(char *s, unsigned int index, size_t bytes);
 char	*get_next_line(int fd);
 char	*ft_itoa(int n);
 void update_node_value(t_env *node, char *value, int append);
+void	ft_putendl_fd(char *s, int fd);
+void	ft_putchar_fd(char c, int fd);
+t_env    *get_exit(t_env *env);
+void free_env(t_env *env);
 #endif
