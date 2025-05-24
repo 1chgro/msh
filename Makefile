@@ -6,7 +6,7 @@ FLGS=-Werror -Wextra -Wall #-g -fsanitize=address
 SRCS_PARSE= main.c\
 	parsing/parse.c parsing/signals.c parsing/token.c parsing/quotes.c parsing/ft_utils.c parsing/ft_utils_2.c\
 	parsing/is_funs.c parsing/token_utils.c parsing/syntax.c parsing/create_cmd.c\
-	execution/copie_env.c execution/ft_split.c parsing/expanding.c
+	execution/copie_env.c execution/ft_split.c parsing/expanding.c parsing/expand_heredoc.c
 
 
 SRCS_EXEC=execution/ft_strcmp.c execution/exec.c execution/run_cmd.c  execution/builtins/ft_unset.c execution/builtins/ft_pwd.c\
