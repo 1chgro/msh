@@ -260,7 +260,8 @@ int run_pipeline(t_cmd *cmd, t_env *env)
     int prev_fd = -1;
     pid_t last_pid;
     int     status;
-    int     last_status;
+    int     last_status = 0;
+    pid_t waited_pid;
 
     while (cmd)
     {
@@ -321,16 +322,20 @@ int run_pipeline(t_cmd *cmd, t_env *env)
             close(p_fd[1]);
             prev_fd = p_fd[0];
         }
+        last_pid = pid;
         cmd = cmd->next;
     }
     if (prev_fd != -1)
         close(prev_fd);
-    last_pid = pid;
-    while (waitpid(-1, &status, 0) > 0)
+
+    while ((waited_pid = waitpid(-1, &status, 0)) > 0)
     {
-        if (WIFEXITED(status) && waitpid(last_pid, &status, 0) == last_pid)
+        if (waited_pid == last_pid)
         {
-            last_status = WEXITSTATUS(status);
+            if (WIFEXITED(status))
+                last_status = WEXITSTATUS(status);
+            else if (WIFSIGNALED(status))
+                last_status = 128 + WTERMSIG(status);
         }
     }
     return (last_status);
