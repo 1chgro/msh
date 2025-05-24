@@ -1,5 +1,18 @@
 #include "../minishell.h"
 
+t_env    *get_exit(t_env *env)
+{
+    t_env   *temp;
+
+    temp = env;
+    while (temp)
+    {
+        if (ft_strcmp(temp->key, "?") == 0)
+            return (temp);
+        temp =temp->next;
+    }
+    return (NULL);
+}
 static int	get_num(int n)
 {
 	int	count;

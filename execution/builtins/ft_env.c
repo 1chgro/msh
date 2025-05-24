@@ -1,6 +1,6 @@
 #include "../../minishell.h"
 
-void    ft_env(char **s_cmd, t_env *env)
+int    ft_env(char **s_cmd, t_env *env)
 {
     t_env *temp = NULL;
 
@@ -9,7 +9,8 @@ void    ft_env(char **s_cmd, t_env *env)
     while (temp)
     {
         if (temp->flag == 1)
-            printf("%s=%s\n", temp->key, temp->value);
+            printf("%s=%s        %d\n", temp->key, temp->value , temp->flag);
         temp = temp->next;
     }
+    return (0);
 }

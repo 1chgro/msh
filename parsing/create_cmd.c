@@ -153,9 +153,11 @@ char **remove_quotes_arr(char **argv)
 	int j = 0;
 	char **new_argv = NULL;
 	int len = 0;
+
+	if (!argv)
+		return (NULL);
 	while (argv[len])
 		len++;
-
 	new_argv = malloc(sizeof(char *) * (len + 1));
 	if (!new_argv)
 		return (NULL);
