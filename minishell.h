@@ -73,6 +73,7 @@ int		valid_quotes(char *s);
 void		skip_quotes(char *s, int *i, char q);
 t_token		*lexer(char *line);
 void free_arr(char **arr);
+void free_cmd(t_cmd *cmd);
 
 // tokenization functions
 t_token		*tokenize(char *line);
@@ -108,11 +109,14 @@ int	is_operator(char c);
 int	is_space(char c);
 int	is_redirection(t_token **token);
 int	is_pipe(t_token **token);
+int is_valid_char(char c);
 
 //-------------------expanding-------------------//
 void   expand_env_vars(t_cmd *cmd, t_env *env);
 char	*expand(char *line, t_env *env);
 char *remove_outer_quotes(char *s);
+char *expand_heredoc(char *line, t_env *env);
+char *my_getenv2(char *name, t_env *env);
 
 //--------------------------excution-------------------//
 int    msh_execute(t_cmd *cmd, t_env *env);
@@ -120,7 +124,6 @@ int    run_cmd(t_cmd *cmd, t_env *env);
 int     copie_env(t_env **c_env, char **env);
 char    *ft_strchr(const char *s, int c);
 char    **ft_split(char const *s, char c);
-// int ft_strcmp(const char *s1, const char *s2);
 t_env *create_node(char *key, char *value);
 void append_node(t_env **head, t_env *node);
 int  are_builtin(char    *cmd);
