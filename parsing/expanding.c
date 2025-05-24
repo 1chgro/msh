@@ -138,13 +138,8 @@ void expand_env_vars(t_cmd *cmd, t_env *env)
         i = 0;
         if (current->line && !is_export_or_unset(current->line))
         {
-            // expanded = expand_var(current->line, env);
             expanded = expand(current->line, env);
-
-            // printf("expanded: %s\n", expanded);
-            // free(current->line);    \\ seg fault when freeing
             current->line = expanded;
-            // printf("current: %s\n", current->line);
         }
         while (current->files && current->files[i].filename)
         {
