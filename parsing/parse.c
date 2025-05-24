@@ -175,7 +175,7 @@ void msh_loop(char **envp)
         cmd = msh_parse(env);
         if (!cmd)
         {
-            status = 1;
+            status = 0;
             update_node_value(get_exit(env), ft_itoa(status), 0);
         }
         else
