@@ -42,7 +42,7 @@ t_redirection_type get_cmd_red_type(t_token_type type)
 static int count_args(const char *str)
 {
 	int count = 0;
-	int i = -1;
+	int i = 0;
 	int in_quotes = 0;
 	char quote_char = '\0';
 
@@ -54,7 +54,7 @@ static int count_args(const char *str)
 			continue;
 		}
 		count++;
-		while (str[++i])
+		while (str[i])
 		{
 			if (is_quote(str[i]))
 			{
@@ -68,9 +68,10 @@ static int count_args(const char *str)
 			}
 			else if (str[i] == ' ' && !in_quotes)
 				break;
+			i++;
 		}
 	}
-	return count;
+	return (count);
 }
 
 static char *extract_arg(const char *str, int *i)
@@ -126,7 +127,6 @@ char **split_line_to_args(char *line)
 	}
 	return (args[arg_count] = NULL, args);
 }
-
 
 void fill_cmd_argv(t_cmd *cmd)
 {
