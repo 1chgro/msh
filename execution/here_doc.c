@@ -29,6 +29,7 @@ int here_doc(char *limiter, int *fd, t_glob_st *glob_strct)
             free(line);
             break;
         }
+      
         line1 = expand_heredoc(line, glob_strct);
         free(line);
         write(write_fd, line1, ft_strlen(line1));

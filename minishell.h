@@ -138,7 +138,6 @@ void	expand_env_vars(t_glob_st *glob_strct);
 char	*expand(char *line, t_glob_st *glob_strct);
 char	*expand_heredoc(char *line, t_glob_st *glob_strct);
 
-
 //-------------------------- excution -------------------//
 int		run_cmd(t_cmd *cmd, t_env *env);
 int     copie_env(t_env **c_env, char **env);
