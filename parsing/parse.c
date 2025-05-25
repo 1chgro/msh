@@ -43,53 +43,59 @@ t_token *lexer(char *line)
 }
 
 
-t_cmd *msh_parse(t_env *env)
+t_cmd *msh_parse(t_glob_st *glob_strct)
 {
     char *line;
-    t_cmd *cmd;
-    t_token *tokens;
 
     line = NULL;
-    cmd = NULL;
     line = read_line();
     if (line == NULL)
         return (NULL);
-    tokens = lexer(line);
-    if (!check_syntax_err(tokens))
-        return (free_tokens(tokens), NULL);
-    cmd = create_cmd(tokens, env);
-    if (!cmd)
-        return (free_tokens(tokens), NULL);
-    print_tokens(tokens);
-    print_cmd(cmd);
-    return (cmd);
+    glob_strct->tokens = lexer(line);
+    if (!check_syntax_err(glob_strct))
+        return (free_tokens(glob_strct->tokens), glob_strct->ext_stat = 2, NULL);
+    glob_strct->cmd = create_cmd(glob_strct);
+    if (!glob_strct->cmd)
+        return (free_tokens(glob_strct->tokens), NULL);
+    print_tokens(glob_strct->tokens);
+    print_cmd(glob_strct->cmd);
+    return (glob_strct->cmd);
 }
 
-
+t_glob_st *init_glob_strct()
+{
+    t_glob_st *glob_strct = NULL;
+    glob_strct = malloc(sizeof(t_glob_st));
+    if (!glob_strct)
+        return (NULL);
+    glob_strct->cmd = NULL;
+    glob_strct->env = NULL;
+    glob_strct->tokens = NULL;
+    glob_strct->ext_stat = 0;
+    return (glob_strct);
+}
 
 void msh_loop(char **envp)
 {
-    t_cmd *cmd = NULL;
-    t_env *env = NULL;
-    int status = 0;
+    // t_cmd *cmd = NULL;
+    // t_env *env = NULL;
+    t_glob_st *glob_strct = NULL;
+    // int status = 0;
 
-    copie_env(&env, envp);
+    glob_strct = init_glob_strct();
+    copie_env(&glob_strct->env, envp);
     msh_signals();
     while(1)
     {
-        cmd = msh_parse(env);
-        if (!cmd)
+        glob_strct->cmd = msh_parse(glob_strct);
+        // if (!glob_strct->cmd)
+        //     glob_strct->ext_stat = 0;
+        if (glob_strct->cmd)
         {
-            status = 0;
-            update_node_value(get_exit(env), ft_itoa(status), 0);
-        }
-        else
-        {
-            status = msh_execute(cmd, env);
-            update_node_value(get_exit(env), ft_itoa(status), 0);
-            free_cmd(cmd);
-            cmd = NULL;
+            glob_strct->ext_stat = msh_execute(glob_strct);
+            free_cmd(glob_strct->cmd);
+            glob_strct->cmd = NULL;
         }
     }
-    free_env(env);
+    free_env(glob_strct->env);
 }

@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-char *expand_heredoc(char *line, t_env *env)
+char *expand_heredoc(char *line, t_glob_st *glob_strct)
 {
     char *result = malloc(1);
     char *var_value = NULL;
@@ -27,10 +27,7 @@ char *expand_heredoc(char *line, t_env *env)
             }
             if (line[i] == '?')
             {
-                var_value = my_getenv2("?", env);
-                if (var_value)
-                    result = ft_strjoin_ws(result, var_value);
-                free(var);
+                result = ft_strjoin_ws(result, ft_itoa(glob_strct->ext_stat));
                 i++;
                 continue;
             }
@@ -38,7 +35,7 @@ char *expand_heredoc(char *line, t_env *env)
             while (line[j] && is_valid_char(line[j]))
                 j++;
             var = ft_strndup(&line[i], j - i);
-            var_value = my_getenv2(var, env);
+            var_value = my_getenv2(var, glob_strct->env);
             if (var_value)
                 result = ft_strjoin_ws(result, var_value);
             else

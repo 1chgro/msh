@@ -184,17 +184,14 @@ t_cmd *create_cmd_lst(t_token *tokens)
 	return (cmd);
 }
 
-t_cmd *create_cmd(t_token *tokens, t_env *env)
+t_cmd *create_cmd(t_glob_st *glob_strct)
 {
-	t_cmd *cmd;
-
-	cmd = NULL;
-	if (!tokens)
+	if (!glob_strct->tokens)
 		return (NULL);
-	cmd = create_cmd_lst(tokens);
-	if (!cmd)
+	glob_strct->cmd = create_cmd_lst(glob_strct->tokens);
+	if (!glob_strct->cmd)
 		return (NULL);
-	expand_env_vars(cmd, env);
-	fill_cmd_argv(cmd);
-	return (cmd);
+	expand_env_vars(glob_strct);
+	fill_cmd_argv(glob_strct->cmd);
+	return (glob_strct->cmd);
 }

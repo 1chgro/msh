@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int here_doc(char *limiter, int *fd, t_env *env)
+int here_doc(char *limiter, int *fd, t_glob_st *glob_strct)
 {
     char    *line1;
     char    *line;
@@ -29,7 +29,7 @@ int here_doc(char *limiter, int *fd, t_env *env)
             free(line);
             break;
         }
-        line1 = expand_heredoc(line, env);
+        line1 = expand_heredoc(line, glob_strct);
         free(line);
         write(write_fd, line1, ft_strlen(line1));
         write(write_fd, "\n", 1);

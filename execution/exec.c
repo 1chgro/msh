@@ -169,16 +169,16 @@ int	run_builtin(char **s_cmd, t_env *env)
 //     return (status);
 // }
 
-int msh_execute(t_cmd *cmd, t_env *env)
+int msh_execute(t_glob_st *glob_strct)
 {
     int status = 0;
     int size = 0;
-    t_cmd *temp = cmd;
+    t_cmd *temp = glob_strct->cmd;
     int i;
     int saved_stdout = -1;
     int saved_stdin = -1;
 
-    if (!cmd)
+    if (!glob_strct->cmd)
         return (1);
 
     while (temp)
@@ -186,7 +186,7 @@ int msh_execute(t_cmd *cmd, t_env *env)
         size++;
         temp = temp->next;
     }
-    temp = cmd;
+    temp = glob_strct->cmd;
     while (temp)
     {
         if (temp->files)
@@ -196,7 +196,7 @@ int msh_execute(t_cmd *cmd, t_env *env)
             {
                 if (temp->files[i].type == HEREDOC)
                 {
-                    status = here_doc(temp->files[i].filename, &temp->files[i].fd, env);
+                    status = here_doc(temp->files[i].filename, &temp->files[i].fd, glob_strct);
                     if (temp->files[i].fd < 0)
                     {
                         perror("heredoc error");
@@ -216,11 +216,11 @@ int msh_execute(t_cmd *cmd, t_env *env)
         return (1);
     }
 
-    if (!cmd->argv)
+    if (!glob_strct->cmd->argv)
     {
-        if (cmd->files)
+        if (glob_strct->cmd->files)
         {
-            status = redirection(cmd);
+            status = redirection(glob_strct->cmd);
             if (status != 0)
             {
                 dup2(saved_stdout, STDOUT_FILENO);
@@ -231,11 +231,11 @@ int msh_execute(t_cmd *cmd, t_env *env)
             }
         }
     }
-    else if (are_builtin(cmd->argv[0]) && size == 1)
+    else if (are_builtin(glob_strct->cmd->argv[0]) && size == 1)
     {
-        if (cmd->files)
+        if (glob_strct->cmd->files)
         {
-            status = redirection(cmd);
+            status = redirection(glob_strct->cmd);
             if (status != 0)
             {
                 dup2(saved_stdout, STDOUT_FILENO);
@@ -245,17 +245,17 @@ int msh_execute(t_cmd *cmd, t_env *env)
                 return (status);
             }
         }
-        status = run_builtin(cmd->argv, env);
+        glob_strct->ext_stat = run_builtin(glob_strct->cmd->argv, glob_strct->env);
     }
     else
     {
-        status = run_cmd(cmd, env);
+        glob_strct->ext_stat = run_cmd(glob_strct->cmd, glob_strct->env);
     }
     dup2(saved_stdout, STDOUT_FILENO);
     dup2(saved_stdin, STDIN_FILENO);
     close(saved_stdout);
     close(saved_stdin);
-    temp = cmd;
+    temp = glob_strct->cmd;
     while (temp)
     {
         if (temp->files)
@@ -271,5 +271,5 @@ int msh_execute(t_cmd *cmd, t_env *env)
         temp = temp->next;
     }
 
-    return (status);
+    return (glob_strct->ext_stat);
 }

@@ -65,6 +65,14 @@ typedef struct s_env{
     struct s_env *next;
 } t_env;
 
+typedef struct s_glob_st
+{
+	t_env *env;
+	t_cmd *cmd;
+	t_token *tokens;
+	int ext_stat;
+} t_glob_st;
+
 //----------------- print functions--------///
 void   print_cmd(t_cmd *cmd);
 void print_tokens(t_token *tokens);
@@ -72,7 +80,7 @@ void print_tokens(t_token *tokens);
 
 //--------------- main functions -----------------------//
 void	msh_loop(char **envp);
-int   	msh_execute(t_cmd *cmd, t_env *env);
+int   	msh_execute(t_glob_st *glob_strct);
 void	msh_signals();
 t_token		*lexer(char *line);
 
@@ -91,10 +99,10 @@ t_token_type		get_token_type(char *value);
 
 
 //------------------------- syntax -----------------------//
-int check_syntax_err(t_token *tokens);
+int check_syntax_err(t_glob_st *glob_strct);
 
 //--------------------- cmd create ----------------------------//
-t_cmd	*create_cmd(t_token *tokens, t_env *env);
+t_cmd	*create_cmd(t_glob_st *glob_strct);
 
 //------------------- env --------------------------------------//
 int		copie_env(t_env **c_env, char **env);
@@ -126,9 +134,9 @@ int		valid_quotes(char *s);
 char	**remove_quotes_arr(char **argv);
 
 //------------------- expanding -------------------//
-void	expand_env_vars(t_cmd *cmd, t_env *env);
-char	*expand(char *line, t_env *env);
-char	*expand_heredoc(char *line, t_env *env);
+void	expand_env_vars(t_glob_st *glob_strct);
+char	*expand(char *line, t_glob_st *glob_strct);
+char	*expand_heredoc(char *line, t_glob_st *glob_strct);
 
 
 //-------------------------- excution -------------------//
@@ -155,7 +163,7 @@ char	*get_key(char	*str);
 char	*get_value(char	*str);
 char	*ft_strjoin_(char *s1, char *s2);
 int	ft_isdigit(int c);
-int	here_doc(char *limiter, int *fd, t_env	*env);
+int	here_doc(char *limiter, int *fd, t_glob_st *glob_strct);
 char	*ft_substr(char *s, unsigned int index, size_t bytes);
 char	*get_next_line(int fd);
 char	*ft_itoa(int n);

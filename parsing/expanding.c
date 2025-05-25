@@ -57,7 +57,7 @@ int	ft_isdigit(int c)
 }
 
 
-char *expand(char *line, t_env *env)
+char *expand(char *line, t_glob_st *glob_strct)
 {
     char *result = malloc(1);
     char *var_value = NULL;
@@ -95,12 +95,7 @@ char *expand(char *line, t_env *env)
             }
             if (line[i] == '?')
             {
-                var_value = my_getenv2("?", env);
-                if (var_value)
-                    result = ft_strjoin_ws(result, var_value);
-                else
-                    result = ft_strjoin_ws(result, "");
-                free(var);
+                result = ft_strjoin_ws(result, ft_itoa(glob_strct->ext_stat));
                 i++;
                 continue;
             }
@@ -108,7 +103,7 @@ char *expand(char *line, t_env *env)
             while (line[j] && is_valid_char(line[j]))
                 j++;
             var = ft_strndup(&line[i], j - i);
-            var_value = my_getenv2(var, env);
+            var_value = my_getenv2(var, glob_strct->env);
             if (var_value)
                 result = ft_strjoin_ws(result, var_value);
             else
@@ -129,9 +124,9 @@ char *expand(char *line, t_env *env)
 
 
 
-void expand_env_vars(t_cmd *cmd, t_env *env)
+void expand_env_vars(t_glob_st *glob_strct)
 {
-    t_cmd *current = cmd;
+    t_cmd *current = glob_strct->cmd;
     char *expanded = NULL;
     int i = 0;
     while (current)
@@ -139,12 +134,12 @@ void expand_env_vars(t_cmd *cmd, t_env *env)
         i = 0;
         if (current->line && !is_export_or_unset(current->line))
         {
-            expanded = expand(current->line, env);
+            expanded = expand(current->line, glob_strct);
             current->line = expanded;
         }
         while (current->files && current->files[i].filename)
         {
-            current->files[i].filename = expand(current->files[i].filename, env);
+            current->files[i].filename = expand(current->files[i].filename, glob_strct);
             current->files[i].filename = remove_outer_quotes(current->files[i].filename);
             i++;
         }
