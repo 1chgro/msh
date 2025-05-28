@@ -19,6 +19,7 @@
 # endif
 
 extern int g_in_heredoc;
+
 typedef enum
 {
 	REDIRECT_IN,
