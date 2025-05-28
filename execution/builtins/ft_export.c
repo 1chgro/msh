@@ -23,106 +23,6 @@ void	make_index(t_env    **env)
 	}
 }
 
-// void    ft_export(char  **s_cmd, t_env **env)
-// {
-//     int current_index;
-//     int lst_size;
-//     t_env   *temp = NULL;
-//     t_env   *node;
-//     char    *key;
-//     char    *value;
-//     int     i;
-
-//     current_index = 0;
-//     lst_size = 0;
-//     i = 0;
-//     make_index(env);
-//     temp = *env;
-//     if (!s_cmd[1])
-//     {
-//         while (temp)
-//         {
-//             lst_size++;
-//             temp = temp->next;
-//         }
-//         while (current_index < lst_size)
-//         {
-//             temp = *env;
-//             while (temp)
-//             {
-//                 if (temp->index == current_index)
-//                 {
-//                     if (temp->flag)
-//                         printf("declare -x %s=\"%s\"  index = %d\n", temp->key, temp->value, temp->index);
-//                     else
-//                         printf("declare -x %s  index = %d\n", temp->key, temp->index);
-//                     break;
-//                 }
-//                 temp = temp->next;
-//             }
-//             current_index++;
-//         }
-//     }
-//     else
-//     {
-//         i = 1;
-//         while (s_cmd[i])
-//         {
-//             if (!check_valid_identifier(s_cmd[i]))
-                
-//             key = get_key(s_cmd[i]);
-//             if (!key)
-//             {
-//                 return;
-//             }
-//             value = get_value(s_cmd[i]);
-//             if (!value)
-//             {
-//                 free(key);
-//                 return;
-//             }
-//             temp = *env;
-//             while (temp)
-//             {
-//                 if (ft_strcmp(temp->key, key) == 0)
-//                 {
-//                     free(temp->value); 
-//                     temp->value = value;
-//                     temp->flag = (value) ? 1 : 0;
-//                     free(key); 
-//                     break;
-//                 }
-//                 temp = temp->next;
-//             }
-//             if (!temp)
-//             {
-//                 node = create_node(key, value);
-//                 if (!node)
-//                 {
-//                     free(key);
-//                     free(value);
-//                     return;
-//                 }
-//                 append_node(env, node);
-//             }
-//             i++;
-//         }
-//     }
-// }
-/* ft_export.c */
-// void	ft_putstr_fd(char *s, int fd)
-// {
-// 	int	i;
-
-// 	if (fd < 0 || !s)
-// 		return ;
-// 	i = 0;
-// 	while (s[i])
-// 	{
-// 		write(fd, &s[i], 1);
-// 		i++;
-// 	}
-// }
 void	ft_putchar_fd(char c, int fd)
 {
 	if (fd < 0)
@@ -175,10 +75,7 @@ void update_node_value(t_env *node, char *value, int append)
     {
         free(node->value);
         node->value = value;
-        if (node->key[0] == '?')
-            node->flag = 2;
-        else
-            node->flag = (value && value[0] != '\0') ? 1 : 0;
+        node->flag = (value && value[0] != '\0') ? 1 : 0;
     }
 }
 static int is_valid_identifier(char *key)
@@ -241,9 +138,9 @@ static int process_export_arg(char *arg, t_env **env)
     key = get_key(arg);
     if (!is_valid_identifier(key))
     {
-        ft_putstr_fd("export: `", 2);
-        ft_putstr_fd(arg, 2);
-        ft_putendl_fd("': not a valid identifier", 2);
+        dup2(2, 1);
+        printf("export: %s:not a valid identifier\n", arg);
+        dup2(1, 2);
         free(key);
         return (0);
     }
@@ -287,6 +184,7 @@ int ft_export(char **s_cmd, t_env **env)
     temp = *env;
     lst_size = 0;
     status = 0;
+
     if (!s_cmd[1])
     {
         while (temp)
@@ -302,7 +200,6 @@ int ft_export(char **s_cmd, t_env **env)
     {
         if (!process_export_arg(s_cmd[i], env))
             status = 1;
-        // process_export_arg(s_cmd[i], env);
         i++;
     }
     return (status);

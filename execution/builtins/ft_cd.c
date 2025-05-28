@@ -82,10 +82,13 @@ int    ft_cd(char  **s_cmd, t_env  **env)
     char    *old_pwd;
     char    *temp;
 
+
+    old_pwd = my_getenv("PWD", *env);
+    if (!old_pwd)
+        return (1);
     if (!s_cmd[1])
     {
         path = get_home(*env);
-        printf("%s\n", path);
         if (!path)
         {
             perror("msh: cd:");
@@ -95,7 +98,15 @@ int    ft_cd(char  **s_cmd, t_env  **env)
     else if (s_cmd[1][0] == '~' && ft_strlen(s_cmd[1]) == 1)
     {
         path = get_home(*env);
-        printf("%s\n", path);
+        if (!path)
+        {
+            perror("msh: cd:");
+            return (1);
+        }
+    }
+    else if (s_cmd[1][0] == '-' && ft_strlen(s_cmd[1]) == 1)
+    {
+        path = my_getenv("OLDPWD", *env);
         if (!path)
         {
             perror("msh: cd:");
@@ -123,12 +134,9 @@ int    ft_cd(char  **s_cmd, t_env  **env)
             return (1);
         }
     }
-    old_pwd = get_current_pwd();
-    if (!old_pwd)
-        return (1);
     if (ft_strcmp(path, "..") == 0)
     {
-        temp = ft_cd_resolve_parent(get_current_pwd());
+        temp = ft_cd_resolve_parent(old_pwd);
         if (temp && access(temp, F_OK) == 0)
         {
             if (path != s_cmd[1])
