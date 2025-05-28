@@ -30,9 +30,9 @@ void    ft_handle_echo_arg(char **args)
     {
         while (args[i])
         {
-            printf("%s", args[i]);
+            ft_putstr_fd(args[i], 1);
             if (args[i + 1])
-                printf(" ");
+                ft_putstr_fd(" ", 1);
             i++;
         }
         printf("\n");
@@ -42,9 +42,9 @@ void    ft_handle_echo_arg(char **args)
         i = 2;
         while (args[i])
         {
-            printf("%s", args[i]);
+            ft_putstr_fd(args[i], 1);
             if (args[i + 1])
-                printf(" ");
+                ft_putstr_fd(" ", 1);
             i++;
         }
     }

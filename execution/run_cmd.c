@@ -186,8 +186,9 @@ void	exec(char **cmd, t_env *env)
 	path = get_path(cmd[0], env);
 	if (!path)
 	{
-		ft_putstr_fd("msh : ", 2);
-		perror(cmd[0]);
+        dup2(2, 1);
+        printf("msh : %s:command not found\n", cmd[0]);
+        dup2(1, 2);
 		exit(127);
 	}
     if (ft_strcmp(path, "./minishell") == 0)

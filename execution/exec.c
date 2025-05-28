@@ -72,120 +72,14 @@ int	run_builtin(char **s_cmd, t_env *env)
 		return (ft_env(s_cmd, env));
 	if (ft_strcmp(s_cmd[0], "exit") == 0)
 		return (ft_exit(s_cmd));
-    ft_putstr_fd("msh: ", 2);
-    ft_putstr_fd(s_cmd[0], 2);
-    ft_putendl_fd(": command not found", 2);
     return (127);
 }
 
-// int    msh_execute(t_cmd *cmd, t_env *env)
-// {
-//     int     status = 0;
-//     int size = 0;
-//     t_cmd   *temp = cmd;
-//     int i;
-
-//     if (!cmd)
-//     {
-//         return (1);
-//     }
-//     while (temp)
-//     {
-//         size++;
-//         temp = temp->next;
-//     }
-//     temp = cmd;
-//     while (temp)
-//     {
-//         if (temp->files)
-//         {
-//             i = 0;
-//             while (temp->files[i].filename)
-//             {
-//                 if (temp->files[i].type == HEREDOC)
-//                 {
-//                     status = here_doc(temp->files[i].filename, &temp->files[i].fd, env);
-//                     if (temp->files[i].fd < 0)
-//                         return (1);
-//                 }
-//                 i++;
-//             }
-//         }
-//         temp = temp->next;
-//     }
-//     if (!cmd->argv)
-//     {
-//         int saved_stdout = dup(STDOUT_FILENO);
-//         int saved_stdin = dup(STDIN_FILENO);
-//         if (cmd->files)
-//         {
-//             char *line;
-//             status = redirection(cmd);
-//             while ((line = get_next_line(STDIN_FILENO)))
-//             {
-//                 write(STDOUT_FILENO, line, ft_strlen(line));
-//                 free(line);
-//             }
-//         }
-//         dup2(saved_stdout, STDOUT_FILENO);
-//         dup2(saved_stdin, STDIN_FILENO);
-//         close(saved_stdout);
-//         close(saved_stdin);
-
-//     }
-//     else if (are_builtin(cmd->argv[0]) && size == 1)
-//     {
-//         int saved_stdout = dup(STDOUT_FILENO);
-//         int saved_stdin = dup(STDIN_FILENO);
-//         if (cmd->files)
-//         {
-//             status = redirection(cmd);
-//         }
-//         status = run_builtin(cmd->argv, env);
-//         dup2(saved_stdout, STDOUT_FILENO);
-//         dup2(saved_stdin, STDIN_FILENO);
-//         close(saved_stdout);
-//         close(saved_stdin);
-//     }
-//     else
-//     {
-//         status = run_cmd(cmd, env);
-//     }
-//     temp = cmd;
-//     while (temp)
-//     {
-//         if (temp->files)
-//         {
-//             int i = 0;
-//             while (temp->files[i].filename)
-//             {
-//                 if (temp->files[i].type == HEREDOC && temp->files[i].fd >= 0)
-//                     close(temp->files[i].fd);
-//                 i++;
-//             }
-//         }
-//         temp = temp->next;
-//     }
-//     return (status);
-// }
-
-int msh_execute(t_glob_st *glob_strct)
+int open_heredoc(t_glob_st *glob_strct)
 {
-    int status = 0;
-    int size = 0;
     t_cmd *temp = glob_strct->cmd;
     int i;
-    int saved_stdout = -1;
-    int saved_stdin = -1;
-
-    if (!glob_strct->cmd)
-        return (1);
-
-    while (temp)
-    {
-        size++;
-        temp = temp->next;
-    }
+    int status = 0;
     temp = glob_strct->cmd;
     while (temp)
     {
@@ -197,15 +91,54 @@ int msh_execute(t_glob_st *glob_strct)
                 if (temp->files[i].type == HEREDOC)
                 {
                     status = here_doc(temp->files[i].filename, &temp->files[i].fd, glob_strct);
-                    if (temp->files[i].fd < 0)
+                    if (temp->files[i].fd < 0 || status)
                     {
-                        perror("heredoc error");
-                        return (1);
+                        perror("msh : ");
+                        return (status);
                     }
                 }
                 i++;
             }
         }
+        temp = temp->next;
+    }
+    return(status);
+}
+void close_heredoc(t_glob_st *glob_strct)
+{
+    t_cmd   *temp;
+    int i;
+
+    temp = glob_strct->cmd;
+    while (temp)
+    {
+        if (temp->files)
+        {
+            i = 0;
+            while (temp->files[i].filename)
+            {
+                if (temp->files[i].type == HEREDOC && temp->files[i].fd >= 0)
+                    close(temp->files[i].fd);
+                i++;
+            }
+        }
+        temp = temp->next;
+    }
+}
+int msh_execute(t_glob_st *glob_strct)
+{
+    int status = 0;
+    int size = 0;
+    t_cmd *temp = glob_strct->cmd;
+    int saved_stdout = -1;
+    int saved_stdin = -1;
+
+    if (!glob_strct->cmd)
+        return (1);
+
+    while (temp)
+    {
+        size++;
         temp = temp->next;
     }
     saved_stdout = dup(STDOUT_FILENO);
@@ -215,7 +148,6 @@ int msh_execute(t_glob_st *glob_strct)
         perror("dup error");
         return (1);
     }
-
     if (!glob_strct->cmd->argv)
     {
         if (glob_strct->cmd->files)
@@ -255,21 +187,6 @@ int msh_execute(t_glob_st *glob_strct)
     dup2(saved_stdin, STDIN_FILENO);
     close(saved_stdout);
     close(saved_stdin);
-    temp = glob_strct->cmd;
-    while (temp)
-    {
-        if (temp->files)
-        {
-            i = 0;
-            while (temp->files[i].filename)
-            {
-                if (temp->files[i].type == HEREDOC && temp->files[i].fd >= 0)
-                    close(temp->files[i].fd);
-                i++;
-            }
-        }
-        temp = temp->next;
-    }
-
+    close_heredoc(glob_strct);
     return (glob_strct->ext_stat);
 }

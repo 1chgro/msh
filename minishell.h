@@ -169,6 +169,8 @@ char	*ft_itoa(int n);
 void update_node_value(t_env *node, char *value, int append);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putchar_fd(char c, int fd);
-t_env    *get_exit(t_env *env);
+char	*my_getenv(char *name, t_env *env);
 void	free_env(t_env *env);
+int open_heredoc(t_glob_st *glob_strct);
+void close_heredoc(t_glob_st *glob_strct);
 #endif

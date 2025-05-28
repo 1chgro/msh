@@ -109,10 +109,7 @@ t_env *create_node(char *key, char *value)
         node->value = ft_strdup("");
     else
         node->value = value;
-    if (ft_strcmp(key, "?") == 0)
-        node->flag = 2;
-    else
-        node->flag = (value && value[0] != '\0') ? 1 : 0;
+    node->flag = (value && value[0] != '\0') ? 1 : 0;
     node->index = -1;
     node->next = NULL;
     return (node);
@@ -203,22 +200,5 @@ int copie_env(t_env **c_env, char **env)
         append_node(c_env, node);
         i++;
     }
-    key = ft_strdup("?");
-    if (!key)
-        return (0);
-    value = ft_strdup("0");
-    if (!value)
-    {
-        free(key);
-        return (0);
-    }
-    node = create_node(key, value);
-    if (!node)
-    {
-        free(key);
-        free(value);
-        return (0);
-    }
-    append_node(c_env, node);
     return (1);
 }

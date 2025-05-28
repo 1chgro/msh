@@ -88,6 +88,8 @@ void msh_loop(char **envp)
     while(1)
     {
         glob_strct->cmd = msh_parse(glob_strct);
+        if (open_heredoc(glob_strct))
+            close_heredoc(glob_strct);
         // if (!glob_strct->cmd)
         //     glob_strct->ext_stat = 0;
         if (glob_strct->cmd)

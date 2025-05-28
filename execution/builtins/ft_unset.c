@@ -48,7 +48,7 @@ int    ft_unset(char **s_cmd, t_env **env)
             }
             temp = temp->next;
         }
-        if (flag == 1 && ft_strcmp(temp->key, "?"))
+        if (flag == 1)
             remove_variable(s_cmd[i], env);
         i++;
     }
