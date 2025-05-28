@@ -91,7 +91,9 @@ int open_heredoc(t_glob_st *glob_strct)
                 if (temp->files[i].type == HEREDOC)
                 {
                     status = here_doc(temp->files[i].filename, &temp->files[i].fd, glob_strct);
-                    if (temp->files[i].fd < 0 || status)
+                    if (status)
+                        return (status);
+                    if (temp->files[i].fd < 0)
                     {
                         perror("msh : ");
                         return (status);

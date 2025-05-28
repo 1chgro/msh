@@ -12,11 +12,13 @@
 #include <limits.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <sys/ioctl.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
 
+extern int g_in_heredoc;
 typedef enum
 {
 	REDIRECT_IN,
