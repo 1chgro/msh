@@ -1,14 +1,15 @@
 #include "../minishell.h"
 
-void init_cmd(t_cmd **cmd)
+int init_cmd(t_cmd **cmd)
 {
 	*cmd = malloc(sizeof(t_cmd));
 	if (!*cmd)
-		return;
+		return (0);
 	(*cmd)->line = NULL;
 	(*cmd)->argv = NULL;
 	(*cmd)->files = NULL;
 	(*cmd)->next = NULL;
+	return (1);
 }
 
 int count_redirections(t_token *tokens)
@@ -112,7 +113,7 @@ char **split_line_to_args(char *line)
 	arg_count = count_args(line);
 	args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!args)
-		return (NULL);
+		return (free(line), NULL);
 	j = 0;
 	while (j < arg_count) 
 	{
@@ -173,7 +174,8 @@ t_cmd *create_cmd_lst(t_token *tokens)
 		}
 		if (is_pipe(&current))
 		{
-			init_cmd(&temp_cmd->next);
+			if (!init_cmd(&temp_cmd->next))
+				return (free_cmd(cmd), NULL);
 			temp_cmd = temp_cmd->next;
 			count_red = count_redirections(current->next);
 			i = 0;
@@ -189,6 +191,7 @@ t_cmd *create_cmd(t_glob_st *glob_strct)
 	if (!glob_strct->tokens)
 		return (NULL);
 	glob_strct->cmd = create_cmd_lst(glob_strct->tokens);
+	free_tokens(glob_strct->tokens);
 	if (!glob_strct->cmd)
 		return (NULL);
 	expand_env_vars(glob_strct);

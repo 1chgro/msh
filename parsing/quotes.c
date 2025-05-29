@@ -37,8 +37,11 @@ char *remove_outer_quotes(char *s)
     char quote = 0;
     char output[ft_strlen(s) + 1];
 
+	if (!s)
+		return (NULL);
 
-    while (s[i]) {
+    while (s[i])
+	{
         if (!quote && (s[i] == '"' || s[i] == '\'')) {
             quote = s[i];
             i++;

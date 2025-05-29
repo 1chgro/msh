@@ -1,5 +1,6 @@
 #include "../minishell.h"
 
+
 char *read_line(void)
 {
 	char *input;
@@ -36,9 +37,9 @@ t_token *lexer(char *line)
         return (NULL);
     };
     tokens = tokenize(line);
-    if (!tokens)
-        return (free(line), NULL);
     free(line);
+    if (!tokens)
+        return (NULL);
     return (tokens);
 }
 
@@ -47,18 +48,22 @@ t_cmd *msh_parse(t_glob_st *glob_strct)
 {
     char *line;
 
+    if (!glob_strct)
+        return (NULL);
     line = NULL;
     line = read_line();
     if (line == NULL)
         return (NULL);
     glob_strct->tokens = lexer(line);
-    if (!check_syntax_err(glob_strct))
+    if (!glob_strct->tokens)
+        return (NULL);
+    if (check_syntax_err(glob_strct))
         return (free_tokens(glob_strct->tokens), glob_strct->ext_stat = 2, NULL);
     glob_strct->cmd = create_cmd(glob_strct);
     if (!glob_strct->cmd)
-        return (free_tokens(glob_strct->tokens), NULL);
-    print_tokens(glob_strct->tokens);
-    print_cmd(glob_strct->cmd);
+        return (NULL);
+    // print_tokens(glob_strct->tokens);
+    // print_cmd(glob_strct->cmd);
     return (glob_strct->cmd);
 }
 
@@ -75,17 +80,17 @@ t_glob_st *init_glob_strct()
     return (glob_strct);
 }
 
-void msh_loop(char **envp)
+int msh_loop(char **envp)
 {
-    // t_cmd *cmd = NULL;
-    // t_env *env = NULL;
     t_glob_st *glob_strct = NULL;
-    // int status = 0;
 
     glob_strct = init_glob_strct();
-    copie_env(&glob_strct->env, envp);
+    if (!glob_strct)
+        return (perror("msh: error allocating memory"), 0);
+    if (!copie_env(&glob_strct->env, envp))
+        return (perror("msh: env failed"), 0);
     msh_signals();
-    while(1)
+    while(1 && glob_strct)
     {
         glob_strct->cmd = msh_parse(glob_strct);
         if (open_heredoc(glob_strct))
@@ -101,5 +106,5 @@ void msh_loop(char **envp)
             glob_strct->cmd = NULL;
         }
     }
-    free_env(glob_strct->env);
+    return (free_env(glob_strct->env), 1);
 }

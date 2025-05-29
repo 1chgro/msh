@@ -1,7 +1,7 @@
 NAME=minishell
 
-FLGS=-Werror -Wextra -Wall #-g -fsanitize=address
-
+FLGS= -g -fsanitize=address
+#-Werror -Wextra -Wall
 
 SRCS_PARSE= main.c\
 	parsing/parse.c parsing/signals.c parsing/token.c parsing/quotes.c parsing/ft_utils.c parsing/ft_utils_2.c\

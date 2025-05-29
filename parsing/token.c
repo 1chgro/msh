@@ -44,7 +44,8 @@ int handle_word(char *line, int *i, t_token **tokens)
     if (!word)
         return (0);
     ft_stringcpy(word, &line[start], end - start);
-    add_token(tokens, new_token(word, TOKEN_WORD));
+    if (!add_token(tokens, new_token(word, TOKEN_WORD)))
+        return (free(word), 0);
     return (free(word), 1);
 }
 

@@ -3,7 +3,8 @@
 void free_env(t_env *env)
 {
 	t_env *tmp;
-
+    if (!env)
+        return ;
 	while (env)
 	{
 		tmp = env;
@@ -150,7 +151,8 @@ int copie_env(t_env **c_env, char **env)
     char *value;
     int i = 0;
 
-    *c_env = NULL;
+    if (!c_env)
+        return (0);
     if (!*env)
     {
         env = fill_env();

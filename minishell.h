@@ -18,6 +18,7 @@
 #  define BUFFER_SIZE 42
 # endif
 
+
 extern int g_in_heredoc;
 
 typedef enum
@@ -82,7 +83,7 @@ void print_tokens(t_token *tokens);
 
 
 //--------------- main functions -----------------------//
-void	msh_loop(char **envp);
+int	msh_loop(char **envp);
 int   	msh_execute(t_glob_st *glob_strct);
 void	msh_signals();
 t_token		*lexer(char *line);
@@ -97,7 +98,7 @@ void		free_tokens(t_token *tokens);
 //------------------------ tokenization ---------------//
 t_token				*tokenize(char *line);
 t_token				*new_token(char *value, t_token_type type);
-void				add_token(t_token **head, t_token *new_token);
+int				add_token(t_token **head, t_token *new_token);
 t_token_type		get_token_type(char *value);
 
 
@@ -176,4 +177,5 @@ char	*my_getenv(char *name, t_env *env);
 void	free_env(t_env *env);
 int open_heredoc(t_glob_st *glob_strct);
 void close_heredoc(t_glob_st *glob_strct);
+
 #endif
