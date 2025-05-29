@@ -1,10 +1,10 @@
 #include "../minishell.h"
 
-int is_export_or_unset(char *line)
+int is_export(char *line)
 {
     if (!line)
         return (0);
-    if (ft_strncmp(line, "export", 6) == 0 || ft_strncmp(line, "unset", 5) == 0)
+    if (ft_strncmp(line, "export", 6) == 0)
         return (1);
     return (0);
 }
@@ -123,6 +123,14 @@ char *expand(char *line, t_glob_st *glob_strct)
 }
 
 
+char *expand_export(char *line, t_glob_st *glob_strct)
+{
+    if (!line)
+        return (NULL);
+
+    return (line);
+}
+
 
 void expand_env_vars(t_glob_st *glob_strct)
 {
@@ -132,14 +140,16 @@ void expand_env_vars(t_glob_st *glob_strct)
     while (current)
     {
         i = 0;
-        if (current->line && !is_export_or_unset(current->line))
+
+        if (current->line)
         {
             expanded = expand(current->line, glob_strct);
             current->line = expanded;
         }
         while (current->files && current->files[i].filename)
         {
-            current->files[i].filename = expand(current->files[i].filename, glob_strct);
+            if (current->files[i].type != HEREDOC)
+                current->files[i].filename = expand(current->files[i].filename, glob_strct);
             current->files[i].filename = remove_outer_quotes(current->files[i].filename);
             i++;
         }

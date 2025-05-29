@@ -17,6 +17,7 @@ int here_doc(char *limiter, int *fd, t_glob_st *glob_strct)
     char *line1;
     char *line;
     int write_fd;
+    unlink("/tmp/file_tmp");
     write_fd = open("/tmp/file_tmp", O_CREAT | O_RDWR, 0644);
     *fd = open("/tmp/file_tmp", O_RDONLY);
     if (write_fd < 0 || *fd < 0)
