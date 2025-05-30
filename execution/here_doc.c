@@ -26,17 +26,17 @@ int here_doc(char *limiter, int *fd, t_glob_st *glob_strct)
         return (1);
     }
     unlink("/tmp/file_tmp");
-    write(STDOUT_FILENO, "> ", 2);
+    // write(STDOUT_FILENO, "> ", 2);
     signal(SIGINT, handel_sigint);
     while (1)
     {
-        line = readline(NULL);
+        line = readline("> ");
         if (!line || g_in_heredoc)
         {
             if (g_in_heredoc)
             {
                 glob_strct->ext_stat = 130;
-                write(STDOUT_FILENO, "\n", 1);
+                // write(STDOUT_FILENO, "\n", 1);
             }
             free(line);
             break ;
@@ -51,7 +51,8 @@ int here_doc(char *limiter, int *fd, t_glob_st *glob_strct)
         write(write_fd, line1, ft_strlen(line1));
         write(write_fd, "\n", 1);
         free(line1);
-        write(STDOUT_FILENO, "> ", 2);
+        // write(STDOUT_FILENO, "> ", 2);
+
     }
     msh_signals();
     if (g_in_heredoc)
