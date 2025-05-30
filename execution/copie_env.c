@@ -133,14 +133,15 @@ char    **fill_env()
 {
     char    **env;
 
-    env = malloc(sizeof(char *) * 5);
+    env = malloc(sizeof(char *) * 6);
     if (!env)
         return (NULL);
-    env[0] = ft_strdup("PWD=/home/noel-baz/Desktop/mini");
-    env[1] = ft_strdup("SHLVL=1");
-    env[2] = ft_strdup("_=/usr/bin/env");
-    env[3] = ft_strdup("PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
-    env[4] = NULL;
+    env[0] = ft_strdup("OLDPWD");
+    env[1] = ft_strjoin_("PWD=", get_current_pwd());
+    env[2] = ft_strdup("SHLVL=1");
+    env[3] = ft_strdup("_=/usr/bin/env");
+    env[4] = ft_strdup("PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
+    env[5] = NULL;
     return(env);
 }
 int copie_env(t_env **c_env, char **env)

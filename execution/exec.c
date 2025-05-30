@@ -63,7 +63,7 @@ int	run_builtin(char **s_cmd, t_env *env)
 	if (ft_strcmp(s_cmd[0], "echo") == 0)
 		return (ft_echo(s_cmd));
 	if (ft_strcmp(s_cmd[0], "pwd") == 0)
-		return (ft_pwd(s_cmd, env));
+		return (ft_pwd(env));
 	if (ft_strcmp(s_cmd[0], "export") == 0)
 		return (ft_export(s_cmd, &env));
 	if (ft_strcmp(s_cmd[0], "unset") == 0)

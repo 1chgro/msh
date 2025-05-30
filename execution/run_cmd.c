@@ -84,52 +84,51 @@ char	*my_getenv(char *name, t_env *env)
 	return (NULL);
 }
 
-static char	*check_command_path(char **allpath, char *cmd)
-{
-	int		i;
-	char	*path_part;
-	char	*exec;
+// static char	*check_command_path(char **allpath, char *cmd)
+// {
+// 	int		i;
+// 	char	*path_part;
+// 	char	*exec;
 
-	i = -1;
-	while (allpath[++i])
-	{
-		path_part = ft_strjoin_(allpath[i], "/");
-		exec = ft_strjoin_(path_part, cmd);
-		free(path_part);
-		if (access(exec, F_OK | X_OK) == 0)
-		{
-			free_split(allpath);
-			return (exec);
-		}
-		free(exec);
-	}
-	return (NULL);
-}
+// 	i = -1;
+// 	while (allpath[++i])
+// 	{
+// 		path_part = ft_strjoin_(allpath[i], "/");
+// 		exec = ft_strjoin_(path_part, cmd);
+// 		free(path_part);
+// 		if (access(exec, F_OK | X_OK) == 0)
+// 		{
+// 			free_split(allpath);
+// 			return (exec);
+// 		}
+// 		free(exec);
+// 	}
+// 	return (NULL);
+// }
 
-char	*get_path(char *cmd, t_env *env)
-{
-	char	**allpath;
-	char	*result;
+// char	*get_path(char *cmd, t_env *env)
+// {
+// 	char	**allpath;
+// 	char	*result;
 
-	allpath = ft_split(my_getenv("PATH", env), ':');
-
-	if (!allpath || !cmd)
-	{
-		free_split(allpath);
-		return (NULL);
-	}
-	if (ft_strchr(cmd, '/'))
-	{
-		if (access(cmd, F_OK | X_OK) == 0)
-			return (cmd);
-		return (NULL);
-	}
-	result = check_command_path(allpath, cmd);
-	if (result)
-		return (result);
-	free_split(allpath);
-	return (NULL);
-}
+//     if (ft_strchr(cmd, '/'))
+//     {
+//         if (access(cmd, F_OK | X_OK) == 0)
+//             return (cmd);
+//         return (NULL);
+//     }
+// 	allpath = ft_split(my_getenv("PATH", env), ':');
+// 	if (!allpath || !cmd)
+// 	{
+// 		free_split(allpath);
+// 		return (NULL);
+// 	}
+// 	result = check_command_path(allpath, cmd);
+// 	if (result)
+// 		return (result);
+// 	free_split(allpath);
+// 	return (NULL);
+// }
 
 int is_valid_numeric(const char *str)
 {
@@ -178,29 +177,147 @@ void    handle_shell_level(t_env *env)
     update_node_value(shlvl_node, ft_itoa(new_shlvl), 0);
 }
 
-void	exec(char **cmd, t_env *env)
+// void	exec(char **cmd, t_env *env)
+// {
+// 	char	*path;
+//     if (!cmd)
+//         {return ;}
+// 	path = get_path(cmd[0], env);
+// 	if (!path)
+// 	{
+//         perror("msh :");
+// 		exit(127);
+// 	}
+//     if (ft_strcmp(path, "./minishell") == 0)
+//     {
+//         handle_shell_level(env);
+//     }
+// 	if (execve(path, cmd, struct_to_array(env)) == -1)
+// 	{
+// 		free(path);
+// 		exit(1);
+// 	}
+// }
+
+
+static int is_directory(const char *path)
 {
-	char	*path;
+    struct stat statbuf;
+    if (stat(path, &statbuf) != 0)
+        return 0;
+    return S_ISDIR(statbuf.st_mode);
+}
+
+static char *check_command_path(char **allpath, char *cmd)
+{
+    int i = -1;
+    char *path_part;
+    char *exec;
+
+    while (allpath && allpath[++i])
+    {
+        path_part = ft_strjoin_(allpath[i], "/");
+        if (!path_part)
+            continue;
+        exec = ft_strjoin_(path_part, cmd);
+        free(path_part);
+        if (!exec)
+            continue;
+        if (access(exec, F_OK) == 0)
+        {
+            if (is_directory(exec))
+            {
+                free(exec);
+                continue;
+            }
+            if (access(exec, X_OK) == 0)
+            {
+                free_split(allpath);
+                return exec;
+            }
+        }
+        free(exec);
+    }
+    return NULL;
+}
+
+
+char *get_path(char *cmd, t_env *env)
+{
+    char **allpath;
+    char *result;
+
     if (!cmd)
-        {return ;}
-	path = get_path(cmd[0], env);
-	if (!path)
-	{
-        dup2(2, 1);
-        printf("msh : %s:command not found\n", cmd[0]);
-        dup2(1, 2);
-		exit(127);
-	}
+        return NULL;
+    if (ft_strchr(cmd, '/'))
+    {
+        if (access(cmd, F_OK) != 0)
+        {
+            ft_putstr_fd("msh: ", 2);
+            ft_putstr_fd(cmd, 2);
+            ft_putstr_fd(": No such file or directory\n", 2);
+            return NULL;
+        }
+        if (is_directory(cmd))
+        {
+            ft_putstr_fd("msh: ", 2);
+            ft_putstr_fd(cmd, 2);
+            ft_putstr_fd(": Is a directory\n", 2);
+            exit(126);
+        }
+        if (access(cmd, X_OK) != 0)
+        {
+            ft_putstr_fd("msh: ", 2);
+            ft_putstr_fd(cmd, 2);
+            ft_putstr_fd(": Permission denied\n", 2);
+            return NULL;
+        }
+        return ft_strdup(cmd);
+    }
+
+    allpath = ft_split(my_getenv("PATH", env), ':');
+    if (!allpath)
+    {
+        ft_putstr_fd("msh: ", 2);
+        ft_putstr_fd(cmd, 2);
+        ft_putstr_fd(": command not found\n", 2);
+        return NULL;
+    }
+    result = check_command_path(allpath, cmd);
+    // free_split(allpath);
+    if (!result)
+    {
+        ft_putstr_fd("msh: ", 2);
+        ft_putstr_fd(cmd, 2);
+        ft_putstr_fd(": command not found\n", 2);
+    }
+    return result;
+}
+
+void exec(char **cmd, t_env *env)
+{
+    char *path;
+
+    if (!cmd || !cmd[0])
+        exit(1);
+    path = get_path(cmd[0], env);
+    if (!path)
+        exit(127);
     if (ft_strcmp(path, "./minishell") == 0)
     {
         handle_shell_level(env);
     }
-	if (execve(path, cmd, struct_to_array(env)) == -1)
-	{
-		free(path);
-		exit(1);
-	}
+    if (execve(path, cmd, struct_to_array(env)) == -1)
+    {
+        ft_putstr_fd("msh: ", 2);
+        ft_putstr_fd(cmd[0], 2);
+        ft_putstr_fd(": execve failed: ", 2);
+        perror("");
+        free(path);
+        exit(1);
+    }
 }
+
 int redirection(t_cmd *cmd)
 {
     int i = 0;
@@ -360,7 +477,9 @@ int    run_single_cmd(t_cmd *cmd, t_env *env)
     }
     waitpid(pid, &status, 0);
     if (WIFEXITED(status))
-        return (WEXITSTATUS(status));
+        status = WEXITSTATUS(status);
+    else if (WIFSIGNALED(status))
+        status = WTERMSIG(status) + 128;
     return (status);
 }
 

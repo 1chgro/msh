@@ -5,8 +5,9 @@ int check_newline(char  *str)
     int i;
 
     i = 0;
-    if (str[i++] == '-')
+    if (str[i] == '-' && str[i + 1])
     {
+        i++;
         while (str[i])
         {
             if (str[i] != 'n')
@@ -24,10 +25,11 @@ void    ft_handle_echo_arg(char **args)
     int     i;
     int     new_line;
 
-    i = 1;
+    i = 0;
     new_line = check_newline(args[1]);
     if (new_line)
     {
+        i++;
         while (args[i])
         {
             ft_putstr_fd(args[i], 1);
@@ -39,7 +41,9 @@ void    ft_handle_echo_arg(char **args)
     }
     else
     {
-        i = 2;
+        i = 1;
+        while (args[i] && !check_newline(args[i]))
+            i++;
         while (args[i])
         {
             ft_putstr_fd(args[i], 1);

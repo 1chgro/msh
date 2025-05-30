@@ -1,9 +1,28 @@
 #include "../../minishell.h"
 
-int    ft_pwd()
+static int is_valid_cwd(void)
+{
+    char *cwd;
+
+    cwd = getcwd(NULL, 0);
+    if (!cwd) {
+        return 0;
+    }
+    free(cwd);
+    return 1;
+}
+
+int    ft_pwd(t_env *env)
 {
     char    buff[8192000];
-
+    char    *pwd;
+    
+    if (!is_valid_cwd())
+    {
+        pwd = my_getenv("PWD", env);
+        printf("%s\n", pwd);
+        return 0;
+    }
     getcwd(buff, 8192000);
     printf("%s\n", buff);
     return (0);

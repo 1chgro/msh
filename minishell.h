@@ -9,6 +9,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <limits.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -150,7 +151,7 @@ t_env	*create_node(char *key, char *value);
 void	append_node(t_env **head, t_env *node);
 int		are_builtin(char    *cmd);
 int		run_builtin(char **s_cmd, t_env *env);
-int    ft_pwd();
+int    ft_pwd(t_env *env);
 int    ft_env(char **s_cmd, t_env *env);
 int    ft_exit(char **s_cmd);
 int    ft_export(char **s_cmd, t_env **env);
@@ -176,4 +177,5 @@ char	*my_getenv(char *name, t_env *env);
 void	free_env(t_env *env);
 int open_heredoc(t_glob_st *glob_strct);
 void close_heredoc(t_glob_st *glob_strct);
+char *get_current_pwd(void);
 #endif
