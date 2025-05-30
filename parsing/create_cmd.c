@@ -195,6 +195,7 @@ t_cmd *create_cmd(t_glob_st *glob_strct)
 	if (!glob_strct->cmd)
 		return (NULL);
 	expand_env_vars(glob_strct);
+	printf("line1:%s\n", glob_strct->cmd->line);
 	fill_cmd_argv(glob_strct->cmd);
 	return (glob_strct->cmd);
 }

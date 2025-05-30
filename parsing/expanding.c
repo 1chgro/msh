@@ -121,14 +121,13 @@ char *expand(char *line, t_glob_st *glob_strct)
     }
     return result;
 }
-
-
-char *expand_export(char *line, t_glob_st *glob_strct)
+char *ft_strcpy(char *dest, const char *src)
 {
-    if (!line)
-        return (NULL);
-
-    return (line);
+    char *ptr = dest;
+    while (*src)
+        *ptr++ = *src++;
+    *ptr = '\0';
+    return dest;
 }
 
 
@@ -141,7 +140,12 @@ void expand_env_vars(t_glob_st *glob_strct)
     {
         i = 0;
 
-        if (current->line)
+        if (current->line && is_export(current->line))
+        {
+            expanded = expand_export(current->line, glob_strct);
+            current->line = expanded;
+        }
+        else if (current->line)
         {
             expanded = expand(current->line, glob_strct);
             current->line = expanded;
