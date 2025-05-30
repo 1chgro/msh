@@ -58,6 +58,8 @@ int	run_builtin(char **s_cmd, t_env *env)
         perror("invalid built-in command");
         return (1);
     }
+    if (!env)
+        return (0);
 	if (ft_strcmp(s_cmd[0], "cd") == 0)
 		return (ft_cd(s_cmd, &env));
 	if (ft_strcmp(s_cmd[0], "echo") == 0)
@@ -135,9 +137,10 @@ int msh_execute(t_glob_st *glob_strct)
     int saved_stdout = -1;
     int saved_stdin = -1;
 
-    if (!glob_strct->cmd)
-        return (1);
-
+    if (!glob_strct->env)
+        return (0);
+    if (!glob_strct->cmd || !glob_strct->env)
+        return (0);
     while (temp)
     {
         size++;

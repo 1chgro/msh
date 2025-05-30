@@ -346,6 +346,8 @@ int redirection(t_cmd *cmd)
         }
         else if (cmd->files[i].type == REDIRECT_OUT)
         {
+            if (ft_strcmp(cmd->files[i].filename, "/dev/stdout") == 0)
+                return (0);
             cmd->files[i].fd = open(cmd->files[i].filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
             if (cmd->files[i].fd < 0)
             {
@@ -490,6 +492,8 @@ int run_cmd(t_cmd *cmd, t_env *env)
         perror("invalid command");
         return (1);
     }
+    if (!env)
+        return (0);
     if (!cmd->next)
     {
         return (run_single_cmd(cmd, env));
