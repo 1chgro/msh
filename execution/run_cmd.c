@@ -424,7 +424,7 @@ int run_pipeline(t_cmd *cmd, t_env *env)
                 
             if (are_builtin(cmd->argv[0]))
             {
-                status = run_builtin(cmd->argv, env);
+                status = run_builtin(cmd->argv, &env);
                 exit(status);
             }
             else

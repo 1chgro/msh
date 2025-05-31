@@ -6,7 +6,6 @@ static void remove_variable(char *key, t_env **env)
         return ;
     t_env *current = *env;
     t_env *prev = NULL;
-    int lat = 0;
     if (!current)
         return;
     if (ft_strcmp(current->key, key) == 0)

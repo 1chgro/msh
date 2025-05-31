@@ -150,7 +150,7 @@ char    **ft_split(char const *s, char c);
 t_env	*create_node(char *key, char *value);
 void	append_node(t_env **head, t_env *node);
 int		are_builtin(char    *cmd);
-int		run_builtin(char **s_cmd, t_env *env);
+int		run_builtin(char **s_cmd, t_env **env);
 int    ft_pwd(t_env *env);
 int    ft_env(char **s_cmd, t_env *env);
 int    ft_exit(char **s_cmd);

@@ -204,7 +204,6 @@ int ft_cd(char **s_cmd, t_env **env)
         }
         path = temp;
     }
-    printf("%s\n", path);
     if (chdir(path) == -1)
     {
         if (ft_strcmp(s_cmd[1], "..") == 0)

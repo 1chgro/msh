@@ -51,27 +51,25 @@ int  are_builtin(char    *cmd)
 		return (1);
 	return (0);
 }
-int	run_builtin(char **s_cmd, t_env *env)
+int	run_builtin(char **s_cmd, t_env **env)
 {
     if (!s_cmd || !s_cmd[0])
     {
         perror("invalid built-in command");
         return (1);
     }
-    if (!env)
-        return (0);
 	if (ft_strcmp(s_cmd[0], "cd") == 0)
-		return (ft_cd(s_cmd, &env));
+		return (ft_cd(s_cmd, env));
 	if (ft_strcmp(s_cmd[0], "echo") == 0)
 		return (ft_echo(s_cmd));
 	if (ft_strcmp(s_cmd[0], "pwd") == 0)
-		return (ft_pwd(env));
+		return (ft_pwd(*env));
 	if (ft_strcmp(s_cmd[0], "export") == 0)
-		return (ft_export(s_cmd, &env));
+		return (ft_export(s_cmd, env));
 	if (ft_strcmp(s_cmd[0], "unset") == 0)
-		return (ft_unset(s_cmd, &env));
+		return (ft_unset(s_cmd, env));
 	if (ft_strcmp(s_cmd[0], "env") == 0)
-		return (ft_env(s_cmd, env));
+		return (ft_env(s_cmd, *env));
 	if (ft_strcmp(s_cmd[0], "exit") == 0)
 		return (ft_exit(s_cmd));
     return (127);
@@ -137,10 +135,8 @@ int msh_execute(t_glob_st *glob_strct)
     int saved_stdout = -1;
     int saved_stdin = -1;
 
-    if (!glob_strct->env)
-        return (0);
     if (!glob_strct->cmd || !glob_strct->env)
-        return (0);
+        return (1);
     while (temp)
     {
         size++;
@@ -182,7 +178,7 @@ int msh_execute(t_glob_st *glob_strct)
                 return (status);
             }
         }
-        glob_strct->ext_stat = run_builtin(glob_strct->cmd->argv, glob_strct->env);
+        glob_strct->ext_stat = run_builtin(glob_strct->cmd->argv, &glob_strct->env);
     }
     else
     {
