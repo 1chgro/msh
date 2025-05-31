@@ -136,7 +136,8 @@ void fill_cmd_argv(t_cmd *cmd)
 	while (temp_cmd)
 	{
 		temp_cmd->argv = split_line_to_args(temp_cmd->line);
-		temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
+		if (!is_export(temp_cmd->argv[0]))
+			temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
 		if (!temp_cmd->argv)
 			return ;
 		temp_cmd = temp_cmd->next;

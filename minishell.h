@@ -107,10 +107,12 @@ int check_syntax_err(t_glob_st *glob_strct);
 
 //--------------------- cmd create ----------------------------//
 t_cmd	*create_cmd(t_glob_st *glob_strct);
+char **split_line_to_args(char *line);
 
 //------------------- env --------------------------------------//
 int		copie_env(t_env **c_env, char **env);
 char	*my_getenv2(char *name, t_env *env);
+int is_export(char *line);
 
 //-----------------------Utility functions-----------------//
 char	*ft_strtrim(char const *s1, char const *set);
