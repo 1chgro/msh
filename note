@@ -23,3 +23,10 @@ msh  -> export 'h'=$a -------> h="a" key: b key: c
 ----------done
 bash -> export h=$a ------> h="a b c"               
 msh  -> export h=$a -------> h="a" key: b key: c        
+
+
+
+
+
+echo '$USER "$USER" "$"USER"" '$USER' '$'USER'''
+echo "$USER "$USER " "$"USER"" '$USER' '$'USER''"
