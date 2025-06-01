@@ -43,6 +43,7 @@ char *add_quotes(char *value)
     return (result);
 }
 
+
 char *export_onebone(char **export_args, t_glob_st *glob_strct)
 {
     char *result = NULL;
@@ -67,7 +68,6 @@ char *export_onebone(char **export_args, t_glob_st *glob_strct)
         {
             result = ft_strjoin_ws(result, "=");
             j++;
-            
             var_value = ft_strdup(&export_args[i][j]);
             if (key_quotes)
             {
@@ -141,7 +141,6 @@ char *export_onebone(char **export_args, t_glob_st *glob_strct)
     return (result);
 }
 
-
 char *expand_export(char *line, t_glob_st *glob_strct)
 {
     char *result = NULL;
@@ -154,5 +153,6 @@ char *expand_export(char *line, t_glob_st *glob_strct)
     if (!export_args)
         return (NULL);
     result = export_onebone(export_args, glob_strct);
+    
     return (result);
 }

@@ -83,6 +83,7 @@ char *expand(char *line, t_glob_st *glob_strct)
             quote = 0;
         if (line[i] == '$' && (is_valid_char(line[i + 1]) || line[i + 1] == '?') && quote != '\'')
         {
+            printf("here line[%d] = %c\n", i, line[i]);
             i++;
             if (ft_isdigit(line[i]) && is_valid_char(line[i + 1]))
             {
@@ -111,8 +112,9 @@ char *expand(char *line, t_glob_st *glob_strct)
             free(var);
             i = j;
         }
-        else
+        else 
         {
+            printf("else line[%d] = %c\n", i, line[i]);
             tmp[0] = line[i];
             tmp[1] = '\0';
             result = ft_strjoin_ws(result, tmp);
