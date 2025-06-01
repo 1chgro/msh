@@ -1,6 +1,6 @@
 
-bash: export a="a b c" or export 'a'="a b c" or export 'a'='a b c' or export "a"="a b c" ----> a="a b c"
-msh : export a="a b c" or export 'a'="a b c" or export 'a'='a b c' or export "a"="a b c" ----> a="a b c"
+bash: export a="a b c" or export 'a'="a b c" or !export 'a'='a b c' or export "a"="a b c" ----> a="a b c"
+msh : export a="a b c" or export 'a'="a b c" or !export 'a'='a b c' or export "a"="a b c" ----> a="a b c"
 
 
 ------- a="a b c"
@@ -13,7 +13,7 @@ bash -> export "h"='$a' or export h='$a' or export 'h'='$a' ----> h="\$a"
 msh  -> export "h"='$a' or export h='$a' or export 'h'='$a' -----> h="$a"
 
 bash -> export h=$a ------> h="a b c"
-msh  -> export h=$a -------> h="a" key: b key: c
-
 bash -> export 'h'=$a ------> h="a" key: b key: c
+
+msh  -> export h=$a -------> h="a" key: b key: c
 msh  -> export 'h'=$a -------> h="a" key: b key: c

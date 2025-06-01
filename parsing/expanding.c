@@ -130,7 +130,23 @@ char *ft_strcpy(char *dest, const char *src)
     return dest;
 }
 
-
+static char *restore_quotes(char *str)
+{
+    char *result = malloc(strlen(str) + 1);
+    int i = 0, j = 0;
+    
+    while (str[i])
+    {
+        if (str[i] == '\x01')
+            result[j] = '"';
+        else
+            result[j] = str[i];
+        i++;
+        j++;
+    }
+    result[j] = '\0';
+    return result;
+}
 void expand_env_vars(t_glob_st *glob_strct)
 {
     t_cmd *current = glob_strct->cmd;
@@ -143,6 +159,8 @@ void expand_env_vars(t_glob_st *glob_strct)
         if (current->line && is_export(current->line))
         {
             expanded = expand_export(current->line, glob_strct);
+            int i = 0;
+            // expanded = restore_quotes(expanded);
             current->line = expanded;
         }
         else if (current->line)
