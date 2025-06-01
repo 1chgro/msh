@@ -129,23 +129,6 @@ char **split_line_to_args(char *line)
 	return (args[arg_count] = NULL, args);
 }
 
-static char *restore_quotes(char *str)
-{
-    char *result = malloc(strlen(str) + 1);
-    int i = 0, j = 0;
-    
-    while (str[i])
-    {
-        if (str[i] == '\x01')
-            result[j] = '"';
-        else
-            result[j] = str[i];
-        i++;
-        j++;
-    }
-    result[j] = '\0';
-    return result;
-}
 
 void fill_cmd_argv(t_cmd *cmd)
 {
@@ -154,13 +137,6 @@ void fill_cmd_argv(t_cmd *cmd)
 	while (temp_cmd)
 	{
 		temp_cmd->argv = split_line_to_args(temp_cmd->line);
-		// if (!is_export(temp_cmd->argv[0]))
-		int i = 0;
-		while (temp_cmd->argv[i])
-		{
-			temp_cmd->argv[i] = restore_quotes(temp_cmd->argv[i]);
-			i++;
-		}
 		temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
 		if (!temp_cmd->argv)
 			return ;
@@ -177,7 +153,6 @@ t_cmd *create_cmd_lst(t_token *tokens)
 	t_token *prev = NULL;
 	int count_red = 0;
 	int i = 0;
-
 	count_red = count_redirections(tokens);
 	init_cmd(&cmd);
 	temp_cmd = cmd;
@@ -220,7 +195,6 @@ t_cmd *create_cmd(t_glob_st *glob_strct)
 	if (!glob_strct->cmd)
 		return (NULL);
 	expand_env_vars(glob_strct);
-	printf("line1:%s\n", glob_strct->cmd->line);
 	fill_cmd_argv(glob_strct->cmd);
 	return (glob_strct->cmd);
 }
