@@ -53,9 +53,11 @@ int check_append_op(char *str)
     int i;
 
     i = 0;
-    while (str[i] && str[i] != '=')
+    while (str[i] && str[i] != '+')
         i++;
-    if (i > 0 && str[i - 1] == '+')
+    if (i > 0 && str[i] == '+' && str[i + 1] == '+')
+        return (2);
+    if (i > 0 && str[i] == '+' && str[i + 1] == '=')
         return (1);
     return (0);
 }
@@ -136,7 +138,7 @@ static int process_export_arg(char *arg, t_env **env)
     
     append = check_append_op(arg);
     key = get_key(arg);
-    if (!is_valid_identifier(key))
+    if (!is_valid_identifier(key) || append == 2)
     {
         dup2(2, 1);
         printf("export: %s:not a valid identifier\n", arg);

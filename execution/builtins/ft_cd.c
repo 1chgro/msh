@@ -65,53 +65,23 @@ char *get_current_pwd(void)
     return 1;
 }
 
-static char *ft_cd_resolve_parent(char *old_pwd)
-{
-    char *resolved_path = ft_strdup(old_pwd);
-    if (!resolved_path)
-    {
-        return NULL;
-    }
-    char *last_slash = strrchr(resolved_path, '/');
-    if (last_slash && last_slash != resolved_path)
-    {
-        *last_slash = '\0';
-    }
-    else
-    {
-        free(resolved_path);
-        resolved_path = ft_strdup("/");
-        if (!resolved_path)
-        {
-            return NULL;
-        }
-    }
-    if (access(resolved_path, F_OK) != 0)
-    {
-        free(resolved_path);
-        return NULL;
-    }
-    return resolved_path;
-}
 int ft_cd(char **s_cmd, t_env **env)
 {
     char *new_pwd = NULL;
     char *path = NULL;
     char *old_pwd = NULL;
-    char *temp = NULL;
+    char *logical_pwd = NULL;
 
     old_pwd = my_getenv("PWD", *env);
     if (!old_pwd)
     {
         old_pwd = get_current_pwd();
         if (!old_pwd)
-        {
             old_pwd = ft_strdup("/");
-            if (!old_pwd)
-            {
-                ft_putstr_fd("msh: cd: cannot allocate memory\n", 2);
-                return 1;
-            }
+        if (!old_pwd)
+        {
+            ft_putstr_fd("msh: cd: cannot allocate memory\n", 2);
+            return 1;
         }
     }
     else
@@ -123,6 +93,7 @@ int ft_cd(char **s_cmd, t_env **env)
             return 1;
         }
     }
+
     if (!s_cmd[1])
     {
         path = get_home(*env);
@@ -133,7 +104,7 @@ int ft_cd(char **s_cmd, t_env **env)
             return 1;
         }
     }
-    else if (s_cmd[1][0] == '~' && strlen(s_cmd[1]) == 1)
+    else if (s_cmd[1][0] == '~' && ft_strlen(s_cmd[1]) == 1)
     {
         path = get_home(*env);
         if (!path)
@@ -143,7 +114,7 @@ int ft_cd(char **s_cmd, t_env **env)
             return 1;
         }
     }
-    else if (s_cmd[1][0] == '-' && strlen(s_cmd[1]) == 1)
+    else if (s_cmd[1][0] == '-' && ft_strlen(s_cmd[1]) == 1)
     {
         path = my_getenv("OLDPWD", *env);
         if (!path)
@@ -153,7 +124,7 @@ int ft_cd(char **s_cmd, t_env **env)
             return 1;
         }
     }
-    else if (s_cmd[1][0] == '~' && strlen(s_cmd[1]) > 1)
+    else if (s_cmd[1][0] == '~' && ft_strlen(s_cmd[1]) > 1)
     {
         char *home = get_home(*env);
         if (!home)
@@ -162,7 +133,7 @@ int ft_cd(char **s_cmd, t_env **env)
             free(old_pwd);
             return 1;
         }
-        path = ft_strjoin_(home, s_cmd[1] + 1);
+        path = ft_strjoin(home, s_cmd[1] + 1);
         if (!path)
         {
             ft_putstr_fd("msh: cd: cannot allocate memory\n", 2);
@@ -180,58 +151,56 @@ int ft_cd(char **s_cmd, t_env **env)
         }
         path = s_cmd[1];
     }
-
+    int logical_dotdot = 0;
     if (ft_strcmp(path, "..") == 0)
     {
-        temp = ft_cd_resolve_parent(old_pwd);
-        if (!temp)
+        if (access(path, X_OK) != 0)
         {
-            char *last_slash = strrchr(old_pwd, '/');
-            if (last_slash && last_slash != old_pwd)
-            {
-                temp = ft_strndup(old_pwd, last_slash - old_pwd);
-            }
+            char *to_rm = strrchr(old_pwd, '/');
+            path = ft_strndup(old_pwd, ft_strlen(old_pwd)-ft_strlen(to_rm));
+        }
+        else
+        {
+            logical_dotdot = 1;
+            char *slashdotdot = NULL;
+            if (old_pwd[ft_strlen(old_pwd) - 1] == '/')
+                slashdotdot = ft_strjoin_(old_pwd, "..");
             else
-            {
-                temp = ft_strdup("/");
-            }
-            if (!temp)
+                slashdotdot = ft_strjoin_(old_pwd, "/..");
+            if (!slashdotdot)
             {
                 ft_putstr_fd("msh: cd: cannot allocate memory\n", 2);
                 free(old_pwd);
                 return 1;
             }
+            logical_pwd = slashdotdot;
+            path = "..";
         }
-        path = temp;
     }
+    printf("%s\n", path);
     if (chdir(path) == -1)
     {
-        if (ft_strcmp(s_cmd[1], "..") == 0)
-        {
-            set_env(env, "PWD", path);
-        }
         perror("msh: cd");
-        if (path == temp) free(temp);
+        if (logical_pwd) free(logical_pwd);
         free(old_pwd);
         return 1;
     }
+    set_env(env, "OLDPWD", old_pwd);
     new_pwd = get_current_pwd();
     if (!new_pwd)
     {
-        ft_putstr_fd("msh: cd: cannot get current directory\n", 2);
-        if (path == temp)
-            free(temp);
-        free(old_pwd);
-        return 1;
+        ft_putstr_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", 2);
+        if (logical_dotdot)
+            set_env(env, "PWD", logical_pwd);
+        else
+            set_env(env, "PWD", path);
     }
-    if (old_pwd)
+    else
     {
-        set_env(env, "OLDPWD", old_pwd);
+        set_env(env, "PWD", new_pwd);
+        free(new_pwd);
     }
-    set_env(env, "PWD", new_pwd);
-    if (path == temp)
-        free(temp);
-    free(new_pwd);
+    if (logical_pwd) free(logical_pwd);
     free(old_pwd);
     return 0;
 }
