@@ -132,6 +132,7 @@ int	is_space(char c);
 int	is_redirection(t_token **token);
 int	is_pipe(t_token **token);
 int	is_valid_char(char c);
+int is_export(char *line);
 
 //------------------- quotes -----------------------//
 void	skip_quotes(char *s, int *i, char q);
@@ -144,7 +145,7 @@ void	expand_env_vars(t_glob_st *glob_strct);
 char	*expand(char *line, t_glob_st *glob_strct);
 char	*expand_heredoc(char *line, t_glob_st *glob_strct);
 char	*expand_export(char *line, t_glob_st *glob_strct);
-
+char *fix_cmd(char *cmd);
 //-------------------------- excution -------------------//
 int		run_cmd(t_cmd *cmd, t_env *env);
 int     copie_env(t_env **c_env, char **env);

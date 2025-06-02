@@ -30,3 +30,141 @@ msh  -> export h=$a -------> h="a" key: b key: c
 
 echo '$USER "$USER" "$"USER"" '$USER' '$'USER'''
 echo "$USER "$USER " "$"USER"" '$USER' '$'USER''"
+
+
+----------------------------------------------------------------------------------------
+ export l=$a m=$a n""=$a
+
+
+--------------
+  f="ayo'ido"
+ echo $f
+line: echo ayo'ido
+argv: 
+                echo 
+                ayoido 
+---------------------
+ayoido
+
+
+----------------------------------------------------------------------------------------
+$ export $p= l=$a m=$a n=$a
+line: export $p="" l="b  c" m="b  c" n="b  c"
+argv: 
+                export 
+                $p= 
+                l=b  c 
+                m=b  c 
+                n=b  c 
+---------------------
+export: $p=:not a valid identifier
+
+
+---------------------------------------------------------------------------------------- 
+
+$ export 1=$j
+line: export 1="c  d"
+argv: 
+                export 
+                1=c  d 
+---------------------
+export: 1=c  d:not a valid identifier
+
+sayb ikhan d 1=c gan wahdotn
+
+
+
+----------------------------------------------------------------------------------------
+
+$ export z=$"HOME"
+line: export z="$"HOME""
+argv: 
+                export 
+                z=$HOME 
+z should be z=HOME
+
+
+
+
+--------------------------------
+
+moul l exection
+ export x++=j
+line: export x++="j"
+argv: 
+                export 
+                x++=j 
+---------------------
+should display = export: `x++=j': not a valid identifier
+
+
+
+
+-------------------------------------------------------------------
+export"" is not export
+$ export"" k=$a 
+line: export k="b  c"
+argv: 
+                export 
+                k=b  c 
+
+
+
+
+---------------------------------------------------------------------
+ << ayo"" cat
+line: cat
+argv: 
+                cat 
+files: filename: ayo     |type: 3       |fd: -1
+---------------------
+> $USER
+> "$HOME"
+> '$USER'
+> $'USER'
+> $"USER"
+> ayo
+olachgue
+"/mnt/homes/olachgue"
+'olachgue'
+$'USER'
+$"USER"
+
+i7lant l quotes ador t expandit ikhan
+
+
+
+--------------------------------------------
+
+>> >k
+files: filename: >       |type: 2       |fd: -1
+filename: k      |type: 1       |fd: -1
+---------------------
+$ >>>
+msh: syntax error near unexpected token `>'
+$ >> >
+msh: syntax error near unexpected token `>'
+$ >> >l
+files: filename: >       |type: 2       |fd: -1
+filename: l      |type: 1       |fd: -1
+
+ikhsa atskrt syntax error
+
+
+
+--------------------------------------------
+declare -x a="b  c"
+declare -x c
+declare -x export="llll"
+declare -x l="b"
+declare -x m="b"
+declare -x n="b"
+declare -x p="b  cb"
+$ export p=$a"$a"
+line: export p="b  c"b  c""
+argv: 
+                export 
+                p=b  cb 
+                c 
+---------------------
+ksas matsplitich

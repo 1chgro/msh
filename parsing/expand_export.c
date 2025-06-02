@@ -5,27 +5,64 @@ int check_kv_quotes(char *key)
     if (!key)
         return (0);
     
-    int len = ft_strlen(key);
-    if (len < 2)
-        return (0);
-    
-    // Check if key starts and ends with single quotes
-    if (key[0] == '\'' && key[len - 1] == '\'')
-        return (1);
-    
-    // Check if key starts and ends with double quotes
-    if (key[0] == '"' && key[len - 1] == '"')
-        return (1);
+    int i = 0;
+    while (key[i])
+    {
+        if (key[i] == '\'' || key[i] == '"')
+            return (1);
+        i++;
+    }
     
     return (0);
 }
+
+
+// int check_kv_quotes(char *key)
+// {
+//     if (!key)
+//         return (0);
+//     int len = ft_strlen(key);
+//     if (len < 1)
+//         return (0);
+//     int has_quotes = 0;
+//     if (key[0] == '\'' || key[0] == '"')
+//         has_quotes = 1;
+//     if (len > 0 && (key[len - 1] == '\'' || key[len - 1] == '"'))
+//         has_quotes = 1;
+//     for (int i = 1; i < len - 1; i++)
+//     {
+//         if (key[i] == '\'' || key[i] == '"')
+//         {
+//             has_quotes = 1;
+//             break;
+//         }
+//     }
+//     for (int i = 0; i < len - 1; i++)
+//     {
+//         if ((key[i] == '\'' && key[i + 1] == '\'') || 
+//             (key[i] == '"' && key[i + 1] == '"'))
+//         {
+//             has_quotes = 1;
+//             break;
+//         }
+//     }
+//     if (len >= 2)
+//     {
+//         if ((key[0] == '\'' && key[len - 1] == '\'') ||
+//             (key[0] == '"' && key[len - 1] == '"'))
+//         {
+//             has_quotes = 1;
+//         }
+//     }
+//     return has_quotes;
+// }
+
 
 char *add_quotes(char *value)
 {
     char *result = NULL;
     if (!value)
         return (NULL);
-    
     // Check if value already has quotes
     if (value[0] == '\'' && value[ft_strlen(value) - 1] == '\'')
     {
@@ -57,18 +94,19 @@ char *export_onebone(char **export_args, t_glob_st *glob_strct)
     result = ft_strdup("export ");
     while (export_args[i])
     {
+        printf("export_args[%d]: %s\n", i, export_args[i]);
         int j = 0;
-        while (export_args[i][j] && export_args[i][j] != '=')
+        while (export_args[i][j]/*  && !is_space(export_args[i][j]) */ && export_args[i][j] != '=')
             j++;
         char *original_key = ft_strndup(export_args[i], j);
         int key_quotes = check_kv_quotes(original_key);
         var_name = ft_strndup(export_args[i], j);
-        result = ft_strjoin_ws(result, var_name);
         if (export_args[i][j] == '=')
         {
             result = ft_strjoin_ws(result, "=");
             j++;
             var_value = ft_strdup(&export_args[i][j]);
+
             if (key_quotes)
             {
                 int has_dollar = 0;
@@ -141,18 +179,22 @@ char *export_onebone(char **export_args, t_glob_st *glob_strct)
     return (result);
 }
 
+
+
+
 char *expand_export(char *line, t_glob_st *glob_strct)
 {
     char *result = NULL;
 
     if (!line || !glob_strct || !glob_strct->env)
-    {
         return (NULL);
-    }
+    printf("Expanding export: %s\n", line);
     char **export_args = split_line_to_args(line);
     if (!export_args)
         return (NULL);
     result = export_onebone(export_args, glob_strct);
-    
     return (result);
 }
+
+
+

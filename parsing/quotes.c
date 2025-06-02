@@ -31,32 +31,85 @@ void	skip_quotes(char *s, int *i, char q)
 		(*i)++;
 }
 
+// char *remove_outer_quotes(char *s)
+// {
+//     int i = 0, j = 0;
+//     char quote = 0;
+//     char output[ft_strlen(s) + 1];
+
+// 	if (!s)
+// 		return (NULL);
+//     while (s[i])
+// 	{
+// 		printf("s[%d] = %c\n", i, s[i]);
+//         if (!quote && (s[i] == '\"' || s[i] == '\'')) {
+//             quote = s[i];
+//             i++;
+//             continue;
+//         }
+//         if (quote && s[i] == quote) {
+//             quote = 0;
+//             i++;
+//             continue;
+//         }
+//         output[j++] = s[i++];
+//     }
+//     output[j] = '\0'; 
+//     return (ft_strdup(output));
+// }
+
 char *remove_outer_quotes(char *s)
 {
     int i = 0, j = 0;
     char quote = 0;
-    char output[ft_strlen(s) + 1];
-
-	if (!s)
-		return (NULL);
-
+    char *output;
+    int len;
+    
+    if (!s)
+        return (NULL);
+    
+    len = ft_strlen(s);
+    output = malloc(len + 1);
+    if (!output)
+        return (NULL);
+    
     while (s[i])
-	{
-        if (!quote && (s[i] == '"' || s[i] == '\'')) {
+    {
+        if (!quote && (s[i] == '"' || s[i] == '\''))
+        {
+            // Starting a quoted section
             quote = s[i];
             i++;
             continue;
         }
-        if (quote && s[i] == quote) {
+        else if (quote && s[i] == quote)
+        {
+            // Ending the quoted section
             quote = 0;
             i++;
             continue;
         }
-        output[j++] = s[i++];
+        else if (quote == '"' && s[i] == '\'')
+        {
+            // Single quote inside double quotes - preserve it
+            output[j++] = s[i++];
+        }
+        else if (quote == '\'' && s[i] == '"')
+        {
+            // Double quote inside single quotes - preserve it
+            output[j++] = s[i++];
+        }
+        else
+        {
+            // Regular character or quote that should be preserved
+            output[j++] = s[i++];
+        }
     }
-    output[j] = '\0'; 
-    return (ft_strdup(output));
+    
+    output[j] = '\0';
+    return (output);
 }
+
 
 char **remove_quotes_arr(char **argv)
 {

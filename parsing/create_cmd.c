@@ -128,7 +128,27 @@ char **split_line_to_args(char *line)
 	}
 	return (args[arg_count] = NULL, args);
 }
-
+static char *add_quotes(char *value)
+{
+    char *result = NULL;
+    if (!value)
+        return (NULL);
+    // Check if value already has quotes
+    if (value[0] == '\'' && value[ft_strlen(value) - 1] == '\'')
+    {
+        result = ft_strdup(value);
+    }
+    else if (value[0] == '"' && value[ft_strlen(value) - 1] == '"')
+    {
+        result = ft_strdup(value);
+    }
+    else
+    {
+        result = ft_strjoin_ws("\"", value);
+        result = ft_strjoin_ws(result, "\"");
+    }
+    return (result);
+}
 
 void fill_cmd_argv(t_cmd *cmd)
 {
@@ -137,6 +157,17 @@ void fill_cmd_argv(t_cmd *cmd)
 	while (temp_cmd)
 	{
 		temp_cmd->argv = split_line_to_args(temp_cmd->line);
+		int i = 0;
+		if (temp_cmd->line && !is_export(temp_cmd->line))
+		{
+			while (temp_cmd->argv[i])
+			{
+				temp_cmd->argv[i] = add_quotes(temp_cmd->argv[i]);
+				i++;
+			}
+		}
+		if (temp_cmd->argv)
+			temp_cmd->argv[0] = fix_cmd(temp_cmd->argv[0]);
 		temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
 		if (!temp_cmd->argv)
 			return ;
