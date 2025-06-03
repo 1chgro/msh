@@ -86,10 +86,10 @@ z should be z=HOME
 
 
 
---------------------------------
+-------------------------------- done;
 
 moul l exection
- export x++=j
+export x++=j
 line: export x++="j"
 argv: 
                 export 
@@ -131,25 +131,6 @@ $'USER'
 $"USER"
 
 i7lant l quotes ador t expandit ikhan
-
-
-
---------------------------------------------
-
->> >k
-files: filename: >       |type: 2       |fd: -1
-filename: k      |type: 1       |fd: -1
----------------------
-$ >>>
-msh: syntax error near unexpected token `>'
-$ >> >
-msh: syntax error near unexpected token `>'
-$ >> >l
-files: filename: >       |type: 2       |fd: -1
-filename: l      |type: 1       |fd: -1
-
-ikhsa atskrt syntax error
-
 
 
 --------------------------------------------

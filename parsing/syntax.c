@@ -65,6 +65,12 @@ int	check_redirection_syntax(t_token *prev, t_token *current)
 			prnt_sy_err(sy_token_type(&current, 0));
 			return (0);
 		}
+		if (is_redirection(&prev) && \
+			is_redirection(&current))
+		{
+			prnt_sy_err(sy_token_type(&current, 0));
+			return (0);
+		}
 	}
 	return (1);
 }
@@ -92,5 +98,6 @@ int	check_syntax_err(t_glob_st *glob_strct)
 		prev = current;
 		current = current->next;
 	}
+	print_tokens(glob_strct->tokens);
 	return (0);
 }
