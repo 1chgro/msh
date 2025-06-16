@@ -48,7 +48,7 @@ char *get_current_pwd(void)
     char *pwd = getcwd(NULL, 0);
     if (!pwd)
     {
-        perror("minishell: getcwd");
+        // perror("minishell: getcwd");
         return NULL;
     }
     return pwd;
@@ -64,6 +64,21 @@ char *get_current_pwd(void)
     free(cwd);
     return 1;
 }
+char *take_store_pwd(char *path)
+{
+    static char *stored_pwd = NULL;
+
+    if (path)
+    {
+        if (stored_pwd)
+            free(stored_pwd);
+        stored_pwd = ft_strdup(path);
+        return stored_pwd;
+    }
+    if (stored_pwd)
+        return ft_strdup(stored_pwd);
+    return NULL;
+}
 
 int ft_cd(char **s_cmd, t_env **env)
 {
@@ -72,10 +87,12 @@ int ft_cd(char **s_cmd, t_env **env)
     char *old_pwd = NULL;
     char *logical_pwd = NULL;
 
-    old_pwd = my_getenv("PWD", *env);
+    if (!env || !*env)
+        return (1);
+    old_pwd = get_current_pwd();
     if (!old_pwd)
     {
-        old_pwd = get_current_pwd();
+        old_pwd = take_store_pwd(NULL);
         if (!old_pwd)
             old_pwd = ft_strdup("/");
         if (!old_pwd)
@@ -181,7 +198,8 @@ int ft_cd(char **s_cmd, t_env **env)
     if (chdir(path) == -1)
     {
         perror("msh: cd");
-        if (logical_pwd) free(logical_pwd);
+        if (logical_pwd)
+            free(logical_pwd);
         free(old_pwd);
         return 1;
     }
@@ -190,17 +208,23 @@ int ft_cd(char **s_cmd, t_env **env)
     if (!new_pwd)
     {
         ft_putstr_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", 2);
-        if (logical_dotdot)
+        if (logical_dotdot){
             set_env(env, "PWD", logical_pwd);
+            take_store_pwd(logical_pwd);
+            }
         else
-            set_env(env, "PWD", path);
+            {set_env(env, "PWD", path);
+            take_store_pwd(path);
+            }
     }
     else
     {
         set_env(env, "PWD", new_pwd);
+        take_store_pwd(new_pwd);
         free(new_pwd);
     }
-    if (logical_pwd) free(logical_pwd);
+    if (logical_pwd)
+        free(logical_pwd);
     free(old_pwd);
     return 0;
 }

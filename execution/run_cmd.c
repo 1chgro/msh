@@ -84,52 +84,6 @@ char	*my_getenv(char *name, t_env *env)
 	return (NULL);
 }
 
-// static char	*check_command_path(char **allpath, char *cmd)
-// {
-// 	int		i;
-// 	char	*path_part;
-// 	char	*exec;
-
-// 	i = -1;
-// 	while (allpath[++i])
-// 	{
-// 		path_part = ft_strjoin_(allpath[i], "/");
-// 		exec = ft_strjoin_(path_part, cmd);
-// 		free(path_part);
-// 		if (access(exec, F_OK | X_OK) == 0)
-// 		{
-// 			free_split(allpath);
-// 			return (exec);
-// 		}
-// 		free(exec);
-// 	}
-// 	return (NULL);
-// }
-
-// char	*get_path(char *cmd, t_env *env)
-// {
-// 	char	**allpath;
-// 	char	*result;
-
-//     if (ft_strchr(cmd, '/'))
-//     {
-//         if (access(cmd, F_OK | X_OK) == 0)
-//             return (cmd);
-//         return (NULL);
-//     }
-// 	allpath = ft_split(my_getenv("PATH", env), ':');
-// 	if (!allpath || !cmd)
-// 	{
-// 		free_split(allpath);
-// 		return (NULL);
-// 	}
-// 	result = check_command_path(allpath, cmd);
-// 	if (result)
-// 		return (result);
-// 	free_split(allpath);
-// 	return (NULL);
-// }
-
 int is_valid_numeric(const char *str)
 {
     if (!str || *str == '\0')
@@ -176,29 +130,6 @@ void    handle_shell_level(t_env *env)
     }
     update_node_value(shlvl_node, ft_itoa(new_shlvl), 0);
 }
-
-// void	exec(char **cmd, t_env *env)
-// {
-// 	char	*path;
-//     if (!cmd)
-//         {return ;}
-// 	path = get_path(cmd[0], env);
-// 	if (!path)
-// 	{
-//         perror("msh :");
-// 		exit(127);
-// 	}
-//     if (ft_strcmp(path, "./minishell") == 0)
-//     {
-//         handle_shell_level(env);
-//     }
-// 	if (execve(path, cmd, struct_to_array(env)) == -1)
-// 	{
-// 		free(path);
-// 		exit(1);
-// 	}
-// }
-
 
 static int is_directory(const char *path)
 {
@@ -249,6 +180,13 @@ char *get_path(char *cmd, t_env *env)
 
     if (!cmd)
         return NULL;
+    if (!env)
+    {
+        ft_putstr_fd("msh: ", 2);
+        ft_putstr_fd(cmd, 2);
+        ft_putstr_fd(": No such file or directory\n", 2);
+        return NULL;
+    }
     if (ft_strchr(cmd, '/'))
     {
         if (access(cmd, F_OK) != 0)
@@ -274,8 +212,12 @@ char *get_path(char *cmd, t_env *env)
         }
         return ft_strdup(cmd);
     }
-
-    allpath = ft_split(my_getenv("PATH", env), ':');
+    char *path = my_getenv("PATH", env);
+    if (!path)
+    {
+        path = ft_strdup(":.");
+    }
+    allpath = ft_split(path, ':');
     if (!allpath)
     {
         ft_putstr_fd("msh: ", 2);
@@ -375,10 +317,12 @@ int redirection(t_cmd *cmd)
 
 int run_pipeline(t_cmd *cmd, t_env *env)
 {
-    pid_t pid;
+    pid_t pid[1392];
     int p_fd[2];
     int prev_fd = -1;
     int     status;
+    int i = 0;
+    int j = 0;
     int     last_status = 0;
 
     while (cmd)
@@ -387,14 +331,31 @@ int run_pipeline(t_cmd *cmd, t_env *env)
         {
             if (pipe(p_fd) == -1)
             {
+                j = 0;
+                while (j < i)
+                {
+                    kill(pid[j], SIGKILL);
+                    waitpid(pid[j], NULL, 0);
+                    j++;
+                }
                 perror("pipe error");
                 return (1);
             }
         }
-        pid = fork();
-        if (pid == -1)
+        pid[i] = fork();
+        
+        if (pid[i] == -1)
         {
-            perror("fork error");
+            j = 0;
+            while (j < i)
+            {
+                if (kill(pid[j], SIGKILL) == -1)
+                    perror("Failed to kill pid");
+                else
+                    printf("Killed pid[%d] = %d\n", j, pid[j]);
+                waitpid(pid[j], NULL, 0);
+                j++;
+            }
             if (cmd->next)
             {
                 close(p_fd[0]);
@@ -402,8 +363,9 @@ int run_pipeline(t_cmd *cmd, t_env *env)
             }
             return (1);
         }
-        if (pid == 0)
+        if (pid[i] == 0)
         {
+            printf("pid[%d] created\n", i);
             if (prev_fd != -1)
             {
                 dup2(prev_fd, STDIN_FILENO);
@@ -421,17 +383,20 @@ int run_pipeline(t_cmd *cmd, t_env *env)
                 if (status != 0)
                     exit(status);
             }
-                
-            if (are_builtin(cmd->argv[0]))
+            if (cmd->argv)
             {
-                status = run_builtin(cmd->argv, &env);
-                exit(status);
+                if (are_builtin(cmd->argv[0]))
+                {
+                    status = run_builtin(cmd->argv, &env);
+                    exit(status);
+                }
+                else
+                {
+                    exec(cmd->argv, env);
+                    exit(1);
+                }
             }
-            else
-            {
-                exec(cmd->argv, env);
-                exit(1);
-            }
+            
         }
         if (prev_fd != -1)
             close(prev_fd);
@@ -441,6 +406,7 @@ int run_pipeline(t_cmd *cmd, t_env *env)
             prev_fd = p_fd[0];
         }
         cmd = cmd->next;
+        i++;
     }
     if (prev_fd != -1)
         close(prev_fd);
@@ -463,6 +429,7 @@ int    run_single_cmd(t_cmd *cmd, t_env *env)
     pid = fork();
     if (pid == -1)
     {
+        kill(pid, SIGKILL);
         perror("fork");
         return (1);
     }
@@ -492,8 +459,6 @@ int run_cmd(t_cmd *cmd, t_env *env)
         perror("invalid command");
         return (1);
     }
-    if (!env)
-        return (0);
     if (!cmd->next)
     {
         return (run_single_cmd(cmd, env));

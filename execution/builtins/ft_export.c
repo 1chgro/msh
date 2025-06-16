@@ -182,6 +182,8 @@ int ft_export(char **s_cmd, t_env **env)
     int i;
     int status;
 
+    if (!env || !*env)
+        return (1);
     make_index(env);
     temp = *env;
     lst_size = 0;

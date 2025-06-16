@@ -8,6 +8,7 @@ static void remove_variable(char *key, t_env **env)
     t_env *prev = NULL;
     if (!current)
         return;
+    
     if (ft_strcmp(current->key, key) == 0)
     {
         *env = current->next;
@@ -34,6 +35,8 @@ int    ft_unset(char **s_cmd, t_env **env)
     int     flag;
     int     i;
 
+    if (!env || !*env)
+        return (1);
     flag = 0;
     i = 0;
     if (!s_cmd[1])

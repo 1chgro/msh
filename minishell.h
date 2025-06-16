@@ -18,7 +18,6 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
-
 extern int g_in_heredoc;
 
 typedef enum
@@ -74,6 +73,7 @@ typedef struct s_glob_st
 	t_env *env;
 	t_cmd *cmd;
 	t_token *tokens;
+    char    *current_pwd;
 	int ext_stat;
 } t_glob_st;
 
@@ -178,4 +178,5 @@ void	free_env(t_env *env);
 int open_heredoc(t_glob_st *glob_strct);
 void close_heredoc(t_glob_st *glob_strct);
 char *get_current_pwd(void);
+char *take_store_pwd(char *path);
 #endif

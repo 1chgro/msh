@@ -12,18 +12,23 @@ static int is_valid_cwd(void)
     return 1;
 }
 
-int    ft_pwd(t_env *env)
+int ft_pwd(t_env *env)
 {
-    char    buff[8192000];
-    char    *pwd;
-    
+    char buff[8192000];
+    char *pwd;
+
     if (!is_valid_cwd())
     {
         pwd = my_getenv("PWD", env);
+        if (!pwd)
+            pwd = take_store_pwd(NULL); 
+        if (!pwd)
+            pwd = "/";
         printf("%s\n", pwd);
         return 0;
     }
     getcwd(buff, 8192000);
+    take_store_pwd(buff);
     printf("%s\n", buff);
-    return (0);
+    return 0;
 }

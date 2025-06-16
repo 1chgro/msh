@@ -11,6 +11,10 @@ long ft_atoi(const char *str)
     sign = 1;
     while (str[i] == ' ')
 		{i++;}
+    if (str[i] == '\0')
+    {
+        return (0);
+    }
     if (str[i] == '-')
     {
         sign = -1;
@@ -20,6 +24,8 @@ long ft_atoi(const char *str)
         {i++;}
     while (str[i] >= '0' && str[i] <= '9')
     {
+        if ((result > LONG_MAX / 10 && str[i + 1] >= '0' && str[i + 1] <= '9'))
+            return (0);
         result = result * 10 + (str[i] - '0');
         i++;
     }
@@ -135,13 +141,14 @@ int msh_execute(t_glob_st *glob_strct)
     int saved_stdout = -1;
     int saved_stdin = -1;
 
-    if (!glob_strct->cmd || !glob_strct->env)
+    if (!glob_strct->cmd)
         return (1);
     while (temp)
     {
         size++;
         temp = temp->next;
     }
+    glob_strct->current_pwd = ft_strdup(my_getenv("PWD", glob_strct->env));
     saved_stdout = dup(STDOUT_FILENO);
     saved_stdin = dup(STDIN_FILENO);
     if (saved_stdout < 0 || saved_stdin < 0)
