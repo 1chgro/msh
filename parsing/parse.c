@@ -58,7 +58,7 @@ t_cmd *msh_parse(t_glob_st *glob_strct)
     if (!glob_strct->tokens)
         return (NULL);
     if (check_syntax_err(glob_strct))
-        return (free_tokens(glob_strct->tokens), glob_strct->ext_stat = 2, NULL);
+        return (free_tokens(glob_strct->tokens), glob_strct->ext_stat = 258, NULL);
     glob_strct->cmd = create_cmd(glob_strct);
     if (!glob_strct->cmd)
         return (NULL);

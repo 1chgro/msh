@@ -10,33 +10,21 @@ msh : export a="a b c" or export 'a'="a b c" or !export 'a'='a b c' or export "a
 bash -> export "h"="$a" or export 'h'="$a" ----> h="a b c"
 msh  -> export "h"="$a" or export 'h'="$a" -----> h="a b c"
 
------ done
 bash -> export "h"='$a' or export h='$a' or export 'h'='$a' ----> h="\$a"
 msh  -> export "h"='$a' or export h='$a' or export 'h'='$a' -----> h="$a"
 
 
----------done
 bash -> export 'h'=$a ------> h="a" key: b key: c          
 msh  -> export 'h'=$a -------> h="a" key: b key: c       
 
-
-----------done
 bash -> export h=$a ------> h="a b c"               
 msh  -> export h=$a -------> h="a" key: b key: c        
-
-
-
-
-
-echo '$USER "$USER" "$"USER"" '$USER' '$'USER'''
-echo "$USER "$USER " "$"USER"" '$USER' '$'USER''"
-
 
 ----------------------------------------------------------------------------------------
  export l=$a m=$a n""=$a
 
-
 --------------
+
   f="ayo'ido"
  echo $f
 line: echo ayo'ido
@@ -45,7 +33,6 @@ argv:
                 ayoido 
 ---------------------
 ayoido
-
 
 ----------------------------------------------------------------------------------------
 $ export $p= l=$a m=$a n=$a
@@ -59,7 +46,6 @@ argv:
 ---------------------
 export: $p=:not a valid identifier
 
-
 ---------------------------------------------------------------------------------------- 
 
 $ export 1=$j
@@ -72,8 +58,6 @@ export: 1=c  d:not a valid identifier
 
 sayb ikhan d 1=c gan wahdotn
 
-
-
 ----------------------------------------------------------------------------------------
 
 $ export z=$"HOME"
@@ -82,9 +66,6 @@ argv:
                 export 
                 z=$HOME 
 z should be z=HOME
-
-
-
 
 -------------------------------- done;
 
@@ -98,8 +79,6 @@ argv:
 should display = export: `x++=j': not a valid identifier
 
 
-
-
 -------------------------------------------------------------------
 export"" is not export
 $ export"" k=$a 
@@ -107,31 +86,6 @@ line: export k="b  c"
 argv: 
                 export 
                 k=b  c 
-
-
-
-
----------------------------------------------------------------------
- << ayo"" cat
-line: cat
-argv: 
-                cat 
-files: filename: ayo     |type: 3       |fd: -1
----------------------
-> $USER
-> "$HOME"
-> '$USER'
-> $'USER'
-> $"USER"
-> ayo
-olachgue
-"/mnt/homes/olachgue"
-'olachgue'
-$'USER'
-$"USER"
-
-i7lant l quotes ador t expandit ikhan
-
 
 --------------------------------------------
 declare -x a="b  c"
@@ -147,5 +101,17 @@ argv:
                 export 
                 p=b  cb 
                 c 
----------------------
-ksas matsplitich
+
+- ksas matsplitich
+
+
+
+
+
+
+
+
+--------------------- done -------------------------------
+
+echo '$USER "$USER" "$"USER"" '$USER' '$'USER'''
+echo "$USER "$USER " "$"USER"" '$USER' '$'USER''"

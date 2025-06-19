@@ -77,6 +77,10 @@ typedef struct s_glob_st
 	int ext_stat;
 } t_glob_st;
 
+
+int check_if_export(char *line, t_glob_st *glob_strct);
+char *expand_export(char *line, t_glob_st *glob_strct);
+
 //----------------- print functions--------///
 void   print_cmd(t_cmd *cmd);
 void print_tokens(t_token *tokens);
