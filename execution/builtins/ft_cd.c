@@ -184,7 +184,8 @@ int ft_cd(char **s_cmd, t_env **env)
 	{
 		if (access(path, X_OK) != 0)
 		{
-			
+			char *to_rm = strrchr(old_pwd, '/');
+			path = ft_strndup(old_pwd, ft_strlen(old_pwd) - ft_strlen(to_rm));
 		}
 		else
 		{
