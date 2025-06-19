@@ -93,13 +93,13 @@ int is_valid_numeric(const char *str)
 {
 	if (!str || *str == '\0')
 		return (0);
-	if (*str == '+' || *str == '-')
+	if (*str == '+' || *str == '-' || *str == ' ')
 		str++;
 	if (*str == '\0')
 		return (0);
 	while (*str)
 	{
-		if (*str < '0' || *str > '9')
+		if (*str < '0' || *str > '9' || *str == ' ')
 			return (0);
 		str++;
 	}
@@ -442,6 +442,7 @@ int    run_single_cmd(t_cmd *cmd, t_env *env)
 	int status = 0;
 	int sig;
 
+    msh_signals();
 	pid = fork();
 	if (pid == -1)
 	{
@@ -477,8 +478,7 @@ int    run_single_cmd(t_cmd *cmd, t_env *env)
 			dup2(1, 2);
 			status = SIGQUIT + 128;
 		}
-	}
-	return (status);
+	}	return (status);
 }
 
 int run_cmd(t_cmd *cmd, t_env *env, int last_ex)

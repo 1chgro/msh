@@ -24,8 +24,10 @@ long ft_atoi_(const char *str, int *is_valid)
 		{i++;}
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		if (result > LONG_MAX)
-			return (0);
+		if (result > LONG_MAX / 10 || (result == LONG_MAX / 10 && (str[i] - '0') > LONG_MAX % 10))
+		{
+            return (0);
+        }
 		result = result * 10 + (str[i] - '0');
 		i++;
 	}
@@ -49,6 +51,14 @@ int ft_exit(char **s_cmd, int last_ex)
 	{
 		exit(last_ex);
 	}
+	exit_num = (int)ft_atoi_(s_cmd[1], &is_valid);
+    if (s_cmd[2] && !is_valid)
+    {
+        dup2(2, 1);
+		printf("msh: exit: %s: numeric argument required\n", s_cmd[1]);
+		dup2(1, 2);
+		exit(255);
+    }
 	if (s_cmd[2])
 	{
 		dup2(2, 1);
@@ -56,7 +66,6 @@ int ft_exit(char **s_cmd, int last_ex)
 		dup2(1, 2);
 		return(1);
 	}
-	exit_num = (int)ft_atoi_(s_cmd[1], &is_valid);
 	if (!is_valid)
 	{
 		dup2(2, 1);

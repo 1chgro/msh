@@ -4,16 +4,13 @@ long ft_atoi(const char *str)
 {
 	int         i;
 	long        result;
-	int         sign;
 
 	i = 0;
 	result = 0;
-	sign = 1;
 	while (str[i] == ' ')
 		i++;
 	if (str[i] == '-')
 	{
-		sign = -1;
 		i++;
 	}
 	else if (str[i] == '+')
@@ -27,7 +24,7 @@ long ft_atoi(const char *str)
 		i++;
 	if (str[i] != '\0')
 		return (0);
-	return (result * sign);
+	return (result);
 }
 int  are_builtin(char    *cmd)
 {

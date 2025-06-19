@@ -79,13 +79,21 @@ char *take_store_pwd(char *path)
 int all(char    *path)
 {
     int i = 0;
+    int len = 0;
     while (path[i])
     {
-        if (path[i] != '.' || path[i] != '/')
-            return (0);
+        if (path[i] == '.' && path[i + 1] == '.' && path[i + 2] != '.')
+        {
+            len++;
+            i = i+2;
+            
+        }
+        else
+            return (-1);
+        if (path[i] && path[i] == '/')
             i++;
     }
-    return(1);
+    return (len);
 }
 int ft_cd(char **s_cmd, t_env **env)
 {
@@ -182,12 +190,7 @@ int ft_cd(char **s_cmd, t_env **env)
 	int logical_dotdot = 0;
 	if (ft_strcmp(path, "..") == 0)
 	{
-		if (access(path, X_OK) != 0)
-		{
-			char *to_rm = strrchr(old_pwd, '/');
-			path = ft_strndup(old_pwd, ft_strlen(old_pwd) - ft_strlen(to_rm));
-		}
-		else
+		if (access(path, X_OK) == 0)
 		{
 			logical_dotdot = 1;
 			char *slashdotdot = NULL;
@@ -205,14 +208,69 @@ int ft_cd(char **s_cmd, t_env **env)
 			path = "..";
 		}
 	}
-	printf("%s\n", path);
+	printf("%s, %d\n", path, all(path));
 	if (chdir(path) == -1)
 	{
-		perror("msh: cd");
-		if (logical_pwd)
-			free(logical_pwd);
-		free(old_pwd);
-		return 1;
+        int nbr = all(path);
+        if (ft_strcmp(path, "..") == 0 || nbr > 0)
+        {
+            char *temp_path = ft_strdup(old_pwd);
+            if (!temp_path)
+            {
+                ft_putstr_fd("msh: cd: cannot allocate memory\n", 2);
+                // free(path);
+                // free(old_pwd);
+                // if (logical_pwd)
+                //     free(logical_pwd);
+                return 1;
+            }
+            if (nbr < 0)
+                nbr = 1;
+            while (nbr > 0)
+            {
+                char *to_rm = strrchr(temp_path, '/');
+                if (to_rm == temp_path) // Root case
+                {
+                    // free(temp_path);
+                    temp_path = ft_strdup("/");
+                    break;
+                }
+                char *new_path = ft_strndup(temp_path, to_rm - temp_path);
+                // free(temp_path);
+                if (!new_path)
+                {
+                    ft_putstr_fd("msh: cd: cannot allocate memory\n", 2);
+                    // free(path);
+                    // free(old_pwd);
+                    // if (logical_pwd)
+                    //     free(logical_pwd);
+                    return 1;
+                }
+                temp_path = new_path;
+                nbr--;
+            }
+            if (chdir(temp_path) == -1)
+            {
+                perror("msh: cd");
+                // free(temp_path);
+                // free(path);
+                // free(old_pwd);
+                // if (logical_pwd)
+                //     free(logical_pwd);
+                return 1;
+            }
+            // free(path);
+            path = temp_path;
+        }
+        else
+        {
+            perror("msh: cd");
+            // free(path);
+            // free(old_pwd);
+            // if (logical_pwd)
+            //     free(logical_pwd);
+            return 1;
+        }
 	}
 	set_env(env, "OLDPWD", old_pwd);
 	new_pwd = get_current_pwd();
