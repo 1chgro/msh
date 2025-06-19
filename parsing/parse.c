@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-char *read_line(void)
+char *read_line(int last_ex)
 {
 	char *input;
 
@@ -11,7 +11,7 @@ char *read_line(void)
 		rl_clear_history(); // kanmsh l history
         write(2, "exit\n", 5);
         // ltht atkon ft_exit blast exit
-		exit(0);
+		exit(last_ex);
 	}
 	else if (*input)
 		add_history(input); // Add input to history
@@ -48,7 +48,7 @@ t_cmd *msh_parse(t_glob_st *glob_strct)
     char *line;
 
     line = NULL;
-    line = read_line();
+    line = read_line(glob_strct->ext_stat);
     if (line == NULL)
         return (NULL);
     glob_strct->tokens = lexer(line);
@@ -57,8 +57,8 @@ t_cmd *msh_parse(t_glob_st *glob_strct)
     glob_strct->cmd = create_cmd(glob_strct);
     if (!glob_strct->cmd)
         return (free_tokens(glob_strct->tokens), NULL);
-    print_tokens(glob_strct->tokens);
-    print_cmd(glob_strct->cmd);
+    // print_tokens(glob_strct->tokens);
+    // print_cmd(glob_strct->cmd);
     return (glob_strct->cmd);
 }
 
@@ -71,7 +71,6 @@ t_glob_st *init_glob_strct()
     glob_strct->cmd = NULL;
     glob_strct->env = NULL;
     glob_strct->tokens = NULL;
-    glob_strct->current_pwd = NULL;
     glob_strct->ext_stat = 0;
     return (glob_strct);
 }
