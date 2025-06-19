@@ -165,16 +165,16 @@ void expand_env_vars(t_glob_st *glob_strct)
     while (current)
     {
         i = 0;
-        if (current->line && is_export(current->line))
-        {
-            printf("is_export: %s\n", current->line);
-            expanded = expand_export(current->line, glob_strct);
+        // if (current->line && is_export(current->line))
+        // {
+        //     printf("is_export: %s\n", current->line);
+        //     expanded = expand_export(current->line, glob_strct);
 
-        }
-        else if (current->line)
-        {
+        // }
+        // else if (current->line)
+        // {
             expanded = expand(current->line, glob_strct);
-        }
+        // }
         current->line = expanded;
         while (current->files && current->files[i].filename)
         {
