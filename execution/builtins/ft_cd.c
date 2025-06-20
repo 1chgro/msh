@@ -27,6 +27,7 @@ void set_env(t_env **env, char *key, char *value)
 		{
 			// free(current->value);
 			current->value = ft_strdup(value);
+            current->flag = 1;
 			return;
 		}
 		current = current->next;
@@ -86,7 +87,6 @@ int all(char    *path)
         {
             len++;
             i = i+2;
-            
         }
         else
             return (-1);
@@ -208,7 +208,6 @@ int ft_cd(char **s_cmd, t_env **env)
 			path = "..";
 		}
 	}
-	printf("%s, %d\n", path, all(path));
 	if (chdir(path) == -1)
 	{
         int nbr = all(path);
