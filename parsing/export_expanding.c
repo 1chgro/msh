@@ -22,8 +22,15 @@ char *expand_export(char *line, t_glob_st *glob_strct)
     char **arr = split_line_to_args(line);
     if (!arr)
         return (NULL);
-    result = malloc(1);
     int i = 0;
+    while (arr[i])
+    {
+        arr[i] = expand(arr[i], glob_strct);
+        printf("arr[%d]: %s\n", i, arr[i]);
+        i++;
+    }
+    result = malloc(1);
+    // int i = 0;
     // while (arr[i])
     // {
     //     arr[i]

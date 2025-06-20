@@ -35,7 +35,7 @@ int here_doc(char *limiter, int *fd, t_glob_st *glob_strct)
         {
             if (g_in_heredoc)
             {
-                glob_strct->ext_stat = 130;
+                glob_strct->ext_stat = 1;
                 // write(STDOUT_FILENO, "\n", 1);
             }
             free(line);
