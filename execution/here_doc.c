@@ -4,13 +4,13 @@ int g_in_heredoc = 0;
 
 void handel_sigint(int sig)
 {
-    if (sig == SIGINT)
-    {
-        g_in_heredoc = 1;
-        ioctl(STDIN_FILENO, TIOCSTI, "\n");
-        rl_replace_line("", 0);
-        rl_redisplay();
-    }
+	if (sig == SIGINT)
+	{
+		g_in_heredoc = 1;
+		ioctl(STDIN_FILENO, TIOCSTI, "\n");
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }
 int here_doc(char *limiter, int *fd, t_glob_st *glob_strct)
 {

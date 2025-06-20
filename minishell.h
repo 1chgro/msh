@@ -9,6 +9,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <limits.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -41,7 +42,6 @@ typedef struct s_cmd
 	char 			*line;
 	char 			**argv;
 	t_red			*files;
-	int				exit_status;
 	struct s_cmd  	*next;
 } t_cmd;
 
@@ -151,17 +151,17 @@ char	*expand_heredoc(char *line, t_glob_st *glob_strct);
 char	*expand_export(char *line, t_glob_st *glob_strct);
 char *fix_cmd(char *cmd);
 //-------------------------- excution -------------------//
-int		run_cmd(t_cmd *cmd, t_env *env);
+int		run_cmd(t_cmd *cmd, t_env *env, int last_ex);
 int     copie_env(t_env **c_env, char **env);
 char    *ft_strchr(const char *s, int c);
 char    **ft_split(char const *s, char c);
 t_env	*create_node(char *key, char *value);
 void	append_node(t_env **head, t_env *node);
 int		are_builtin(char    *cmd);
-int		run_builtin(char **s_cmd, t_env *env);
-int    ft_pwd();
+int		run_builtin(char **s_cmd, t_env **env, int last_ex);
+int    ft_pwd(t_env *env);
 int    ft_env(char **s_cmd, t_env *env);
-int    ft_exit(char **s_cmd);
+int    ft_exit(char **s_cmd, int last_ex);
 int    ft_export(char **s_cmd, t_env **env);
 int    ft_unset(char **s_cmd, t_env **env);
 long	ft_atoi(const char *str);
@@ -185,5 +185,6 @@ char	*my_getenv(char *name, t_env *env);
 void	free_env(t_env *env);
 int open_heredoc(t_glob_st *glob_strct);
 void close_heredoc(t_glob_st *glob_strct);
-
+char *get_current_pwd(void);
+char *take_store_pwd(char *path);
 #endif
