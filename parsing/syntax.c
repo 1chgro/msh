@@ -98,6 +98,5 @@ int	check_syntax_err(t_glob_st *glob_strct)
 		prev = current;
 		current = current->next;
 	}
-	print_tokens(glob_strct->tokens);
 	return (0);
 }
