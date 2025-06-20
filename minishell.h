@@ -11,6 +11,7 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <limits.h>
+#include <termios.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/ioctl.h>
@@ -73,6 +74,7 @@ typedef struct s_glob_st
 	t_cmd *cmd;
 	t_token *tokens;
 	int ext_stat;
+    struct  termios origin;
 } t_glob_st;
 
 //----------------- print functions--------///
@@ -145,7 +147,7 @@ int		run_cmd(t_cmd *cmd, t_env *env, int last_ex);
 int     copie_env(t_env **c_env, char **env);
 char    *ft_strchr(const char *s, int c);
 char    **ft_split(char const *s, char c);
-t_env	*create_node(char *key, char *value);
+t_env	*create_node(char *key, char *value, int have_equal);
 void	append_node(t_env **head, t_env *node);
 int		are_builtin(char    *cmd);
 int		run_builtin(char **s_cmd, t_env **env, int last_ex);
@@ -168,7 +170,7 @@ int	here_doc(char *limiter, int *fd, t_glob_st *glob_strct);
 char	*ft_substr(char *s, unsigned int index, size_t bytes);
 char	*get_next_line(int fd);
 char	*ft_itoa(int n);
-void update_node_value(t_env *node, char *value, int append);
+void update_node_value(t_env *node, char *value, int append, int have_equal);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putchar_fd(char c, int fd);
 char	*my_getenv(char *name, t_env *env);
@@ -177,4 +179,7 @@ int open_heredoc(t_glob_st *glob_strct);
 void close_heredoc(t_glob_st *glob_strct);
 char *get_current_pwd(void);
 char *take_store_pwd(char *path);
+long ft_atoi_(const char *str, int *is_valid);
+void get_terminall(struct termios *termios);
+void set_terminall(struct termios *termios);
 #endif
