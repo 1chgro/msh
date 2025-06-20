@@ -110,7 +110,7 @@ t_env *create_node(char *key, char *value, int have_equal)
 	if (!node)
 		return (NULL);
 	node->key = key;
-	if (!value || value[0] == '\0')
+	if ((!value || value[0] == '\0') && have_equal)
 		node->value = ft_strdup("");
 	else
 		node->value = value;
@@ -146,11 +146,11 @@ char    **fill_env()
 	env = malloc(sizeof(char *) * 6);
 	if (!env)
 		return (NULL);
-	env[0] = ft_strdup("OLDPWD");
+	env[0] = ft_strdup("OLDPWD=");
 	env[1] = ft_strjoin_("PWD=", get_current_pwd());
 	env[2] = ft_strdup("SHLVL=1");
 	env[3] = ft_strdup("_=/usr/bin/env");
-	env[4] = ft_strdup("PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
+	env[4] = ft_strdup("PATH=/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin");
 	env[5] = NULL;
 	return(env);
 }
@@ -160,38 +160,14 @@ int copie_env(t_env **c_env, char **env)
 	char *key;
 	char *value;
     int have_equal = 0;
+    int empty = 0;
 	int i = 0;
 
 	*c_env = NULL;
 	if (!*env)
 	{
+        empty = 1;
 		env = fill_env();
-		while (env[i])
-		{
-            if (ft_strchr(env[i], '='))
-                have_equal = 1;
-			key = get_key(env[i]);
-			if (!key)
-				return (0);
-			value = get_value(env[i]);
-			if (!value)
-			{
-				free(key);
-				return (0);
-			}
-			node = create_node(key, value, have_equal);
-			if (!node)
-			{
-				free(key);
-				free(value);
-				return (0);
-			}
-			if (ft_strcmp(node->key, "PATH") == 0)
-				node->flag = 2;
-			append_node(c_env, node);
-			i++;
-		}
-		return (1);
 	}
 	while (env[i])
 	{
@@ -221,6 +197,11 @@ int copie_env(t_env **c_env, char **env)
 			free(value);
 			return (0);
 		}
+        if (empty)
+        {
+            if (ft_strcmp(node->key, "PATH") == 0)
+				node->flag = 2;
+        }
 		append_node(c_env, node);
 		i++;
 	}

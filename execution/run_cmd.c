@@ -57,7 +57,7 @@ char    **struct_to_array(t_env *env)
 		temp = temp->next;
 	}
 	temp = env;
-	arr = malloc(sizeof(char *) * (size_lst + 2));
+	arr = malloc(sizeof(char *) * (size_lst + 1));
 	if (!arr)
 		return  (NULL);
 	while (temp)
@@ -66,11 +66,6 @@ char    **struct_to_array(t_env *env)
 		arr[i++] = ft_strjoin_(str, temp->value);
 		temp = temp->next;
 	}
-    if (!my_getenv("PATH", env))
-    {
-        arr[i] = ft_strdup("PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
-        i++;
-    }
 	arr[i] = NULL;
 	return (arr);
 }
@@ -208,8 +203,9 @@ char *get_path(char *cmd, t_env *env)
 	char *path = my_getenv("PATH", env);
 	if (!path)
 	{
-		path = ft_strdup(":.");
+        path = ft_strdup(":.");
 	}
+	path = ft_strjoin(path, ":.");
 	allpath = ft_split(path, ':');
 	if (!allpath)
 	{
@@ -242,37 +238,34 @@ void exec(char **cmd, t_env *env)
 	{
 		handle_shell_level(env);
 	}
-    if (ft_strchr(cmd[0], '/') && is_file(path))
+    if (execve(path, cmd, struct_to_array(env)) == -1)
     {
-        char **new_arg = malloc((sizeof(char *) * 3));
-        if (!new_arg)
+        if (ft_strchr(cmd[0], '/') && is_file(path))
         {
-            perror("malloc");
-        }
-        new_arg[0] = ft_strdup("bash");
-        new_arg[1] = path;
-        new_arg[2] = NULL;
-        if (execve("/bin/bash", new_arg, struct_to_array(env)) == -1)
-        {
+            char **new_arg = malloc((sizeof(char *) * 3));
+            if (!new_arg)
+            {
+                perror("malloc");
+            }
+            new_arg[0] = ft_strdup("bash");
+            new_arg[1] = path;
+            new_arg[2] = NULL;
+            if (execve("/bin/bash", new_arg, struct_to_array(env)) == -1)
+            {
                 ft_putstr_fd("msh: ", 2);
                 ft_putstr_fd(cmd[0], 2);
                 ft_putstr_fd(": execve failed: ", 2);
                 perror("");
                 free(path);
                 exit(1);
+            }
         }
-    }
-    else
-    {
-        if (execve(path, cmd, struct_to_array(env)) == -1)
-        {
-                ft_putstr_fd("msh: ", 2);
-                ft_putstr_fd(cmd[0], 2);
-                ft_putstr_fd(": execve failed: ", 2);
-                perror("");
-                free(path);
-                exit(1);
-        }
+        ft_putstr_fd("msh: ", 2);
+        ft_putstr_fd(cmd[0], 2);
+        ft_putstr_fd(": execve failed: ", 2);
+        perror("");
+        free(path);
+        exit(1);
     }
 }
 
@@ -426,23 +419,25 @@ int run_pipeline(t_cmd *cmd, t_env *env, int last_ex)
 	if (prev_fd != -1)
 		close(prev_fd);
 
-	while (waitpid(-1, &status, 0) > 0)
+	waitpid(pid[i - 1], &status, 0);
+    if (WIFEXITED(status))
+        last_status = WEXITSTATUS(status);
+    else if (WIFSIGNALED(status))
+    {
+        sig = WTERMSIG(status);
+        if (sig == SIGINT)
+            last_status = SIGINT + 128;
+        else if (sig == SIGQUIT)
+        {
+            dup2(2, 1);
+            printf("Quit: %d\n", SIGQUIT);
+            dup2(1, 2);
+            last_status = SIGQUIT + 128;
+        }
+    }
+    while (waitpid(-1, NULL, 0) > 0)
 	{
-		if (WIFEXITED(status))
-			last_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-		{
-			sig = WTERMSIG(status);
-			if (sig == SIGINT)
-				last_status = SIGINT + 128;
-			else if (sig == SIGQUIT)
-			{
-				dup2(2, 1);
-				printf("Quit: %d\n", SIGQUIT);
-				dup2(1, 2);
-				last_status = SIGQUIT + 128;
-			}
-		}
+        ;
 	}
 	return (last_status);
 }
