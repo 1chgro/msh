@@ -39,3 +39,6 @@ char *expand_export(char *line, t_glob_st *glob_strct)
     
     return (line);
 }
+
+
+

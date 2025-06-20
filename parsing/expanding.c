@@ -113,6 +113,11 @@ char *expand_core(char *line, t_glob_st *glob_strct, char *result)
             result = handle_variable_expansion(line, &i, glob_strct, result);
         else
         {
+            if (line[i] == '$' && line[i + 1] == '$')
+            {
+                i += 2;
+                continue;
+            }
             if (line[i] == '$' && !is_valid_char(line[i + 1]) && quote == 0)
             {
                 i++;

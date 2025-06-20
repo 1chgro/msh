@@ -115,3 +115,41 @@ argv:
 
 echo '$USER "$USER" "$"USER"" '$USER' '$'USER'''
 echo "$USER "$USER " "$"USER"" '$USER' '$'USER''"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export a="a b c" should be exported as a="a b c"
+export 'h'="$a" should be exported as h="a b c"
+export "h"='$a' should be exported as h="$a"
+export 'h'=$a should be exported as h="a" key: b key: c
+export "h"=$a should be exported as h="a" key: b key: c
+if there is multiple keys
+if there is quotes in the key, the value of the key should be splited by space and the other keys should be expanded too the way they should
+if there is quotes in export like exp'o'rt ""export export'' ot any other variant where the quotes are balanced then all the values of the keys should be splited by space
+export l=$a m=$a n=$a should be exported as l="a b c" m="a b c" n="a b c"
+export $p= l=$a m=$a n=$a should be exported as l="a b  c" m="a b  c" n="a b  c"
+export 1=$j should be exported as 1="c d" but it will fail with not a valid identifier
+export z=$"HOME" should be exported as z=HOME
