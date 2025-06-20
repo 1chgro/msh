@@ -61,7 +61,7 @@ int check_append_op(char *str)
 		return (1);
 	return (0);
 }
-void update_node_value(t_env *node, char *value, int append)
+void update_node_value(t_env *node, char *value, int append, int have_equal)
 {
 	char *new_value;
 
@@ -71,13 +71,19 @@ void update_node_value(t_env *node, char *value, int append)
 		free(node->value);
 		free(value);
 		node->value = new_value;
-		node->flag = (new_value && new_value[0] != '\0') ? 1 : 0;
+        if (have_equal)
+		    node->flag = 1;
+        else 
+            node->flag = 0;
 	}
 	else
 	{
 		free(node->value);
 		node->value = value;
-		node->flag = (value && value[0] != '\0') ? 1 : 0;
+		if (have_equal)
+		    node->flag = 1;
+        else 
+            node->flag = 0;
 	}
 }
 static int is_valid_identifier(char *key)
@@ -133,11 +139,18 @@ static int process_export_arg(char *arg, t_env **env)
 	char *key;
 	char *value;
 	int append;
+    int have_equal = 0;
 	t_env *node;
 
 	
 	append = check_append_op(arg);
 	key = get_key(arg);
+    if (!key)
+    {
+        return (0);
+    }
+    if (ft_strchr(arg, '='))
+        have_equal = 1;
 	if (!is_valid_identifier(key) || append == 2)
 	{
 		dup2(2, 1);
@@ -158,12 +171,12 @@ static int process_export_arg(char *arg, t_env **env)
 		node = node->next;
 	if (node)
 	{
-		update_node_value(node, value, append);
+		update_node_value(node, value, append, have_equal);
 		free(key);
 	}
 	else
 	{
-		node = create_node(key, value);
+		node = create_node(key, value, have_equal);
 		if (!node)
 		{
 			free(key);

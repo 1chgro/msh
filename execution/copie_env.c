@@ -81,6 +81,8 @@ char *get_value(char *str)
 	int j;
 
 	i = 0;
+    if (!str)
+        return (NULL);
 	while (str[i] && str[i] != '=')
 		i++;
 	if (str[i] == '=')
@@ -102,7 +104,7 @@ char *get_value(char *str)
 	return (value);
 }
 
-t_env *create_node(char *key, char *value)
+t_env *create_node(char *key, char *value, int have_equal)
 {
 	t_env *node = malloc(sizeof(t_env));
 	if (!node)
@@ -112,7 +114,10 @@ t_env *create_node(char *key, char *value)
 		node->value = ft_strdup("");
 	else
 		node->value = value;
-	node->flag = (value && value[0] != '\0') ? 1 : 0;
+    if (have_equal)
+	    node->flag = 1;
+    else
+        node->flag = 0;
 	node->index = -1;
 	node->next = NULL;
 	return (node);
@@ -154,6 +159,7 @@ int copie_env(t_env **c_env, char **env)
 	t_env *node;
 	char *key;
 	char *value;
+    int have_equal = 0;
 	int i = 0;
 
 	*c_env = NULL;
@@ -162,6 +168,8 @@ int copie_env(t_env **c_env, char **env)
 		env = fill_env();
 		while (env[i])
 		{
+            if (ft_strchr(env[i], '='))
+                have_equal = 1;
 			key = get_key(env[i]);
 			if (!key)
 				return (0);
@@ -171,7 +179,7 @@ int copie_env(t_env **c_env, char **env)
 				free(key);
 				return (0);
 			}
-			node = create_node(key, value);
+			node = create_node(key, value, have_equal);
 			if (!node)
 			{
 				free(key);
@@ -187,16 +195,26 @@ int copie_env(t_env **c_env, char **env)
 	}
 	while (env[i])
 	{
+        if (ft_strchr(env[i], '='))
+            have_equal = 1;
 		key = get_key(env[i]);
 		if (!key)
 			return (0);
-		value = get_value(env[i]);
-		if (!value)
-		{
-			free(key);
-			return (0);
-		}
-		node = create_node(key, value);
+        if (ft_strcmp(key, "OLDPWD") == 0)
+        {
+            have_equal = 0;
+            value = NULL;
+        }
+        else
+        {
+            value = get_value(env[i]);
+            if (!value)
+            {
+                free(key);
+                return (0);
+            }
+        }
+		node = create_node(key, value, have_equal);
 		if (!node)
 		{
 			free(key);

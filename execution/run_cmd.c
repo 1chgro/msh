@@ -89,43 +89,24 @@ char	*my_getenv(char *name, t_env *env)
 	return (NULL);
 }
 
-int is_valid_numeric(const char *str)
-{
-	if (!str || *str == '\0')
-		return (0);
-	if (*str == '+' || *str == '-' || *str == ' ')
-		str++;
-	if (*str == '\0')
-		return (0);
-	while (*str)
-	{
-		if (*str < '0' || *str > '9' || *str == ' ')
-			return (0);
-		str++;
-	}
-	return (1);
-}
-
 void    handle_shell_level(t_env *env)
 {
 	int shell_level;
 	int new_shlvl;
+    int is_valid = 0;
 	t_env *shlvl_node = get_shlvl(env);
 
 	if (!shlvl_node || !shlvl_node->value)
 	{
-		shlvl_node = create_node("SHLVL", "1");
+		shlvl_node = create_node("SHLVL", "1", 1);
 		append_node(&env, shlvl_node);
 		return ;
 	}
-	if (!is_valid_numeric(shlvl_node->value))
-	{
-		shell_level = 0;
-	}
-	else
-	{
-		shell_level = ft_atoi(shlvl_node->value);
-	}
+		shell_level = ft_atoi_(shlvl_node->value, &is_valid);
+    if (!is_valid)
+    {
+        shell_level = 0;
+    }
 	if (shell_level >= 999)
 	{
 		new_shlvl = 1;
@@ -133,7 +114,7 @@ void    handle_shell_level(t_env *env)
 	{
 		new_shlvl = shell_level + 1;
 	}
-	update_node_value(shlvl_node, ft_itoa(new_shlvl), 0);
+	update_node_value(shlvl_node, ft_itoa(new_shlvl), 0, 1);
 }
 
 static int is_directory(const char *path)
@@ -142,6 +123,13 @@ static int is_directory(const char *path)
 	if (stat(path, &statbuf) != 0)
 		return 0;
 	return S_ISDIR(statbuf.st_mode);
+}
+static int is_file(const char *path)
+{
+	struct stat statbuf;
+	if (stat(path, &statbuf) != 0)
+		return 0;
+	return S_ISREG(statbuf.st_mode);
 }
 
 static char *check_command_path(char **allpath, char *cmd)
@@ -254,15 +242,38 @@ void exec(char **cmd, t_env *env)
 	{
 		handle_shell_level(env);
 	}
-	if (execve(path, cmd, struct_to_array(env)) == -1)
-	{
-		ft_putstr_fd("msh: ", 2);
-		ft_putstr_fd(cmd[0], 2);
-		ft_putstr_fd(": execve failed: ", 2);
-		perror("");
-		free(path);
-		exit(1);
-	}
+    if (ft_strchr(cmd[0], '/') && is_file(path))
+    {
+        char **new_arg = malloc((sizeof(char *) * 3));
+        if (!new_arg)
+        {
+            perror("malloc");
+        }
+        new_arg[0] = ft_strdup("bash");
+        new_arg[1] = path;
+        new_arg[2] = NULL;
+        if (execve("/bin/bash", new_arg, struct_to_array(env)) == -1)
+        {
+                ft_putstr_fd("msh: ", 2);
+                ft_putstr_fd(cmd[0], 2);
+                ft_putstr_fd(": execve failed: ", 2);
+                perror("");
+                free(path);
+                exit(1);
+        }
+    }
+    else
+    {
+        if (execve(path, cmd, struct_to_array(env)) == -1)
+        {
+                ft_putstr_fd("msh: ", 2);
+                ft_putstr_fd(cmd[0], 2);
+                ft_putstr_fd(": execve failed: ", 2);
+                perror("");
+                free(path);
+                exit(1);
+        }
+    }
 }
 
 int redirection(t_cmd *cmd)

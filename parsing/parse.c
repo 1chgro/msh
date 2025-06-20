@@ -75,6 +75,7 @@ t_glob_st *init_glob_strct()
     glob_strct->env = NULL;
     glob_strct->tokens = NULL;
     glob_strct->ext_stat = 0;
+    get_terminall(&glob_strct->origin);
     return (glob_strct);
 }
 
@@ -103,6 +104,7 @@ int msh_loop(char **envp)
             free_cmd(glob_strct->cmd);
             glob_strct->cmd = NULL;
         }
+        set_terminall(&glob_strct->origin);
     }
     return (free_env(glob_strct->env), 1);
 }
