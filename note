@@ -21,9 +21,6 @@ bash -> export h=$a ------> h="a b c"
 msh  -> export h=$a -------> h="a" key: b key: c        
 
 ----------------------------------------------------------------------------------------
- export l=$a m=$a n""=$a
-
---------------
 
   f="ayo'ido"
  echo $f
@@ -34,17 +31,6 @@ argv:
 ---------------------
 ayoido
 
-----------------------------------------------------------------------------------------
-$ export $p= l=$a m=$a n=$a
-line: export $p="" l="b  c" m="b  c" n="b  c"
-argv: 
-                export 
-                $p= 
-                l=b  c 
-                m=b  c 
-                n=b  c 
----------------------
-export: $p=:not a valid identifier
 
 ---------------------------------------------------------------------------------------- 
 
@@ -57,26 +43,6 @@ argv:
 export: 1=c  d:not a valid identifier
 
 sayb ikhan d 1=c gan wahdotn
-
-----------------------------------------------------------------------------------------
-
-$ export z=$"HOME"
-line: export z="$"HOME""
-argv: 
-                export 
-                z=$HOME 
-z should be z=HOME
-
--------------------------------- done;
-
-moul l exection
-export x++=j
-line: export x++="j"
-argv: 
-                export 
-                x++=j 
----------------------
-should display = export: `x++=j': not a valid identifier
 
 
 -------------------------------------------------------------------
@@ -110,25 +76,42 @@ argv:
 
 
 
-
 --------------------- done -------------------------------
 
 echo '$USER "$USER" "$"USER"" '$USER' '$'USER'''
 echo "$USER "$USER " "$"USER"" '$USER' '$'USER''"
 
 
+$ export z=$"HOME"
+line: export z="$"HOME""
+argv: 
+                export 
+                z=$HOME 
+z should be z=HOME
+
+-------------------------------- done;
+
+moul l exection
+export x++=j
+line: export x++="j"
+argv: 
+                export 
+                x++=j 
+---------------------
+should display = export: `x++=j': not a valid identifier
 
 
 
-
-
-
-
-
-
-
-
-
+$ export $p= l=$a m=$a n=$a
+line: export $p="" l="b  c" m="b  c" n="b  c"
+argv: 
+                export 
+                $p= 
+                l=b  c 
+                m=b  c 
+                n=b  c 
+---------------------
+export: $p=:not a valid identifier
 
 
 

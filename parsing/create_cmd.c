@@ -128,39 +128,16 @@ char **split_line_to_args(char *line)
 	}
 	return (args[arg_count] = NULL, args);
 }
-static char *add_quotes(char *value)
-{
-    char *result = NULL;
-    if (!value)
-        return (NULL);
-    // Check if value already has quotes
-    if (value[0] == '\'' && value[ft_strlen(value) - 1] == '\'')
-    {
-        result = ft_strdup(value);
-    }
-    else if (value[0] == '"' && value[ft_strlen(value) - 1] == '"')
-    {
-        result = ft_strdup(value);
-    }
-    else
-    {
-        result = ft_strjoin_ws("\"", value);
-        result = ft_strjoin_ws(result, "\"");
-    }
-    return (result);
-}
 
-void fill_cmd_argv(t_cmd *cmd)
+
+void fill_cmd_argv(t_cmd *cmd, t_glob_st *glob_strct)
 {
 	t_cmd *temp_cmd = cmd;
 
 	while (temp_cmd)
 	{
 		temp_cmd->argv = split_line_to_args(temp_cmd->line);
-		int i = 0;
 		temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
-		if (!temp_cmd->argv)
-			return ;
 		temp_cmd = temp_cmd->next;
 	}
 }
@@ -216,6 +193,6 @@ t_cmd *create_cmd(t_glob_st *glob_strct)
 	if (!glob_strct->cmd)
 		return (NULL);
 	expand_env_vars(glob_strct);
-	fill_cmd_argv(glob_strct->cmd);
+	fill_cmd_argv(glob_strct->cmd, glob_strct);
 	return (glob_strct->cmd);
 }

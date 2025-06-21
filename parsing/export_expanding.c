@@ -37,7 +37,7 @@ char **split_key_val(char *str)
 int check_key(char *key)
 {
     int i = 0;
-    char quote = 0;
+    char quote = 0; 
     while (key[i])
     {
         if (is_quote(key[i]))
@@ -66,6 +66,28 @@ int check_value(char *value)
     return (0);
 }
 
+char *add_quotes(char *value)
+{
+    if (!value)
+        return (NULL);
+    char *result = NULL;
+    if (value[0] == '"' || value[0] == '\'')
+    {
+        result = ft_strdup(value);
+    }
+    else
+    {
+        result = malloc(sizeof(char) * (ft_strlen(value) + 3));
+        if (!result)
+            return (NULL);
+        result[0] = '"';
+        ft_stringcpy(&result[1], value, ft_strlen(value));
+        result[ft_strlen(value) + 1] = '"';
+        result[ft_strlen(value) + 2] = '\0';
+    }
+    return (result);
+}
+
 char *expand_key_value(char *str, t_glob_st *glob_strct)
 {
     char *result = NULL;
@@ -76,11 +98,11 @@ char *expand_key_value(char *str, t_glob_st *glob_strct)
     if (!key_val)
         return (NULL);
     int i = 0;
-    while (key_val[i])
-    {
-        printf("key_val[%d]: %s\n", i, key_val[i]);
-        i++;
-    }
+    // while (key_val[i])
+    // {
+    //     printf("key_val[%d]: %s\n", i, key_val[i]);
+    //     i++;
+    // }
     int split_value = 0;
     if (key_val[0])
     {
@@ -96,25 +118,29 @@ char *expand_key_value(char *str, t_glob_st *glob_strct)
     if (key_val[1])
     {
         value = expand(key_val[1], glob_strct);
-        printf("value: %s\n", value);
-        if (split_value == 1 )
+        if (!split_value)
+            value = add_quotes(value);
+        else
         {
             value_arr = ft_split(value, ' ');
+            free(value);
+            value = NULL;
         }
-        if (!value)
-            return (NULL);
-    }
-    else
-    {
-        value = ft_strdup("");
     }
     int k = 0;
     while (value_arr && value_arr[k])
     {
-        printf("value_arr[%d]: %s\n", k, value_arr[k]);
+        value = ft_strjoin(value, value_arr[k]);
         k++;
     }
-    printf("split_value: %d\n", split_value);
+
+    result = ft_strjoin(result, key);
+    if (value)
+    {
+        result = ft_strjoin_ws(result, "=");
+        result = ft_strjoin_ws(result, value);
+    }
+    // printf("split_value: %d\n", split_value);
     return (result);
 }
 
@@ -137,6 +163,6 @@ char *expand_export(char *line, t_glob_st *glob_strct)
         result = ft_strjoin(result, expanded);
         i++;
     }
-
-    return (line);
+    // printf("result export: %s\n", result);
+    return (result);
 }

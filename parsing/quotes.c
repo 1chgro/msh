@@ -67,7 +67,7 @@ char *remove_outer_quotes(char *s)
     
     if (!s)
         return (NULL);
-    
+    // printf("s: %s\n", s);
     len = ft_strlen(s);
     output = malloc(len + 1);
     if (!output)
@@ -89,7 +89,7 @@ char *remove_outer_quotes(char *s)
             i++;
             continue;
         }
-        else if (quote == '"' && s[i] == '\'')
+        else if ((quote == '"') && s[i] == '\'')
         {
             // Single quote inside double quotes - preserve it
             output[j++] = s[i++];
@@ -101,12 +101,11 @@ char *remove_outer_quotes(char *s)
         }
         else
         {
-            // Regular character or quote that should be preserved
             output[j++] = s[i++];
         }
     }
-    
     output[j] = '\0';
+	// printf("output: %s\n", output);
     return (output);
 }
 
@@ -139,3 +138,4 @@ char **remove_quotes_arr(char **argv)
 	}
 	return (new_argv[i] = NULL, new_argv);
 }
+

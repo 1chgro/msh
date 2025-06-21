@@ -110,7 +110,9 @@ char *expand_core(char *line, t_glob_st *glob_strct, char *result)
     {
         handle_quotes(line, i, &quote, &pos);
         if (line[i] == '$' && (is_valid_char(line[i + 1]) || line[i + 1] == '?') && quote != '\'')
+        {
             result = handle_variable_expansion(line, &i, glob_strct, result);
+        }
         else
         {
             if (line[i] == '$' && line[i + 1] == '$')
@@ -163,14 +165,14 @@ void expand_env_vars(t_glob_st *glob_strct)
         i = 0;
         if (current->line && check_if_export(current->line, glob_strct))
         {
-            printf("Expanding export: %s\n", current->line);
             expanded = expand_export(current->line, glob_strct);
+            current->line = expanded;
         }
         else if (current->line)
         {
             expanded = expand(current->line, glob_strct);
+            current->line = expanded;
         }
-        current->line = expanded;
         while (current->files && current->files[i].filename)
         {
             if (current->files[i].type != HEREDOC)
