@@ -88,7 +88,7 @@ char *add_quotes(char *value)
     return (result);
 }
 
-char *expand_key_value(char *str, t_glob_st *glob_strct)
+char *expand_key_value(char *str, t_glob_st *glob_strct, int split_all_values)
 {
     char *result = NULL;
     char *key = NULL;
@@ -106,10 +106,11 @@ char *expand_key_value(char *str, t_glob_st *glob_strct)
     int split_value = 0;
     if (key_val[0])
     {
-        if (check_key(key_val[0]) == 1 && check_value(key_val[1]) == 1)
-        {
-            split_value = 1;
-        }
+        if (split_all_values || (check_key(key_val[0]) == 1 && check_value(key_val[1]) == 1))
+	        split_value = 1;
+        // {
+        //     split_value = 1;
+        // }
         key = expand(key_val[0], glob_strct);
         if (!key)
             return (NULL);
@@ -119,7 +120,10 @@ char *expand_key_value(char *str, t_glob_st *glob_strct)
     {
         value = expand(key_val[1], glob_strct);
         if (!split_value)
+        {
+            value = remove_outer_quotes(value);
             value = add_quotes(value);
+        }
         else
         {
             value_arr = ft_split(value, ' ');
@@ -144,9 +148,67 @@ char *expand_key_value(char *str, t_glob_st *glob_strct)
     return (result);
 }
 
+int is_quoted_export(char *line)
+{
+	if (!line)
+		return (0);
+
+	int i = 0;
+	int len = ft_strlen(line);
+	int single = 0, dbl = 0;
+	char export_candidate[64];
+	int j = 0;
+
+    // printf("line: %s\n", line);
+	// Copy first 6–12 non-space characters to buffer
+	while (line[i])
+	{
+        if (is_space(line[i]))
+            break;
+		export_candidate[j++] = line[i];
+		i++;
+	}
+	export_candidate[j] = '\0';
+    printf("export_candidate: %s\n", export_candidate);
+    if (ft_strcmp(export_candidate, "export") == 0)
+        return (0);
+
+	// Sanitize export_candidate to just check if it contains "export"
+	char cleaned[64];
+	int k = 0;
+	for (int l = 0; export_candidate[l]; l++)
+	{
+		if (export_candidate[l] != '\'' && export_candidate[l] != '"')
+			cleaned[k++] = export_candidate[l];
+	}
+	cleaned[k] = '\0';
+
+	// Must match "export" exactly
+	if (ft_strncmp(cleaned, "export", 6) != 0)
+		return (0);
+
+	// Count quotes in the export_candidate string
+	for (int m = 0; export_candidate[m]; m++)
+	{
+		if (export_candidate[m] == '\'')
+			single++;
+		else if (export_candidate[m] == '"')
+			dbl++;
+	}
+
+	// Only return 1 if quotes are balanced
+	if ((single % 2 == 0) && (dbl % 2 == 0) && (single + dbl > 0))
+		return (1);
+
+	return (0);
+}
+
+
+
+
+
 char *expand_export(char *line, t_glob_st *glob_strct)
 {
-    (void)glob_strct;
     char *result = NULL;
     if (!line)
         return (NULL);
@@ -154,15 +216,35 @@ char *expand_export(char *line, t_glob_st *glob_strct)
     if (!arr)
         return (NULL);
     int i = 0;
-    char **key_val = malloc(sizeof(char *) * 3);
-    int j = 0;
-    char *expanded = NULL;
+    int split_all_values = is_quoted_export(line);
     while (arr[i])
     {
-        expanded = expand_key_value(arr[i], glob_strct);
+        char *expanded = expand_key_value(arr[i], glob_strct, split_all_values);
         result = ft_strjoin(result, expanded);
         i++;
     }
-    // printf("result export: %s\n", result);
     return (result);
 }
+
+// char *expand_export(char *line, t_glob_st *glob_strct)
+// {
+//     (void)glob_strct;
+//     char *result = NULL;
+//     if (!line)
+//         return (NULL);
+//     char **arr = split_line_to_args(line);
+//     if (!arr)
+//         return (NULL);
+//     int i = 0;
+//     char **key_val = malloc(sizeof(char *) * 3);
+//     int j = 0;
+//     char *expanded = NULL;
+//     while (arr[i])
+//     {
+//         expanded = expand_key_value(arr[i], glob_strct);
+//         result = ft_strjoin(result, expanded);
+//         i++;
+//     }
+//     // printf("result export: %s\n", result);
+//     return (result);
+// }

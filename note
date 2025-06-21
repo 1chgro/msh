@@ -45,35 +45,6 @@ export: 1=c  d:not a valid identifier
 sayb ikhan d 1=c gan wahdotn
 
 
--------------------------------------------------------------------
-export"" is not export
-$ export"" k=$a 
-line: export k="b  c"
-argv: 
-                export 
-                k=b  c 
-
---------------------------------------------
-declare -x a="b  c"
-declare -x c
-declare -x export="llll"
-declare -x l="b"
-declare -x m="b"
-declare -x n="b"
-declare -x p="b  cb"
-$ export p=$a"$a"
-line: export p="b  c"b  c""
-argv: 
-                export 
-                p=b  cb 
-                c 
-
-- ksas matsplitich
-
-
-
-
-
 
 
 --------------------- done -------------------------------
@@ -114,6 +85,30 @@ argv:
 export: $p=:not a valid identifier
 
 
+-------------------------------------------------------------------
+export"" is not export
+$ export"" k=$a 
+line: export k="b  c"
+argv: 
+                export 
+                k=b  c 
+
+--------------------------------------------
+declare -x a="b  c"
+declare -x c
+declare -x export="llll"
+declare -x l="b"
+declare -x m="b"
+declare -x n="b"
+declare -x p="b  cb"
+$ export p=$a"$a"
+line: export p="b  c"b  c""
+argv: 
+                export 
+                p=b  cb 
+                c 
+
+- ksas matsplitich
 
 
 
