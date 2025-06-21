@@ -175,8 +175,17 @@ void expand_env_vars(t_glob_st *glob_strct)
         }
         while (current->files && current->files[i].filename)
         {
+            printf("Expanding file: %s\n", current->files[i].filename);
+            printf("Expanding flg: %d\n", current->files[i].expand_flg);
             if (current->files[i].type != HEREDOC)
+            {
                 current->files[i].filename = expand(current->files[i].filename, glob_strct);
+            }
+            if (current->files[i].type == HEREDOC && check_key((current->files[i].filename)))
+            {
+                current->files[i].expand_flg = 0;
+            }
+            printf("Expanding flg: %d\n", current->files[i].expand_flg);
             current->files[i].filename = remove_outer_quotes(current->files[i].filename);
             i++;
         }
