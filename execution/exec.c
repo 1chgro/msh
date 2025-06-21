@@ -159,7 +159,7 @@ int msh_execute(t_glob_st *glob_strct)
 			}
 		}
 	}
-	else if (are_builtin(glob_strct->cmd->argv[0]) && size == 1)
+	if (glob_strct->cmd->argv && are_builtin(glob_strct->cmd->argv[0]) && size == 1)
 	{
 		if (glob_strct->cmd->files)
 		{

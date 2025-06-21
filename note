@@ -131,3 +131,5 @@ export l=$a m=$a n=$a should be exported as l="a b c" m="a b c" n="a b c"
 export $p= l=$a m=$a n=$a should be exported as l="a b  c" m="a b  c" n="a b  c"
 export 1=$j should be exported as 1="c d" but it will fail with not a valid identifier
 export z=$"HOME" should be exported as z=HOME
+
+while true ; do lsof -c minishell ; sleep 5; done

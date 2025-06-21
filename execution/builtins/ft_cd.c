@@ -159,6 +159,7 @@ int ft_cd(char **s_cmd, t_env **env)
 			free(old_pwd);
 			return 1;
 		}
+        printf("%s\n", path);
 	}
 	else if (s_cmd[1][0] == '~' && ft_strlen(s_cmd[1]) > 1)
 	{
@@ -179,12 +180,12 @@ int ft_cd(char **s_cmd, t_env **env)
 	}
 	else
 	{
-		if (s_cmd[2])
-		{
-			ft_putstr_fd("msh: cd: too many arguments\n", 2);
-			free(old_pwd);
-			return 1;
-		}
+		// if (s_cmd[2])
+		// {
+		// 	ft_putstr_fd("msh: cd: too many arguments\n", 2);
+		// 	free(old_pwd);
+		// 	return 1;
+		// }
 		path = s_cmd[1];
 	}
 	int logical_dotdot = 0;

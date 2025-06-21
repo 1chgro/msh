@@ -57,7 +57,7 @@ char    **struct_to_array(t_env *env)
 		temp = temp->next;
 	}
 	temp = env;
-	arr = malloc(sizeof(char *) * (size_lst + 1));
+	arr = malloc(sizeof(char *) * (size_lst + 2));
 	if (!arr)
 		return  (NULL);
 	while (temp)
@@ -66,6 +66,10 @@ char    **struct_to_array(t_env *env)
 		arr[i++] = ft_strjoin_(str, temp->value);
 		temp = temp->next;
 	}
+    if (!my_getenv("PATH", env))
+    {
+        arr[++i] = ft_strdup("PATH=/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:");
+    }
 	arr[i] = NULL;
 	return (arr);
 }
@@ -104,7 +108,7 @@ void    handle_shell_level(t_env *env)
     }
 	if (shell_level >= 999)
 	{
-		new_shlvl = 1;
+		new_shlvl = 0;
 	} else
 	{
 		new_shlvl = shell_level + 1;
@@ -196,7 +200,7 @@ char *get_path(char *cmd, t_env *env)
 			ft_putstr_fd("msh: ", 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": Permission denied\n", 2);
-			return NULL;
+			exit(126);
 		}
 		return ft_strdup(cmd);
 	}
@@ -405,6 +409,7 @@ int run_pipeline(t_cmd *cmd, t_env *env, int last_ex)
 					exit(1);
 				}
 			}
+            exit(0);
 		}
 		if (prev_fd != -1)
 			close(prev_fd);
@@ -489,7 +494,7 @@ int    run_single_cmd(t_cmd *cmd, t_env *env)
 
 int run_cmd(t_cmd *cmd, t_env *env, int last_ex)
 {
-	if (!cmd || !cmd->argv || !cmd->argv[0])
+	if (!cmd)
 	{
 		perror("invalid command");
 		return (1);
