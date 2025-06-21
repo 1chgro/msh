@@ -168,6 +168,7 @@ t_cmd *create_cmd_lst(t_token *tokens)
 			temp_cmd->files[i].filename = ft_strdup(current->next->value);
 			temp_cmd->files[i].type = get_cmd_red_type(current->type);
 			temp_cmd->files[i].fd = -1;
+			temp_cmd->files[i].expand_flg = 1;
 			i++;
 		}
 		if (is_pipe(&current))

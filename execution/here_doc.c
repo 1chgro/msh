@@ -12,7 +12,8 @@ void handel_sigint(int sig)
 		rl_redisplay();
 	}
 }
-int here_doc(char *limiter, int *fd, t_glob_st *glob_strct)
+
+int here_doc(char *limiter, int *fd, int *expnd_flg, t_glob_st *glob_strct)
 {
     char *line1;
     char *line;
@@ -28,16 +29,14 @@ int here_doc(char *limiter, int *fd, t_glob_st *glob_strct)
     unlink("/tmp/file_tmp");
     // write(STDOUT_FILENO, "> ", 2);
     signal(SIGINT, handel_sigint);
+    // printf("expanding flggg: %d\n", *expnd_flg);
     while (1)
     {
         line = readline("> ");
         if (!line || g_in_heredoc)
         {
             if (g_in_heredoc)
-            {
                 glob_strct->ext_stat = 1;
-                // write(STDOUT_FILENO, "\n", 1);
-            }
             free(line);
             break ;
         }
@@ -46,13 +45,14 @@ int here_doc(char *limiter, int *fd, t_glob_st *glob_strct)
             free(line);
             break;
         }
-        line1 = expand_heredoc(line, glob_strct);
+        if (*expnd_flg)
+            line1 = expand_heredoc(line, glob_strct);
+        else
+            line1 = ft_strdup(line);
         free(line);
         write(write_fd, line1, ft_strlen(line1));
         write(write_fd, "\n", 1);
         free(line1);
-        // write(STDOUT_FILENO, "> ", 2);
-
     }
     msh_signals();
     if (g_in_heredoc)

@@ -35,6 +35,7 @@ typedef struct s_red
 {
 	char 					*filename;
 	int 					fd;
+	int 					expand_flg;
 	t_redirection_type 		type;
 } t_red;
 
@@ -152,7 +153,8 @@ void	expand_env_vars(t_glob_st *glob_strct);
 char	*expand(char *line, t_glob_st *glob_strct);
 char	*expand_heredoc(char *line, t_glob_st *glob_strct);
 char	*expand_export(char *line, t_glob_st *glob_strct);
-char *fix_cmd(char *cmd);
+// char *fix_cmd(char *cmd);
+int check_key(char *key);
 //-------------------------- excution -------------------//
 int		run_cmd(t_cmd *cmd, t_env *env, int last_ex);
 int     copie_env(t_env **c_env, char **env);
@@ -177,7 +179,7 @@ char	*get_key(char	*str);
 char	*get_value(char	*str);
 char	*ft_strjoin_(char *s1, char *s2);
 int	ft_isdigit(int c);
-int	here_doc(char *limiter, int *fd, t_glob_st *glob_strct);
+int	here_doc(char *limiter, int *fd, int *expnd_flg, t_glob_st *glob_strct);
 char	*ft_substr(char *s, unsigned int index, size_t bytes);
 char	*get_next_line(int fd);
 char	*ft_itoa(int n);

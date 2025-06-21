@@ -47,7 +47,7 @@ sayb ikhan d 1=c gan wahdotn
 
 
 
---------------------- done -------------------------------
+(--------------------- done (((((((((((((((((((((((((((((((((((
 
 echo '$USER "$USER" "$"USER"" '$USER' '$'USER'''
 echo "$USER "$USER " "$"USER"" '$USER' '$'USER''"
