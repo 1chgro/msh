@@ -140,13 +140,16 @@ int	is_space(char c);
 int	is_redirection(t_token **token);
 int	is_pipe(t_token **token);
 int	is_valid_char(char c);
-int is_export(char *line);
+// int is_export(char *line);
 
 //------------------- quotes -----------------------//
 void	skip_quotes(char *s, int *i, char q);
 char	*remove_outer_quotes(char *s);
 int		valid_quotes(char *s);
 char	**remove_quotes_arr(char **argv);
+char	*replace_quotes(char *value);
+char	*restore_quotes(char *value);
+
 
 //------------------- expanding -------------------//
 void	expand_env_vars(t_glob_st *glob_strct);

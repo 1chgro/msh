@@ -31,82 +31,48 @@ void	skip_quotes(char *s, int *i, char q)
 		(*i)++;
 }
 
-// char *remove_outer_quotes(char *s)
-// {
-//     int i = 0, j = 0;
-//     char quote = 0;
-//     char output[ft_strlen(s) + 1];
-
-// 	if (!s)
-// 		return (NULL);
-//     while (s[i])
-// 	{
-// 		printf("s[%d] = %c\n", i, s[i]);
-//         if (!quote && (s[i] == '\"' || s[i] == '\'')) {
-//             quote = s[i];
-//             i++;
-//             continue;
-//         }
-//         if (quote && s[i] == quote) {
-//             quote = 0;
-//             i++;
-//             continue;
-//         }
-//         output[j++] = s[i++];
-//     }
-//     output[j] = '\0'; 
-//     return (ft_strdup(output));
-// }
+static int	should_skip_quote(char c, char *quote)
+{
+	if (!*quote && (c == '"' || c == '\''))
+	{
+		*quote = c;
+		return 1;
+	}
+	else if (*quote && c == *quote)
+	{
+		*quote = 0;
+		return 1;
+	}
+	return 0;
+}
 
 char *remove_outer_quotes(char *s)
 {
-    int i = 0, j = 0;
-    char quote = 0;
+    int i;
+	int j;
+    char quote;
     char *output;
     int len;
-    
+
     if (!s)
         return (NULL);
-    // printf("s: %s\n", s);
-    len = ft_strlen(s);
+	(1) && (i = 0, j = 0, quote = 0, output = NULL, len = ft_strlen(s));
     output = malloc(len + 1);
     if (!output)
         return (NULL);
-    
     while (s[i])
     {
-        if (!quote && (s[i] == '"' || s[i] == '\''))
-        {
-            // Starting a quoted section
-            quote = s[i];
-            i++;
-            continue;
-        }
-        else if (quote && s[i] == quote)
-        {
-            // Ending the quoted section
-            quote = 0;
-            i++;
-            continue;
-        }
-        else if ((quote == '"') && s[i] == '\'')
-        {
-            // Single quote inside double quotes - preserve it
+		if (should_skip_quote(s[i], &quote))
+		{
+			i++;
+			continue;
+		}
+        if ((quote == '"' && s[i] == '\'') || (quote == '\'' && s[i] == '"'))
             output[j++] = s[i++];
-        }
-        else if (quote == '\'' && s[i] == '"')
-        {
-            // Double quote inside single quotes - preserve it
-            output[j++] = s[i++];
-        }
         else
-        {
             output[j++] = s[i++];
-        }
     }
-    output[j] = '\0';
-	// printf("output: %s\n", output);
-    return (output);
+    return (output[j] = '\0', output);
 }
 
 
@@ -117,9 +83,9 @@ char **remove_quotes_arr(char **argv)
 	char **new_argv;
 	int len;
 
-	(1) && (i = 0, j = 0, new_argv = NULL, len = 0);
 	if (!argv)
 		return (NULL);
+	(1) && (i = 0, j = 0, new_argv = NULL, len = 0);
 	while (argv[len++])
 	new_argv = malloc(sizeof(char *) * (len + 1));
 	if (!new_argv)
