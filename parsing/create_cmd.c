@@ -39,13 +39,34 @@ t_redirection_type get_cmd_red_type(t_token_type type)
 	return (-1);
 }
 
+static int	skip_argument(const char *str, int i)
+{
+	int in_quotes = 0;
+	char quote_char = '\0';
 
-static int count_args(const char *str)
+	while (str[i])
+	{
+		if (is_quote(str[i]))
+		{
+			if (!in_quotes)
+			{
+				quote_char = str[i];
+				in_quotes = 1;
+			}
+			else if (str[i] == quote_char)
+				in_quotes = 0;
+		}
+		else if (str[i] == ' ' && !in_quotes)
+			break;
+		i++;
+	}
+	return (i);
+}
+
+int	count_args(const char *str)
 {
 	int count = 0;
 	int i = 0;
-	int in_quotes = 0;
-	char quote_char = '\0';
 
 	while (str[i])
 	{
@@ -55,22 +76,7 @@ static int count_args(const char *str)
 			continue;
 		}
 		count++;
-		while (str[i])
-		{
-			if (is_quote(str[i]))
-			{
-				if (!in_quotes)
-				{
-					quote_char = str[i];
-					in_quotes = 1;
-				}
-				else if (str[i] == quote_char)
-					in_quotes = 0;
-			}
-			else if (str[i] == ' ' && !in_quotes)
-				break;
-			i++;
-		}
+		i = skip_argument(str, i);
 	}
 	return (count);
 }
@@ -138,52 +144,86 @@ void fill_cmd_argv(t_cmd *cmd, t_glob_st *glob_strct)
 	{
 		temp_cmd->argv = split_line_to_args(temp_cmd->line);
 		temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
+		int i = 0;
+		while (temp_cmd->argv && temp_cmd->argv[i])
+		{
+			temp_cmd->argv[i] = restore_quotes(temp_cmd->argv[i]);
+			if (!temp_cmd->argv[i])
+			{
+				free_cmd(cmd);
+				return;
+			}
+			i++;
+		}
 		temp_cmd = temp_cmd->next;
 	}
+}
+
+static void	process_token_word(t_token *current, t_token *prev, t_cmd *temp_cmd)
+{
+	if (current->type == TOKEN_WORD && !is_redirection(&prev))
+		temp_cmd->line = ft_strjoin(temp_cmd->line, current->value);
+}
+
+static int	process_token_redirection(t_token *current, t_cmd *temp_cmd, int *i, int count_red)
+{
+	if (is_redirection(&current))
+	{
+		if (!temp_cmd->files)
+		{
+			temp_cmd->files = malloc(sizeof(t_red) * (count_red + 1));
+			if (!temp_cmd->files)
+				return (0);
+			temp_cmd->files[count_red] = (t_red){NULL, -1, -1};
+		}
+		temp_cmd->files[*i].filename = ft_strdup(current->next->value);
+		temp_cmd->files[*i].type = get_cmd_red_type(current->type);
+		temp_cmd->files[*i].fd = -1;
+		temp_cmd->files[*i].expand_flg = 1;
+		(*i)++;
+	}
+	return (1);
+}
+
+static int handle_pipe(t_token *current, t_cmd **temp_cmd, int *count_red, int *i)
+{
+	if (is_pipe(&current))
+	{
+		if (!init_cmd(&(*temp_cmd)->next))
+			return (0);
+		*temp_cmd = (*temp_cmd)->next;
+		*count_red = count_redirections(current->next);
+		*i = 0;
+	}
+	return (1);
 }
 
 t_cmd *create_cmd_lst(t_token *tokens)
 {
 	t_cmd *cmd;
-	cmd = NULL;
-	t_cmd *temp_cmd = NULL;
-	t_token *current = tokens;
-	t_token *prev = NULL;
-	int count_red = 0;
-	int i = 0;
+	t_cmd *temp_cmd;
+	t_token *current;
+	t_token *prev;
+	int count_red;
+	int i;
+
+	(1) && (cmd = NULL, temp_cmd = NULL, current = tokens, prev = NULL, i = 0);
 	count_red = count_redirections(tokens);
 	init_cmd(&cmd);
 	temp_cmd = cmd;
 	while (current)
 	{
-		if (current->type == TOKEN_WORD && !is_redirection(&prev))
-			temp_cmd->line = ft_strjoin(temp_cmd->line, current->value);
-		if (is_redirection(&current))
-		{
-			if (temp_cmd->files == NULL)
-				temp_cmd->files = malloc(sizeof(t_red) * (count_red + 1));
-			if (!temp_cmd->files)
-				return (NULL);
-			temp_cmd->files[count_red] = (t_red){NULL, -1, -1};
-			temp_cmd->files[i].filename = ft_strdup(current->next->value);
-			temp_cmd->files[i].type = get_cmd_red_type(current->type);
-			temp_cmd->files[i].fd = -1;
-			temp_cmd->files[i].expand_flg = 1;
-			i++;
-		}
-		if (is_pipe(&current))
-		{
-			if (!init_cmd(&temp_cmd->next))
-				return (free_cmd(cmd), NULL);
-			temp_cmd = temp_cmd->next;
-			count_red = count_redirections(current->next);
-			i = 0;
-		}
+		process_token_word(current, prev, temp_cmd);
+		if (!process_token_redirection(current, temp_cmd, &i, count_red))
+			return (free_cmd(cmd), NULL);
+		if (!handle_pipe(current, &temp_cmd, &count_red, &i))
+			return (free_cmd(cmd), NULL);
 		prev = current;
 		current = current->next;
 	}
 	return (cmd);
 }
+
 
 t_cmd *create_cmd(t_glob_st *glob_strct)
 {
