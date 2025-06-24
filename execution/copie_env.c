@@ -152,7 +152,7 @@ char    **fill_env()
 	env[1] = ft_strjoin_("PWD=", get_current_pwd());
 	env[2] = ft_strdup("SHLVL=1");
 	env[3] = ft_strdup("_=/usr/bin/env");
-	env[4] = ft_strdup("PATH=/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin");
+	env[4] = ft_strdup("PATH=/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:.");
 	env[5] = NULL;
 	return(env);
 }

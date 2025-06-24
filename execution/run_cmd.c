@@ -195,6 +195,13 @@ static char	*check_command_path(char **allpath, char *cmd)
 				free_split(allpath);
 				return (exec);
 			}
+            else if (is_file(cmd) && access(exec, X_OK) != 0)
+            {
+                ft_putstr_fd("msh: ", 2);
+                ft_putstr_fd(exec, 2);
+                ft_putstr_fd(": Permission denied\n", 2);
+                exit(126);
+            }
 		}
 		free(exec);
 	}
@@ -212,7 +219,10 @@ static char	*handle_absolute_path(char *cmd)
 {
 	if (access(cmd, F_OK) != 0)
 	{
-		print_error(cmd, ": No such file or directory\n");
+		ft_putstr_fd("msh: ", 2);
+        ft_putstr_fd(cmd, 2);
+        ft_putstr_fd(": ", 2);
+        perror("");
 		return (NULL);
 	}
 	if (is_directory(cmd))
@@ -265,9 +275,9 @@ static char	*search_in_path(char *cmd, char *path)
 	char	*result;
 	char	*full_path;
 
-	full_path = ft_strjoin_(path, ":.");
-	allpath = ft_split(full_path, ':');
-	free(full_path);
+	// full_path = ft_strjoin_(path, ":.");
+	allpath = ft_split(path, ':');
+	// free(full_path);
 	if (!allpath)
 	{
 		perror("msh: ");
