@@ -78,6 +78,8 @@ void update_node_value(t_env *node, char *value, int append, int have_equal)
 	}
 	else
 	{
+        if (node->value && !value )
+            return;
 		free(node->value);
 		node->value = value;
 		if (have_equal)

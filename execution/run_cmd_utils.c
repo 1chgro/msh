@@ -47,12 +47,12 @@ char	*ft_itoa(int n)
 void get_terminall(struct termios *termios)
 {
     if (tcgetattr(STDIN_FILENO, termios) == -1 )
-        perror("tcgetattr : ");
+        perror("tcgetattr: ");
 }
 void set_terminall(struct termios *termios)
 {
     if (tcsetattr(STDIN_FILENO, TCSANOW, termios) == -1)
     {
-        perror("tcsetattr final restore");
+        perror("tcsetattr: ");
     }
 }

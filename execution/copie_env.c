@@ -87,6 +87,8 @@ char *get_value(char *str)
 		i++;
 	if (str[i] == '=')
 		i++;
+    else
+        return (NULL);
 	len = 0;
 	while (str[i + len])
 		len++;
