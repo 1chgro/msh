@@ -98,19 +98,12 @@ char *expand_key_value(char *str, t_glob_st *glob_strct, int split_all_values)
     if (!key_val)
         return (NULL);
     int i = 0;
-    // while (key_val[i])
-    // {
-    //     printf("key_val[%d]: %s\n", i, key_val[i]);
-    //     i++;
-    // }
+
     int split_value = 0;
     if (key_val[0])
     {
         if (split_all_values || (check_key(key_val[0]) == 1 && check_value(key_val[1]) == 1))
-	        split_value = 1;
-        // {
-        //     split_value = 1;
-        // }
+            split_value = 1;
         key = expand(key_val[0], glob_strct);
         if (!key)
             return (NULL);
@@ -137,114 +130,75 @@ char *expand_key_value(char *str, t_glob_st *glob_strct, int split_all_values)
         value = ft_strjoin(value, value_arr[k]);
         k++;
     }
-
     result = ft_strjoin(result, key);
     if (value)
     {
         result = ft_strjoin_ws(result, "=");
         result = ft_strjoin_ws(result, value);
     }
-    // printf("split_value: %d\n", split_value);
     return (result);
+}
+
+char *get_word(char *line)
+{
+    char *word;
+    int i = 0;
+    
+    while (line[i])
+    {
+        if (is_space(line[i]))
+            break;
+        i++;
+    }
+    word = ft_strndup(line, i);
+    return (word);
 }
 
 int is_quoted_export(char *line)
 {
+    int quote;
+    char *export_candidate;
+	int j;
 	if (!line)
 		return (0);
 
-	int i = 0;
-	int len = ft_strlen(line);
-	int single = 0, dbl = 0;
-	char export_candidate[64];
-	int j = 0;
-
-    // printf("line: %s\n", line);
-	// Copy first 6–12 non-space characters to buffer
-	while (line[i])
-	{
-        if (is_space(line[i]))
-            break;
-		export_candidate[j++] = line[i];
-		i++;
-	}
-	export_candidate[j] = '\0';
-    printf("export_candidate: %s\n", export_candidate);
+    quote = 0;
+    j = 0;
+    export_candidate = get_word(line);
     if (ft_strcmp(export_candidate, "export") == 0)
         return (0);
-
-	// Sanitize export_candidate to just check if it contains "export"
-	char cleaned[64];
-	int k = 0;
-	for (int l = 0; export_candidate[l]; l++)
+	while (export_candidate[j])
 	{
-		if (export_candidate[l] != '\'' && export_candidate[l] != '"')
-			cleaned[k++] = export_candidate[l];
+		if (export_candidate[j] == '\'' || export_candidate[j] == '"')
+			quote++;
+        j++;
 	}
-	cleaned[k] = '\0';
-
-	// Must match "export" exactly
-	if (ft_strncmp(cleaned, "export", 6) != 0)
-		return (0);
-
-	// Count quotes in the export_candidate string
-	for (int m = 0; export_candidate[m]; m++)
-	{
-		if (export_candidate[m] == '\'')
-			single++;
-		else if (export_candidate[m] == '"')
-			dbl++;
-	}
-
-	// Only return 1 if quotes are balanced
-	if ((single % 2 == 0) && (dbl % 2 == 0) && (single + dbl > 0))
-		return (1);
-
-	return (0);
+	return (quote);
 }
-
-
-
 
 
 char *expand_export(char *line, t_glob_st *glob_strct)
 {
-    char *result = NULL;
+    char *result;
+    char **arr;
+    int i;
+    int split_all_values;
+    char *expanded;
+
     if (!line)
         return (NULL);
-    char **arr = split_line_to_args(line);
+    i = 0;
+    expanded = NULL;
+    arr = split_line_to_args(line);
+    result = NULL;
     if (!arr)
         return (NULL);
-    int i = 0;
-    int split_all_values = is_quoted_export(line);
+    split_all_values = is_quoted_export(line);
     while (arr[i])
     {
-        char *expanded = expand_key_value(arr[i], glob_strct, split_all_values);
+        expanded = expand_key_value(arr[i], glob_strct, split_all_values);
         result = ft_strjoin(result, expanded);
         i++;
     }
     return (result);
 }
-
-// char *expand_export(char *line, t_glob_st *glob_strct)
-// {
-//     (void)glob_strct;
-//     char *result = NULL;
-//     if (!line)
-//         return (NULL);
-//     char **arr = split_line_to_args(line);
-//     if (!arr)
-//         return (NULL);
-//     int i = 0;
-//     char **key_val = malloc(sizeof(char *) * 3);
-//     int j = 0;
-//     char *expanded = NULL;
-//     while (arr[i])
-//     {
-//         expanded = expand_key_value(arr[i], glob_strct);
-//         result = ft_strjoin(result, expanded);
-//         i++;
-//     }
-//     // printf("result export: %s\n", result);
-//     return (result);
-// }
