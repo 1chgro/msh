@@ -159,7 +159,7 @@ void fill_cmd_argv(t_cmd *cmd, t_glob_st *glob_strct)
 	{
 		i = 0;
 		temp_cmd->argv = split_line_to_args(temp_cmd->line);
-		if (!temp_cmd->argv)
+		if (!temp_cmd->argv && !temp_cmd->files)
 		{
 			temp_cmd->argv = malloc(sizeof(char *) * 2);
 			temp_cmd->argv[0] = ft_strdup("");
