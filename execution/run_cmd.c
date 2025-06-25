@@ -437,6 +437,13 @@ int	redirection(t_cmd *cmd)
 	i = 0;
 	while (cmd->files[i].filename)
 	{
+        if (cmd->files[i].ambiguous_flg)
+        {
+            ft_putstr_fd("msh: ", 2);
+            ft_putstr_fd(cmd->files[i].filename, 2);
+            ft_putstr_fd(": ambiguous redirect\n", 2);
+            return (1);
+        }
 		if (cmd->files[i].type == HEREDOC)
 			result = handle_heredoc(&cmd->files[i]);
 		else if (cmd->files[i].type == REDIRECT_IN)

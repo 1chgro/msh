@@ -283,7 +283,7 @@ static void expand_cmd_files(t_cmd *cmd, t_glob_st *glob_strct)
 		if (cmd->files[i].type == HEREDOC && check_key(cmd->files[i].filename))
 			cmd->files[i].expand_flg = 0;
 		cmd->files[i].filename = remove_outer_quotes(cmd->files[i].filename);
-		if (check_for_ambgu(cmd->files[i].filename))
+		if (check_for_ambgu(cmd->files[i].filename) && cmd->files[i].type != HEREDOC)
 			cmd->files[i].ambiguous_flg = 1;
 		i++;
 	}
