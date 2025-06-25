@@ -199,6 +199,7 @@ static int	process_token_redirection(t_token *current, t_cmd *temp_cmd, int *i, 
 		temp_cmd->files[*i].type = get_cmd_red_type(current->type);
 		temp_cmd->files[*i].fd = -1;
 		temp_cmd->files[*i].expand_flg = 1;
+		temp_cmd->files[*i].ambiguous_flg = 0;
 		(*i)++;
 	}
 	return (1);

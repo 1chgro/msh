@@ -259,10 +259,9 @@ static void expand_cmd_line(t_cmd *cmd, t_glob_st *glob_strct)
 
 int check_for_ambgu(char *name)
 {
-	int i;
-
 	if (!name || !*name)
 		return (1);
+	int i = 0;
 	while(name[i])
 	{
 		if (is_space(name[i]))
