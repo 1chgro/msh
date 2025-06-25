@@ -257,6 +257,22 @@ static void expand_cmd_line(t_cmd *cmd, t_glob_st *glob_strct)
 	cmd->line = expanded;
 }
 
+int check_for_ambgu(char *name)
+{
+	int i;
+
+	if (!name || !*name)
+		return (1);
+	
+	while(name[i])
+	{
+		if (is_space(name[i]))
+	            return (1);
+		i++;
+	}
+	return (0);
+}
+
 static void expand_cmd_files(t_cmd *cmd, t_glob_st *glob_strct)
 {
 	int i;
@@ -269,6 +285,8 @@ static void expand_cmd_files(t_cmd *cmd, t_glob_st *glob_strct)
 		if (cmd->files[i].type == HEREDOC && check_key(cmd->files[i].filename))
 			cmd->files[i].expand_flg = 0;
 		cmd->files[i].filename = remove_outer_quotes(cmd->files[i].filename);
+		if (check_for_ambgu(cmd->files[i].filename))
+			cmd->files[i].ambiguous_flg = 1;
 		i++;
 	}
 }

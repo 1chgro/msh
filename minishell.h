@@ -37,6 +37,7 @@ typedef struct s_red
 	char 					*filename;
 	int 					fd;
 	int 					expand_flg;
+	int 					ambiguous_flg;
 	t_redirection_type 		type;
 } t_red;
 
