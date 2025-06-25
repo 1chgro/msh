@@ -182,6 +182,7 @@ char *expand_core(char *line, t_glob_st *glob_strct)
 		{
 			if (handle_dollar_case(line, &i, quote))
 				continue;
+			if (line[i])
 			tmp[0] = line[i++];
 			tmp[1] = '\0';
 			result = ft_strjoin_ws(result, tmp);
@@ -213,6 +214,29 @@ char *ft_strcpy(char *dest, const char *src)
 	return dest;
 }
 
+char *space_change(char *str)
+{
+	char *new_str;
+	if (!str)
+		return (NULL);
+	char tmp[2];
+	tmp[0] = '\0';
+	tmp[1] = '\0';
+	int i = 0;
+	new_str = NULL;
+	while(str[i])
+	{
+		if (is_space(str[i]))
+			tmp[0] = ' ';
+		else
+			tmp[0] = str[i];
+		tmp[1] = '\0';
+		new_str = ft_strjoin_ws(new_str, tmp);
+		i++;
+	}
+	return (new_str);
+}
+
 static void expand_cmd_line(t_cmd *cmd, t_glob_st *glob_strct)
 {
 	char *expanded;
@@ -225,7 +249,11 @@ static void expand_cmd_line(t_cmd *cmd, t_glob_st *glob_strct)
 		expanded = expand_export(cmd->line, glob_strct);
 	}
 	else
+	{
 		expanded = expand(cmd->line, glob_strct);
+		expanded = space_change(expanded);
+	}
+	
 	cmd->line = expanded;
 }
 

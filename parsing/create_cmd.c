@@ -165,19 +165,6 @@ void fill_cmd_argv(t_cmd *cmd, t_glob_st *glob_strct)
 			temp_cmd->argv[0] = ft_strdup("");
 			temp_cmd->argv[1] = NULL;
 		}
-		// while (temp_cmd->argv && temp_cmd->argv[i])
-		// {
-		// 	printf("argv[%d]: %s\n", i, temp_cmd->argv[i]);
-		// 	i++;
-		// }
-		// i = 0;
-		// temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
-		// while (temp_cmd->argv && temp_cmd->argv[i])
-		// {
-		// 	printf("argv[%d]: %s\n", i, temp_cmd->argv[i]);
-		// 	i++;
-		// }
-		// i = 0;
 		while (temp_cmd->argv && temp_cmd->argv[i])
 		{
 			temp_cmd->argv[i] = restore_quotes(temp_cmd->argv[i]);
