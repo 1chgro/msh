@@ -2,11 +2,20 @@
 
 int check_if_export(char *line, t_glob_st *glob_strct)
 {
+    char *tmp;
+    char *temp;
     if (!line)
         return (0);
-    char *tmp = expand(line, glob_strct);
+    
+    tmp = expand(line, glob_strct);
+    if (!tmp)
+        return (0);
     tmp = remove_outer_quotes(tmp);
+    if (!tmp)
+        return (0);
     tmp = ft_strtrim(tmp, " \t\n\r\v\f");
+    if (!tmp)
+        return (0);
     if (ft_strncmp("export", tmp, 6) == 0)
         return (free(tmp), 1);
     return (0);
@@ -184,6 +193,7 @@ char *expand_export(char *line, t_glob_st *glob_strct)
     int i;
     int split_all_values;
     char *expanded;
+    char *temp;
 
     if (!line)
         return (NULL);
@@ -197,7 +207,9 @@ char *expand_export(char *line, t_glob_st *glob_strct)
     while (arr[i])
     {
         expanded = expand_key_value(arr[i], glob_strct, split_all_values);
-        result = ft_strjoin(result, expanded);
+        temp = result;
+        result = ft_strjoin(temp, expanded);
+        free(temp);
         i++;
     }
     return (result);

@@ -73,53 +73,51 @@ char *handle_digit_expansion(char *line, int *i, char *result)
 char *replace_quotes(char *value)
 {
 	char *new_value;
-	int i;
+	char tmp[2];
 	if (!value)
 		return (NULL);
-	new_value = malloc(ft_strlen(value) + 1);
-	i = 0;
-	if (!new_value)
-		return (free(value), NULL);
+	tmp[0] = '\0';
+	tmp[1] = '\0';
+	int i = 0;
+	new_value = NULL;
 	while (value[i])
 	{
-		if (is_quote(value[i]))
-		{
-			if (value[i] == '\'')
-				new_value[i] = '\x01';
-			else if (new_value[i] == '"')
-				new_value[i] = '\x02';
-		}
+		if (value[i] == '\'')
+			tmp[0] = '\x01';
+		else if (value[i] == '\"')
+			tmp[0] = '\x02';
 		else
-			new_value[i] = value[i];
+			tmp[0] = value[i];
+		tmp[1] = '\0';
+		new_value = ft_strjoin_ws(new_value, tmp);
 		i++;
 	}
-	new_value[i] = '\0';
 	return (new_value);
 }
 
 char *restore_quotes(char *value)
 {
 	char *new_value;
+	char tmp[2];
 	if (!value)
 		return (NULL);
-	new_value = malloc(ft_strlen(value) + 1);
-	if (!new_value)
-	{
-		free(value);
-		return (NULL);
-	}
+
+	new_value = NULL;
+	tmp[0] = '\0';
+	tmp[1] = '\0';
 	int i = 0;
 	while (value[i])
 	{
 		if (value[i] == '\x01')
-			new_value[i] = '\'';
-		else if (new_value[i] == '\x02')
-			new_value[i] = '"';
+			tmp[0] = '\'';
+		else if (value[i] == '\x02')
+			tmp[0] = '\"';
 		else
-			new_value[i] = value[i];
+			tmp[0] = value[i];
+		tmp[1] = '\0';
+		new_value = ft_strjoin_ws(new_value, tmp);
 		i++;
 	}
-	new_value[i] = '\0';
 	return (new_value);
 }
 
@@ -167,13 +165,13 @@ static int handle_dollar_case(char *line, int *i, char quote)
 	return (0);
 }
 
-char *expand_core(char *line, t_glob_st *glob_strct, char *result)
+char *expand_core(char *line, t_glob_st *glob_strct)
 {
 	int i;
 	int pos;
 	char quote;
 	char tmp[2];
-
+	char *result = NULL;
 	(1) && (i = 0, quote = 0, pos = 0, tmp[0] = '\0', tmp[1] = '\0');
 	while (line[i])
 	{
@@ -199,9 +197,10 @@ char *expand(char *line, t_glob_st *glob_strct)
 
 	if (!line)
 		return (NULL);
-	result = malloc(1);
-	result[0] = '\0';
-	return (expand_core(line, glob_strct, result));
+	result = expand_core(line, glob_strct);
+	if (result == NULL)
+		return (ft_strdup(""));
+	return (result);
 }
 
 
@@ -222,7 +221,9 @@ static void expand_cmd_line(t_cmd *cmd, t_glob_st *glob_strct)
 	if (!cmd->line)
 		return;
 	if (check_if_export(cmd->line, glob_strct))
+	{
 		expanded = expand_export(cmd->line, glob_strct);
+	}
 	else
 		expanded = expand(cmd->line, glob_strct);
 	cmd->line = expanded;

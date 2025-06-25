@@ -25,7 +25,7 @@ void free_arr(char **arr)
         free(arr[i]);
         i++;
     }
-    free(arr);
+    arr = NULL;
 }
 
 void free_cmd_files(t_red *files)

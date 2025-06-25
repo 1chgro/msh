@@ -489,7 +489,7 @@ int    run_single_cmd(t_cmd *cmd, t_env *env)
 
 int run_cmd(t_cmd *cmd, t_env *env, int last_ex)
 {
-	if (!cmd || !cmd->argv || !cmd->argv[0])
+	if (!cmd/*  || !cmd->argv || !cmd->argv[0] */)
 	{
 		perror("invalid command");
 		return (1);
