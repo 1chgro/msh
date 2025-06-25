@@ -218,73 +218,89 @@ static void	print_error(char *cmd, char *msg)
 static char	*handle_absolute_path(char *cmd)
 {
 	if (access(cmd, F_OK) != 0)
-	{
-		ft_putstr_fd("msh: ", 2);
-        ft_putstr_fd(cmd, 2);
-        ft_putstr_fd(": ", 2);
-        perror("");
-		return (NULL);
-	}
-	if (is_directory(cmd))
-	{
-		print_error(cmd, ": Is a directory\n");
-		exit(126);
-	}
-	if (access(cmd, X_OK) != 0)
-	{
-		print_error(cmd, ": Permission denied\n");
-		exit(126);
-	}
+        {
+            ft_putstr_fd("msh: ", 2);
+            ft_putstr_fd(cmd, 2);
+            ft_putstr_fd(": ", 2);
+            
+            if (errno == ENOTDIR)
+            {
+                ft_putstr_fd("Not a directory\n", 2);
+                exit(126);
+            }
+            else if (errno == ENOENT)
+                ft_putstr_fd("No such file or directory\n", 2);
+            else
+                perror("");
+            exit(127);
+        }
+        if (is_directory(cmd))
+        {
+            ft_putstr_fd("msh: ", 2);
+            ft_putstr_fd(cmd, 2);
+            ft_putstr_fd(": is a directory\n", 2);
+            exit(126);
+        }
+        if (access(cmd, X_OK) != 0)
+        {
+            ft_putstr_fd("msh: ", 2);
+            ft_putstr_fd(cmd, 2);
+            ft_putstr_fd(": Permission denied\n", 2);
+            exit(126);
+        }
 	return (ft_strdup(cmd));
 }
 
-static char	*handle_no_path(char *cmd)
-{
-	char	*current_dir;
+// static char	*handle_no_path(char *cmd)
+// {
+// 	char	*current_dir;
 
-	current_dir = ft_strjoin_("./", cmd);
-	if (!current_dir)
-	{
-		perror("msh: ");
-		return (NULL);
-	}
-	if (access(current_dir, F_OK) != 0)
-	{
-		print_error(cmd, ": No such file or directory\n");
-		free(current_dir);
-		return (NULL);
-	}
-	if (is_directory(current_dir))
-	{
-		print_error(cmd, ": Is a directory\n");
-		free(current_dir);
-		exit(126);
-	}
-	if (access(current_dir, X_OK) != 0)
-	{
-		print_error(cmd, ": Permission denied\n");
-		free(current_dir);
-		exit(126);
-	}
-	return (current_dir);
-}
+// 	current_dir = ft_strjoin_("./", cmd);
+// 	if (!current_dir)
+// 	{
+// 		perror("msh: ");
+// 		return (NULL);
+// 	}
+// 	if (access(current_dir, F_OK) != 0)
+// 	{
+// 		print_error(cmd, ": No such file or directory\n");
+// 		free(current_dir);
+// 		return (NULL);
+// 	}
+// 	if (is_directory(current_dir))
+// 	{
+// 		print_error(cmd, ": Is a directory\n");
+// 		free(current_dir);
+// 		exit(126);
+// 	}
+// 	if (access(current_dir, X_OK) != 0)
+// 	{
+// 		print_error(cmd, ": Permission denied\n");
+// 		free(current_dir);
+// 		exit(126);
+// 	}
+// 	return (current_dir);
+// }
 
-static char	*search_in_path(char *cmd, char *path)
+static char	*search_in_path(char *cmd, char *path, int null_path)
 {
 	char	**allpath;
 	char	*result;
 	char	*full_path;
 
-	// full_path = ft_strjoin_(path, ":.");
 	allpath = ft_split(path, ':');
-	// free(full_path);
 	if (!allpath)
 	{
 		perror("msh: ");
 		return (NULL);
 	}
 	result = check_command_path(allpath, cmd);
-	if (!result)
+	if (!result && null_path)
+	{
+		free_split(allpath);
+		print_error(cmd, ": No such file or directory\n");
+	}
+	else if (!result)
 	{
 		free_split(allpath);
 		print_error(cmd, ": command not found\n");
@@ -295,15 +311,21 @@ static char	*search_in_path(char *cmd, char *path)
 char	*get_path(char *cmd, t_env *env)
 {
 	char	*path;
+    int     null_path;
 
+    null_path = 0;
 	if (!cmd)
 		return (NULL);
 	if (ft_strchr(cmd, '/'))
 		return (handle_absolute_path(cmd));
 	path = my_getenv("PATH", env);
 	if (!path)
-		return (handle_no_path(cmd));
-	return (search_in_path(cmd, path));
+    {
+        null_path = 1;
+        path = ft_strdup(".");
+    }
+		// return (handle_no_path(cmd));
+	return (search_in_path(cmd, path, null_path));
 }
 
 static void	handle_minishell_exec(char *path, t_env *env)
@@ -387,7 +409,7 @@ static int	handle_redirect_out(t_red *file)
 	file->fd = open(file->filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (file->fd < 0)
 	{
-		perror("open failed");
+		perror("msh");
 		return (1);
 	}
 	dup2(file->fd, STDOUT_FILENO);
@@ -400,7 +422,7 @@ static int	handle_append(t_red *file)
 	file->fd = open(file->filename, O_CREAT | O_RDWR | O_APPEND, 0644);
 	if (file->fd < 0)
 	{
-		perror("open failed");
+		perror("msh");
 		return (1);
 	}
 	dup2(file->fd, STDOUT_FILENO);
