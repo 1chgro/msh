@@ -346,7 +346,7 @@ static void	try_bash_execution(char **cmd, char *path, t_env *env)
 	new_arg[2] = NULL;
 	if (execve("/bin/bash", new_arg, struct_to_array(env)) == -1)
 	{
-		print_error(cmd[0], ": execve failed: ");
+		print_error(cmd[0], ": execve failed : ");
 		perror("");
 		free(path);
 		exit(1);
@@ -355,9 +355,8 @@ static void	try_bash_execution(char **cmd, char *path, t_env *env)
 
 static void	handle_execve_failure(char **cmd, char *path, t_env *env)
 {
-	if (ft_strchr(cmd[0], '/') && is_file(path))
-		try_bash_execution(cmd, path, env);
-	print_error(cmd[0], ": execve failed: ");
+	try_bash_execution(cmd, path, env);
+	print_error(cmd[0], ": execve failed : ");
 	perror("");
 	free(path);
 	exit(1);
