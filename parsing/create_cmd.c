@@ -63,11 +63,13 @@ static int	skip_argument(const char *str, int i)
 	return (i);
 }
 
-int	count_args(const char *str)
+int	count_args(char *str)
 {
 	int count = 0;
 	int i = 0;
 
+	if (!str)
+		return (1);
 	while (str[i])
 	{
 		if (str[i] == ' ')
@@ -119,39 +121,69 @@ char **split_line_to_args(char *line)
 	arg_count = count_args(line);
 	args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!args)
-		return (free(line), NULL);
+		return (NULL);
 	j = 0;
-	while (j < arg_count) 
+	while (line && j < arg_count) 
 	{
 		while (line[i] == ' ')
 			i++;
 		args[j] = extract_arg(line, &i);
+		args[j] = remove_outer_quotes(args[j]);
+		args[j] = replace_quotes(args[j]);
 		if (!args[j])
-			return (free_arr(args), NULL);
+		{
+			free_arr(args);
+			return (NULL);
+		}
 		if (line[i] == ' ')
 			i++;
 		j++;
 	}
-	return (args[arg_count] = NULL, args);
+	args[arg_count] = NULL;
+	if (!args[0])
+	{
+		free_arr(args);
+		args = malloc(sizeof(char *) * 2);
+		args[0] = ft_strdup("");
+		args[1] = NULL;
+	}
+	return (args);
 }
 
 
 void fill_cmd_argv(t_cmd *cmd, t_glob_st *glob_strct)
 {
 	t_cmd *temp_cmd = cmd;
-
+	int i = 0;
 	while (temp_cmd)
 	{
+		i = 0;
 		temp_cmd->argv = split_line_to_args(temp_cmd->line);
-		temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
-		int i = 0;
+		if (!temp_cmd->argv)
+		{
+			temp_cmd->argv = malloc(sizeof(char *) * 2);
+			temp_cmd->argv[0] = ft_strdup("");
+			temp_cmd->argv[1] = NULL;
+		}
+		// while (temp_cmd->argv && temp_cmd->argv[i])
+		// {
+		// 	printf("argv[%d]: %s\n", i, temp_cmd->argv[i]);
+		// 	i++;
+		// }
+		// i = 0;
+		// temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
+		// while (temp_cmd->argv && temp_cmd->argv[i])
+		// {
+		// 	printf("argv[%d]: %s\n", i, temp_cmd->argv[i]);
+		// 	i++;
+		// }
+		// i = 0;
 		while (temp_cmd->argv && temp_cmd->argv[i])
 		{
 			temp_cmd->argv[i] = restore_quotes(temp_cmd->argv[i]);
 			if (!temp_cmd->argv[i])
 			{
-				free_cmd(cmd);
-				return;
+				temp_cmd->argv[i] = ft_strdup("");
 			}
 			i++;
 		}
