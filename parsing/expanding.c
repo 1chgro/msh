@@ -263,11 +263,10 @@ int check_for_ambgu(char *name)
 
 	if (!name || !*name)
 		return (1);
-	
 	while(name[i])
 	{
 		if (is_space(name[i]))
-	            return (1);
+			return (1);
 		i++;
 	}
 	return (0);
