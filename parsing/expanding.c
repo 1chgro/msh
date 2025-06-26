@@ -122,9 +122,7 @@ char *restore_quotes(char *value)
 		else
 			tmp[0] = value[i];
 		tmp[1] = '\0';
-		// temp = new_value;
 		new_value = ft_strjoin_ws(new_value, tmp);
-		// free(temp);
 		i++;
 	}
 	return (free(value), new_value);

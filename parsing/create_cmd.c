@@ -110,6 +110,55 @@ static char *extract_arg(const char *str, int *i)
 	return (result);
 }
 
+
+char *replace_value_quotes(char *value)
+{
+	char *new_value = NULL;
+	char tmp[2];
+	int i = 0;
+	char quote = 0;
+
+	if (!value)
+		return (NULL);
+	tmp[1] = '\0';
+
+	while (value[i])
+	{
+		if (is_quote(value[i]))
+		{
+			if (!quote)
+			{
+				// Opening quote
+				quote = value[i];
+				tmp[0] = value[i];
+			}
+			else if (value[i] == quote)
+			{
+				// Closing quote
+				quote = 0;
+				tmp[0] = value[i];
+			}
+			else
+			{
+				// Inner quote (different from surrounding)
+				if (value[i] == '\'')
+					tmp[0] = '\x01';
+				else if (value[i] == '\"')
+					tmp[0] = '\x02';
+			}
+		}
+		else
+		{
+			tmp[0] = value[i];
+		}
+		new_value = ft_strjoin_ws(new_value, tmp); // assumes ft_strjoin_ws frees the first arg
+		i++;
+	}
+	free(value);
+	return (new_value);
+}
+
+
 char **split_line_to_args(char *line)
 {
 	int i;
@@ -130,8 +179,7 @@ char **split_line_to_args(char *line)
 		while (line[i] == ' ')
 			i++;
 		args[j] = extract_arg(line, &i);
-		args[j] = remove_outer_quotes(args[j]);
-		args[j] = replace_quotes(args[j]);
+		args[j] = replace_value_quotes(args[j]);
 		if (!args[j])
 		{
 			free_arr(args);
@@ -158,6 +206,25 @@ void fill_cmd_argv(t_cmd *cmd)
 			temp_cmd->argv = malloc(sizeof(char *) * 2);
 			temp_cmd->argv[0] = ft_strdup("");
 			temp_cmd->argv[1] = NULL;
+		}
+		while (temp_cmd->argv && temp_cmd->argv[i])
+		{
+			
+			if (!temp_cmd->argv[i])
+			{
+				free_arr(temp_cmd->argv);
+				temp_cmd->argv = malloc(sizeof(char *) * 2);
+				temp_cmd->argv[0] = ft_strdup("");
+				temp_cmd->argv[1] = NULL;
+			}
+			i++;
+		}
+		temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
+		i = 0;
+		while (temp_cmd->argv && temp_cmd->argv[i])
+		{
+			printf("argv[%d]: %s\n", i, temp_cmd->argv[i]);
+			i++;
 		}
 		i = 0;
 		while (temp_cmd->argv && temp_cmd->argv[i])

@@ -85,8 +85,16 @@ char	*take_store_pwd(char *path)
 
 	if (path)
 	{
-		if (stored_pwd)
-			free(stored_pwd);
+        if (!ft_strcmp(path, "."))
+        {
+            path = ft_strjoin_("/", path);
+            path = ft_strjoin_(stored_pwd, path);
+        }
+        else
+        {
+            if (stored_pwd)
+			    free(stored_pwd);
+        }
 		stored_pwd = ft_strdup(path);
 		return (stored_pwd);
 	}
@@ -314,7 +322,7 @@ static int	attempt_chdir(char *path, char *old_pwd)
 	return (0);
 }
 
-static void	update_pwd_env(t_env **env, char *logical_pwd, char *path,
+static int	update_pwd_env(t_env **env, char *logical_pwd, char *path,
 		int logical_dotdot)
 {
 	char	*new_pwd;
@@ -332,9 +340,9 @@ static void	update_pwd_env(t_env **env, char *logical_pwd, char *path,
 		else
 		{
 			set_env(env, "PWD", path);
-			if (ft_strcmp(path, "."))
-				take_store_pwd(path);
+			take_store_pwd(path);
 		}
+        return (1);
 	}
 	else
 	{
@@ -342,6 +350,7 @@ static void	update_pwd_env(t_env **env, char *logical_pwd, char *path,
 		take_store_pwd(new_pwd);
 		free(new_pwd);
 	}
+    return (0);
 }
 
 int	ft_cd(char **s_cmd, t_env **env)
@@ -350,8 +359,10 @@ int	ft_cd(char **s_cmd, t_env **env)
 	char	*old_pwd;
 	char	*logical_pwd;
 	int		logical_dotdot;
+	int		status;
 
 	logical_pwd = NULL;
+    status = 0;
 	if (!env || !*env)
 		return (1);
 	old_pwd = get_old_pwd_or_default();
@@ -370,9 +381,9 @@ int	ft_cd(char **s_cmd, t_env **env)
 	if (attempt_chdir(path, old_pwd) != 0)
 		return (1);
 	set_env(env, "OLDPWD", old_pwd);
-	update_pwd_env(env, logical_pwd, path, logical_dotdot);
+	status = update_pwd_env(env, logical_pwd, path, logical_dotdot);
 	if (logical_pwd)
 		free(logical_pwd);
 	free(old_pwd);
-	return (0);
+	return (status);
 }
