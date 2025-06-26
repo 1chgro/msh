@@ -31,29 +31,50 @@ void	skip_quotes(char *s, int *i, char q)
 		(*i)++;
 }
 
+static int	should_skip_quote(char c, char *quote)
+{
+	if (!*quote && (c == '"' || c == '\''))
+	{
+		*quote = c;
+		return 1;
+	}
+	else if (*quote && c == *quote)
+	{
+		*quote = 0;
+		return 1;
+	}
+	return 0;
+}
+
 char *remove_outer_quotes(char *s)
 {
-    int i = 0, j = 0;
-    char quote = 0;
-    char output[ft_strlen(s) + 1];
+    int i;
+	int j;
+    char quote;
+    char *output;
+    int len;
 
-
-    while (s[i]) {
-        if (!quote && (s[i] == '"' || s[i] == '\'')) {
-            quote = s[i];
-            i++;
-            continue;
-        }
-        if (quote && s[i] == quote) {
-            quote = 0;
-            i++;
-            continue;
-        }
-        output[j++] = s[i++];
+    if (!s)
+        return (NULL);
+	(1) && (i = 0, j = 0, quote = 0, output = NULL, len = ft_strlen(s));
+    output = malloc(len + 1);
+    if (!output)
+        return (free(s), NULL);
+    while (s[i])
+    {
+		if (should_skip_quote(s[i], &quote))
+		{
+			i++;
+			continue;
+		}
+        if ((quote == '"' && s[i] == '\'') || (quote == '\'' && s[i] == '"'))
+            output[j++] = s[i++];
+        else
+            output[j++] = s[i++];
     }
-    output[j] = '\0'; 
-    return (ft_strdup(output));
+    return (output[j] = '\0', free(s), output);
 }
+
 
 char **remove_quotes_arr(char **argv)
 {
@@ -62,9 +83,9 @@ char **remove_quotes_arr(char **argv)
 	char **new_argv;
 	int len;
 
-	(1) && (i = 0, j = 0, new_argv = NULL, len = 0);
 	if (!argv)
 		return (NULL);
+	(1) && (i = 0, j = 0, new_argv = NULL, len = 0);
 	while (argv[len++])
 	new_argv = malloc(sizeof(char *) * (len + 1));
 	if (!new_argv)
@@ -72,7 +93,6 @@ char **remove_quotes_arr(char **argv)
 	while (argv[i])
 	{
 		new_argv[i] = remove_outer_quotes(argv[i]);
-		free(argv[i]);
 		if (!new_argv)
 		{
 			while (--j >= 0)
@@ -83,3 +103,4 @@ char **remove_quotes_arr(char **argv)
 	}
 	return (new_argv[i] = NULL, new_argv);
 }
+

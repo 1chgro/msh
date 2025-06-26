@@ -32,20 +32,21 @@ t_token	*new_token(char *value, t_token_type type)
 	return (token);
 }
 
-void	add_token(t_token **head, t_token *new_token)
+int	add_token(t_token **head, t_token *new_token)
 {
 	t_token	*tmp;
 
 	if (!new_token)
-		return ;
+		return (0);
 	if (!*head)
 	{
 		*head = new_token;
-		return ;
+		return (1);
 	}
 	tmp = *head;
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new_token;
+	return (1);
 }
 

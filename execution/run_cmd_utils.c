@@ -43,3 +43,16 @@ char	*ft_itoa(int n)
 	}
 	return (res);
 }
+
+void get_terminall(struct termios *termios)
+{
+    if (tcgetattr(STDIN_FILENO, termios) == -1 )
+        perror("tcgetattr: ");
+}
+void set_terminall(struct termios *termios)
+{
+    if (tcsetattr(STDIN_FILENO, TCSANOW, termios) == -1)
+    {
+        perror("tcsetattr: ");
+    }
+}

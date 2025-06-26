@@ -1,32 +1,80 @@
 #include "../../minishell.h"
 
-int ft_exit(char **s_cmd)
+long ft_atoi_(const char *str, int *is_valid)
 {
-    int exit_num = 0;
+	int         i;
+	long        result;
+	int         sign;
 
-    if (isatty(STDIN_FILENO) && isatty(STDOUT_FILENO))
-        write(STDERR_FILENO, "exit\n", 5);
-    if (!s_cmd[1])
-    {
-        exit(0);
-    }
-    if (s_cmd[2])
+	i = 0;
+	result = 0;
+	sign = 1;
+	while (str[i] == ' ')
+		{i++;}
+	if (str[i] == '\0')
+	{
+		return (0);
+	}
+	if (str[i] == '-')
+	{
+		sign = -1;
+		i++;
+	}
+	else if (str[i] == '+')
+		{i++;}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		if (result > LONG_MAX / 10 || (result == LONG_MAX / 10 && (str[i] - '0') > LONG_MAX % 10))
+		{
+            return (0);
+        }
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	while (str[i] == ' ')
+	   { i++;}
+	if (str[i] != '\0')
+	{
+		return (0);
+	}
+	*is_valid = 1;
+	return (result * sign);
+}
+int ft_exit(char **s_cmd, int last_ex)
+{
+	int exit_num = 0;
+	int is_valid = 0;
+
+	if (isatty(STDIN_FILENO) && isatty(STDOUT_FILENO))
+		write(STDERR_FILENO, "exit\n", 5);
+	if (!s_cmd[1])
+	{
+		exit(last_ex);
+	}
+	exit_num = (int)ft_atoi_(s_cmd[1], &is_valid);
+    if (s_cmd[2] && !is_valid)
     {
         dup2(2, 1);
-        printf("bash: exit: too many arguments\n");
-        dup2(1, 2);
-        return(1);
+		printf("msh: exit: %s: numeric argument required\n", s_cmd[1]);
+		dup2(1, 2);
+		exit(255);
     }
-    exit_num = (int)ft_atoi(s_cmd[1]);
-    if (ft_atoi(s_cmd[1]) == 0 && s_cmd[1][0] != '0')
-    {
-        dup2(2, 1);
-        printf("msh: exit: %s: numeric argument required\n", s_cmd[1]);
-        dup2(1, 2);
-        exit(2);
-    }
-    exit_num = exit_num % 256;
-    if (exit_num < 0)
-        exit_num += 256;
-    exit(exit_num);
+	if (s_cmd[2])
+	{
+		dup2(2, 1);
+		printf("bash: exit: too many arguments\n");
+		dup2(1, 2);
+		return(1);
+	}
+	if (!is_valid)
+	{
+		dup2(2, 1);
+		printf("msh: exit: %s: numeric argument required\n", s_cmd[1]);
+		dup2(1, 2);
+		exit(255);
+	}
+	exit_num = exit_num % 256;
+	if (exit_num < 0)
+		exit_num += 256;
+	exit(exit_num);
 }

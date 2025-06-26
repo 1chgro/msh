@@ -65,6 +65,12 @@ int	check_redirection_syntax(t_token *prev, t_token *current)
 			prnt_sy_err(sy_token_type(&current, 0));
 			return (0);
 		}
+		if (is_redirection(&prev) && \
+			is_redirection(&current))
+		{
+			prnt_sy_err(sy_token_type(&current, 0));
+			return (0);
+		}
 	}
 	return (1);
 }
@@ -75,22 +81,22 @@ int	check_syntax_err(t_glob_st *glob_strct)
 	t_token	*current;
 
 	if (!glob_strct->tokens)
-		return (1);
+		return (0);
 	current = glob_strct->tokens;
 	prev = NULL;
 	if (is_pipe(&current))
 	{
 		prnt_sy_err(sy_token_type(&current, 0));
-		return (0);
+		return (1);
 	}
 	while (current)
 	{
 		if (!check_pipe_syntax(prev, current))
-			return (0);
+			return (1);
 		if (!check_redirection_syntax(prev, current))
-			return (0);
+			return (1);
 		prev = current;
 		current = current->next;
 	}
-	return (1);
+	return (0);
 }
