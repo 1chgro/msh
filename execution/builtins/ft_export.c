@@ -162,12 +162,6 @@ static int process_export_arg(char *arg, t_env **env)
 		return (0);
 	}
 	value = get_value(arg);
-	if (!key || !value)
-	{
-		free(key);
-		free(value);
-		return (0);
-	}
 	node = *env;
 	while (node && ft_strcmp(node->key, key))
 		node = node->next;

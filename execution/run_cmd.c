@@ -640,7 +640,7 @@ int	run_single_cmd(t_cmd *cmd, t_env *env)
         {
             exec(cmd->argv, env);
         }
-		exit(1);
+		exit(0);
 	}
 	waitpid(pid, &status, 0);
 	return (get_exit_status(status));
