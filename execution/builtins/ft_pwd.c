@@ -22,7 +22,11 @@ int ft_pwd(t_env *env)
 	{
 		pwd = take_store_pwd(NULL); 
 		if (!pwd)
-			pwd = "/";
+		{
+            ft_putstr_fd("pwd: error retrieving current directory: getcwd: "
+			"cannot access parent directories: No such file or directory\n", 2);
+            return (1);
+        }
 		printf("%s\n", pwd);
 		return 0;
 	}
