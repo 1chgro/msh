@@ -121,11 +121,10 @@ char **split_line_to_args(char *line);
 //------------------- env --------------------------------------//
 int		copie_env(t_env **c_env, char **env);
 char	*my_getenv2(char *name, t_env *env);
-// int is_export(char *line);
 char *add_quotes(char *value);
 
 //-----------------------Utility functions-----------------//
-char	*ft_strtrim(char const *s1, char const *set);
+char	*ft_strtrim(char *s1, char const *set);
 char	*ft_stringcpy(char *dst, const char *src, size_t n);
 char	*ft_strdup(char *str);
 char	*ft_strjoin(char const *s1, char const *s2);

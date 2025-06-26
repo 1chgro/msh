@@ -1,29 +1,29 @@
 #include "../minishell.h"
 
-char *read_line(int last_ex)
+char *read_line(t_glob_st *glob_strct, int ext_stat)
 {
 	char *input;
 
 	input = NULL;
 	input = readline("$ ");
-	if (!input) // hna ila kan ctrl +d 
+	if (!input)
 	{
-		rl_clear_history(); // kanmsh l history
+		rl_clear_history();
+        free(glob_strct->env);
+        free(glob_strct);
         write(2, "exit\n", 5);
-        // ltht atkon ft_exit blast exit
-		exit(last_ex);
+		exit(ext_stat);
 	}
 	else if (*input)
-		add_history(input); // Add input to history
+		add_history(input);
 	else
-		return (NULL); // hna ila kan input empty kan3awd nakhd input
+		return (NULL);
 	return (input);
 }
 
 t_token *lexer(char *line)
 {
     t_token *tokens = NULL;
-
     if (!line || !*line)
         return (NULL);
     line = ft_strtrim(line, " \t\n\r\v\f");
@@ -50,7 +50,7 @@ t_cmd *msh_parse(t_glob_st *glob_strct)
     if (!glob_strct)
         return (NULL);
     line = NULL;
-    line = read_line(glob_strct->ext_stat);
+    line = read_line(glob_strct, glob_strct->ext_stat);
     if (line == NULL)
         return (NULL);
     glob_strct->tokens = lexer(line);
@@ -61,7 +61,7 @@ t_cmd *msh_parse(t_glob_st *glob_strct)
     glob_strct->cmd = create_cmd(glob_strct);
     if (!glob_strct->cmd)
         return (NULL);
-    // print_cmd(glob_strct->cmd);
+    print_cmd(glob_strct->cmd);
     return (glob_strct->cmd);
 }
 
@@ -81,7 +81,7 @@ t_glob_st *init_glob_strct()
 
 int msh_loop(char **envp)
 {
-    t_glob_st *glob_strct = NULL;
+    t_glob_st *glob_strct;
 
     glob_strct = init_glob_strct();
     if (!glob_strct)
@@ -106,5 +106,5 @@ int msh_loop(char **envp)
         }
         set_terminall(&glob_strct->origin);
     }
-    return (free_env(glob_strct->env), 1);
+    return (free_env(glob_strct->env), free(glob_strct), 1);
 }

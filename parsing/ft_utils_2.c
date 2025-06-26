@@ -45,8 +45,8 @@ char	*ft_strjoin_ws(char const *s1, char const *s2)
 	while (s2[j] && i < total_len)
 		jnd_str[i++] = s2[j++];
 	jnd_str[i] = '\0';
-	// if (s1)
-	// 	free((char *)s1);
+	if (s1)
+		free((char *)s1);
 	return (jnd_str);
 }
 

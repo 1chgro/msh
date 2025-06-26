@@ -72,7 +72,7 @@ char *remove_outer_quotes(char *s)
         else
             output[j++] = s[i++];
     }
-    return (output[j] = '\0', output);
+    return (output[j] = '\0', free(s), output);
 }
 
 
@@ -93,7 +93,6 @@ char **remove_quotes_arr(char **argv)
 	while (argv[i])
 	{
 		new_argv[i] = remove_outer_quotes(argv[i]);
-		free(argv[i]);
 		if (!new_argv)
 		{
 			while (--j >= 0)

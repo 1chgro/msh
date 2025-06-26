@@ -5,7 +5,8 @@ int check_if_export(char *line, t_glob_st *glob_strct)
     char *tmp;
     if (!line)
         return (0);
-    
+
+    tmp = NULL;
     tmp = expand(line, glob_strct);
     if (!tmp)
         return (0);
@@ -17,6 +18,7 @@ int check_if_export(char *line, t_glob_st *glob_strct)
         return (0);
     if (ft_strncmp("export", tmp, 6) == 0)
         return (free(tmp), 1);
+    free(tmp);
     return (0);
 }
 
@@ -39,6 +41,7 @@ char **split_key_val(char *str)
         result[0] = ft_strdup(str);
         result[1] = NULL;
     }
+    free(str);
     return (result);
 }
 
@@ -92,6 +95,7 @@ char *add_quotes(char *value)
         result[ft_strlen(value) + 1] = '"';
         result[ft_strlen(value) + 2] = '\0';
     }
+    free(value);
     return (result);
 }
 
@@ -141,6 +145,10 @@ char *expand_key_value(char *str, t_glob_st *glob_strct, int split_all_values)
         result = ft_strjoin_ws(result, "=");
         result = ft_strjoin_ws(result, value);
     }
+    free(value_arr);
+    free(key);
+    free(value);
+    free_arr(key_val);
     return (result);
 }
 
@@ -189,23 +197,25 @@ char *expand_export(char *line, t_glob_st *glob_strct)
     int i;
     int split_all_values;
     char *expanded;
-    char *temp;
+    // char *temp;
 
     if (!line)
         return (NULL);
     i = 0;
     expanded = NULL;
-    arr = split_line_to_args(line);
+    arr = NULL;
+    split_all_values = 0;
+    expanded = NULL;
     result = NULL;
+    arr = split_line_to_args(line);
     if (!arr)
         return (NULL);
     split_all_values = is_quoted_export(line);
     while (arr[i])
     {
         expanded = expand_key_value(arr[i], glob_strct, split_all_values);
-        temp = result;
-        result = ft_strjoin(temp, expanded);
-        free(temp);
+        result = ft_strjoin(result, expanded);
+        free(expanded);
         i++;
     }
     return (result);

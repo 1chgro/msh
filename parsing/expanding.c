@@ -62,10 +62,13 @@ void handle_quotes(char *line, int i, char *quote, int *pos)
 char *handle_digit_expansion(char *line, int *i, char *result)
 {
 	char tmp[2];
+	// char *temp = NULL;
 	(*i)++;
 	tmp[0] = line[*i];
 	tmp[1] = '\0';
+	// temp = result;
 	result = ft_strjoin_ws(result, tmp);
+	// free(temp);
 	(*i)++;
 	return (result);
 }
@@ -73,6 +76,7 @@ char *handle_digit_expansion(char *line, int *i, char *result)
 char *replace_quotes(char *value)
 {
 	char *new_value;
+	// char *temp = NULL;
 	char tmp[2];
 	if (!value)
 		return (NULL);
@@ -89,15 +93,18 @@ char *replace_quotes(char *value)
 		else
 			tmp[0] = value[i];
 		tmp[1] = '\0';
+		// temp = new_value;
 		new_value = ft_strjoin_ws(new_value, tmp);
+		// free(temp);
 		i++;
 	}
-	return (new_value);
+	return (free(value), new_value);
 }
 
 char *restore_quotes(char *value)
 {
 	char *new_value;
+	// char *temp = NULL;
 	char tmp[2];
 	if (!value)
 		return (NULL);
@@ -115,10 +122,12 @@ char *restore_quotes(char *value)
 		else
 			tmp[0] = value[i];
 		tmp[1] = '\0';
+		// temp = new_value;
 		new_value = ft_strjoin_ws(new_value, tmp);
+		// free(temp);
 		i++;
 	}
-	return (new_value);
+	return (free(value), new_value);
 }
 
 char *handle_variable_expansion(char *line, int *i, t_glob_st *glob_strct, char *result)
@@ -126,6 +135,7 @@ char *handle_variable_expansion(char *line, int *i, t_glob_st *glob_strct, char 
 	char *var_value;
 	char *var;
 	int j;
+	// char *temp = NULL;
 	
 	(1) && (var_value = NULL, var = NULL, j = 0);
 	(*i)++;
@@ -133,21 +143,23 @@ char *handle_variable_expansion(char *line, int *i, t_glob_st *glob_strct, char 
 		return handle_digit_expansion(line, i, result);
 	if (line[*i] == '?')
 	{
-		result = ft_strjoin_ws(result, ft_itoa(glob_strct->ext_stat));
-		return ((*i)++, result);
+		var_value = ft_itoa(glob_strct->ext_stat);
+		result = ft_strjoin_ws(result, var_value);
+		return ((*i)++, free(var_value), result);
 	}
 	j = *i;
 	while (line[j] && is_valid_char(line[j]))
 		j++;
 	var = ft_strndup(&line[*i], j - *i);
 	var_value = my_getenv2(var, glob_strct->env);
+	var_value = ft_strdup(var_value);
 	var_value = replace_quotes(var_value);
 	if (var_value)
 		result = ft_strjoin_ws(result, var_value);
 	else
 		result = ft_strjoin_ws(result, "");
 	*i = j;
-	return (free(var), result);
+	return (free(var), free(var_value), result);
 }
 
 static int handle_dollar_case(char *line, int *i, char quote)
@@ -211,7 +223,7 @@ char *ft_strcpy(char *dest, const char *src)
 	while (*src)
 		*ptr++ = *src++;
 	*ptr = '\0';
-	return dest;
+	return (dest);
 }
 
 char *space_change(char *str)
@@ -234,7 +246,7 @@ char *space_change(char *str)
 		new_str = ft_strjoin_ws(new_str, tmp);
 		i++;
 	}
-	return (new_str);
+	return (free(str), new_str);
 }
 
 static void expand_cmd_line(t_cmd *cmd, t_glob_st *glob_strct)
@@ -243,17 +255,18 @@ static void expand_cmd_line(t_cmd *cmd, t_glob_st *glob_strct)
 
 	expanded = NULL;
 	if (!cmd->line)
-		return;
+		return ;
 	if (check_if_export(cmd->line, glob_strct))
 	{
 		expanded = expand_export(cmd->line, glob_strct);
+		free(cmd->line);
 	}
 	else
 	{
 		expanded = expand(cmd->line, glob_strct);
+		free(cmd->line);
 		expanded = space_change(expanded);
 	}
-	
 	cmd->line = expanded;
 }
 
@@ -274,12 +287,18 @@ int check_for_ambgu(char *name)
 static void expand_cmd_files(t_cmd *cmd, t_glob_st *glob_strct)
 {
 	int i;
+	char *temp_filename;
 
 	i = 0;
+	temp_filename = NULL;
 	while (cmd->files && cmd->files[i].filename)
 	{
 		if (cmd->files[i].type != HEREDOC)
-			cmd->files[i].filename = expand(cmd->files[i].filename, glob_strct);
+		{
+			temp_filename = cmd->files[i].filename;
+			cmd->files[i].filename = expand(temp_filename, glob_strct);
+			free(temp_filename);
+		}
 		if (cmd->files[i].type == HEREDOC && check_key(cmd->files[i].filename))
 			cmd->files[i].expand_flg = 0;
 		cmd->files[i].filename = remove_outer_quotes(cmd->files[i].filename);

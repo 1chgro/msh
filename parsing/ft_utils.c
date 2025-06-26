@@ -42,7 +42,7 @@ char	*ft_stringcpy(char *dst, const char *src, size_t n)
 	return (dst);
 }
 
-char	*ft_strtrim(char const *s1, char const *set)
+char	*ft_strtrim(char *s1, char const *set)
 {
 	size_t	start;
 	size_t	end;
@@ -60,6 +60,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	if (!trimmed_str)
 		return (NULL);
 	ft_stringcpy(trimmed_str, s1 + start, end - start);
+	free((char *)s1);
 	return (trimmed_str);
 }
 
@@ -86,7 +87,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (s2[j] && i <= total_len)
 		jnd_str[i++] = s2[j++];
 	jnd_str[i] = '\0';
-	// free((char *)s1);
+	free((char *)s1);
 	return (jnd_str);
 }
 

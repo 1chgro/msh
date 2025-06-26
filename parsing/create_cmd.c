@@ -88,6 +88,7 @@ static char *extract_arg(const char *str, int *i)
 	int start = *i;
 	int in_quotes = 0;
 	char quote_char = '\0';
+	char *result = NULL;
 
 	while (str[*i])
 	{
@@ -105,7 +106,8 @@ static char *extract_arg(const char *str, int *i)
 			break;
 		(*i)++;
 	}
-	return (ft_strndup(str + start, *i - start));
+	result = ft_strndup(str + start, *i - start);
+	return (result);
 }
 
 char **split_line_to_args(char *line)
@@ -140,13 +142,6 @@ char **split_line_to_args(char *line)
 		j++;
 	}
 	args[arg_count] = NULL;
-	if (!args[0])
-	{
-		free_arr(args);
-		args = malloc(sizeof(char *) * 2);
-		args[0] = ft_strdup("");
-		args[1] = NULL;
-	}
 	return (args);
 }
 
@@ -157,7 +152,6 @@ void fill_cmd_argv(t_cmd *cmd)
 	int i = 0;
 	while (temp_cmd)
 	{
-		i = 0;
 		temp_cmd->argv = split_line_to_args(temp_cmd->line);
 		if (!temp_cmd->argv && !temp_cmd->files)
 		{
@@ -165,12 +159,16 @@ void fill_cmd_argv(t_cmd *cmd)
 			temp_cmd->argv[0] = ft_strdup("");
 			temp_cmd->argv[1] = NULL;
 		}
+		i = 0;
 		while (temp_cmd->argv && temp_cmd->argv[i])
 		{
 			temp_cmd->argv[i] = restore_quotes(temp_cmd->argv[i]);
 			if (!temp_cmd->argv[i])
 			{
-				temp_cmd->argv[i] = ft_strdup("");
+				free_arr(temp_cmd->argv);
+				temp_cmd->argv = malloc(sizeof(char *) * 2);
+				temp_cmd->argv[0] = ft_strdup("");
+				temp_cmd->argv[1] = NULL;
 			}
 			i++;
 		}

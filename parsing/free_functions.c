@@ -25,6 +25,7 @@ void free_arr(char **arr)
         free(arr[i]);
         i++;
     }
+    free(arr);
     arr = NULL;
 }
 
@@ -39,11 +40,13 @@ void free_cmd_files(t_red *files)
         i++;
     }
     free(files);
+    files = NULL;
 }
 
 void free_cmd(t_cmd *cmd)
 {
     t_cmd *temp;
+
     while (cmd)
     {
         free(cmd->line);
@@ -52,5 +55,6 @@ void free_cmd(t_cmd *cmd)
         temp = cmd;
         cmd = cmd->next;
         free(temp);
+        temp = NULL;
     }
 }
