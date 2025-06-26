@@ -92,7 +92,9 @@ char **remove_quotes_arr(char **argv)
 		return (free(argv), NULL);
 	while (argv[i])
 	{
+		// printf("Removing quotes from argv[%d]: %s\n", i, argv[i]);
 		new_argv[i] = remove_outer_quotes(argv[i]);
+		// printf("Removing quotes from argv[%d]: %s\n", i, new_argv[i]);
 		if (!new_argv)
 		{
 			while (--j >= 0)
