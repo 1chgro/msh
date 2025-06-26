@@ -3,7 +3,6 @@
 int check_if_export(char *line, t_glob_st *glob_strct)
 {
     char *tmp;
-    char *temp;
     if (!line)
         return (0);
     
@@ -69,7 +68,6 @@ int check_value(char *value)
 {
     if (!value)
         return (0);
-    int i = 0;
     if (ft_strchr(value, '$'))
         return (1);
     return (0);
@@ -102,11 +100,9 @@ char *expand_key_value(char *str, t_glob_st *glob_strct, int split_all_values)
     char *result = NULL;
     char *key = NULL;
     char *value = NULL;
-    char *equal_sign = ft_strchr(str, '=');
     char **key_val = split_key_val(str);
     if (!key_val)
         return (NULL);
-    int i = 0;
 
     int split_value = 0;
     if (key_val[0])

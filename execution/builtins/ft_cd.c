@@ -117,7 +117,7 @@ int	all(char *path)
 	return (len);
 }
 
-static char	*get_old_pwd_or_default(t_env **env)
+static char	*get_old_pwd_or_default()
 {
 	char	*old_pwd;
 
@@ -185,7 +185,8 @@ static char	*handle_dash_only(t_env *env, char *old_pwd)
 		free(old_pwd);
 		return (NULL);
 	}
-	printf("%s\n", path);
+	else if (path && path[0] != '\0')
+		printf("%s\n", path);
 	return (path);
 }
 
@@ -345,7 +346,6 @@ static void	update_pwd_env(t_env **env, char *logical_pwd, char *path,
 
 int	ft_cd(char **s_cmd, t_env **env)
 {
-	char	*new_pwd;
 	char	*path;
 	char	*old_pwd;
 	char	*logical_pwd;
@@ -354,7 +354,7 @@ int	ft_cd(char **s_cmd, t_env **env)
 	logical_pwd = NULL;
 	if (!env || !*env)
 		return (1);
-	old_pwd = get_old_pwd_or_default(env);
+	old_pwd = get_old_pwd_or_default();
 	if (!old_pwd)
 		return (1);
 	path = determine_path(s_cmd, *env, old_pwd);

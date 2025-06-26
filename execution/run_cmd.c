@@ -286,7 +286,7 @@ static char	*search_in_path(char *cmd, char *path, int null_path)
 {
 	char	**allpath;
 	char	*result;
-	char	*full_path;
+	// char	*full_path;
 
 	allpath = ft_split(path, ':');
 	if (!allpath)
@@ -551,6 +551,8 @@ static int	get_exit_status(int status)
 	int	sig;
 	int	last_status;
 
+	sig = 0;
+	last_status = 0;
 	if (WIFEXITED(status))
 		last_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))

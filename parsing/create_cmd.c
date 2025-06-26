@@ -151,7 +151,7 @@ char **split_line_to_args(char *line)
 }
 
 
-void fill_cmd_argv(t_cmd *cmd, t_glob_st *glob_strct)
+void fill_cmd_argv(t_cmd *cmd)
 {
 	t_cmd *temp_cmd = cmd;
 	int i = 0;
@@ -193,7 +193,11 @@ static int	process_token_redirection(t_token *current, t_cmd *temp_cmd, int *i, 
 			temp_cmd->files = malloc(sizeof(t_red) * (count_red + 1));
 			if (!temp_cmd->files)
 				return (0);
-			temp_cmd->files[count_red] = (t_red){NULL, -1, -1};
+		temp_cmd->files[count_red].filename = NULL;
+		temp_cmd->files[count_red].type = -1;
+		temp_cmd->files[count_red].fd = -1;
+		temp_cmd->files[count_red].expand_flg = 0;
+		temp_cmd->files[count_red].ambiguous_flg = 0;
 		}
 		temp_cmd->files[*i].filename = ft_strdup(current->next->value);
 		temp_cmd->files[*i].type = get_cmd_red_type(current->type);
@@ -254,6 +258,6 @@ t_cmd *create_cmd(t_glob_st *glob_strct)
 	if (!glob_strct->cmd)
 		return (NULL);
 	expand_env_vars(glob_strct);
-	fill_cmd_argv(glob_strct->cmd, glob_strct);
+	fill_cmd_argv(glob_strct->cmd);
 	return (glob_strct->cmd);
 }
