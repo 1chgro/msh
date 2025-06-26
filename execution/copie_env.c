@@ -113,7 +113,11 @@ t_env *create_node(char *key, char *value, int have_equal)
 		return (NULL);
 	node->key = key;
 	if ((!value || value[0] == '\0') && have_equal)
+	{
+		if (value)
+			free(value);
 		node->value = ft_strdup("");
+	}
 	else
 		node->value = value;
     if (have_equal)

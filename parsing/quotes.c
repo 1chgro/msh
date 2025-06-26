@@ -59,7 +59,7 @@ char *remove_outer_quotes(char *s)
 	(1) && (i = 0, j = 0, quote = 0, output = NULL, len = ft_strlen(s));
     output = malloc(len + 1);
     if (!output)
-        return (NULL);
+        return (free(s), NULL);
     while (s[i])
     {
 		if (should_skip_quote(s[i], &quote))

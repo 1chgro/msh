@@ -31,8 +31,8 @@ char **split_key_val(char *str)
     char *equal_sign = ft_strchr(str, '=');
     if (equal_sign)
     {
-        *equal_sign = '\0';
-        result[0] = ft_strdup(str);
+        result[0] = ft_strndup(str, equal_sign - str);
+        printf("Key: %s\n", result[0]);
         result[1] = ft_strdup(equal_sign + 1);
         result[2] = NULL;
     }
@@ -179,14 +179,14 @@ int is_quoted_export(char *line)
     j = 0;
     export_candidate = get_word(line);
     if (ft_strcmp(export_candidate, "export") == 0)
-        return (0);
+        return (free(export_candidate),0);
 	while (export_candidate[j])
 	{
 		if (export_candidate[j] == '\'' || export_candidate[j] == '"')
 			quote++;
         j++;
 	}
-	return (quote);
+	return ( free(export_candidate), quote);
 }
 
 
@@ -197,9 +197,9 @@ char *expand_export(char *line, t_glob_st *glob_strct)
     int i;
     int split_all_values;
     char *expanded;
-    // char *temp;
 
-    if (!line)
+    (void) glob_strct;
+        if (!line)
         return (NULL);
     i = 0;
     expanded = NULL;
@@ -218,5 +218,6 @@ char *expand_export(char *line, t_glob_st *glob_strct)
         free(expanded);
         i++;
     }
+    free(arr);
     return (result);
 }

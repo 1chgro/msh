@@ -9,7 +9,7 @@ char *read_line(t_glob_st *glob_strct, int ext_stat)
 	if (!input)
 	{
 		rl_clear_history();
-        free(glob_strct->env);
+        free_env(glob_strct->env);
         free(glob_strct);
         write(2, "exit\n", 5);
 		exit(ext_stat);
@@ -17,7 +17,7 @@ char *read_line(t_glob_st *glob_strct, int ext_stat)
 	else if (*input)
 		add_history(input);
 	else
-		return (NULL);
+		return (free(input), NULL);
 	return (input);
 }
 
@@ -79,10 +79,10 @@ t_glob_st *init_glob_strct()
     return (glob_strct);
 }
 
+
 int msh_loop(char **envp)
 {
     t_glob_st *glob_strct;
-
     glob_strct = init_glob_strct();
     if (!glob_strct)
         return (perror("msh: error allocating memory"), 0);
