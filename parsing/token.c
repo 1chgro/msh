@@ -5,6 +5,8 @@ int	handle_operator(char *line, int *i, t_token **tokens)
 	char	*op;
 	int		len;
 
+	(void) tokens;
+	op = NULL;
 	len = 1;
 	if ((line[*i] == '<' && line[*i + 1] == '<') || \
 		(line[*i] == '>' && line[*i + 1] == '>'))
@@ -13,8 +15,9 @@ int	handle_operator(char *line, int *i, t_token **tokens)
 	if (!op)
 		return (0);
 	ft_stringcpy(op, &line[*i], len);
-	add_token(tokens, new_token(op, get_token_type(op)));
-	free(op);
+	t_token *token = new_token(op, get_token_type(op));
+	if (!add_token(tokens, token))
+		return (free(token->value), free(token), 0);
 	*i += len;
 	return (1);
 }
@@ -25,7 +28,9 @@ int	handle_word(char *line, int *i, t_token **tokens)
 	int		end;
 	char	*word;
 	char	q;
+	t_token *token;
 
+	word = NULL;
 	start = *i;
 	while (line[*i])
 	{
@@ -43,9 +48,12 @@ int	handle_word(char *line, int *i, t_token **tokens)
 	if (!word)
 		return (0);
 	ft_stringcpy(word, &line[start], end - start);
-	if (!add_token(tokens, new_token(word, TOKEN_WORD)))
-		return (free(word), 0);
-	return (free(word), 1);
+	token = new_token(word, TOKEN_WORD);
+	if (!token)
+		return (0);
+	if (!add_token(tokens, token))
+		return (free(token->value), free(token), 0);
+	return (1);
 }
 
 t_token	*tokenize(char *line)
