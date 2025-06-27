@@ -286,7 +286,6 @@ static char	*search_in_path(char *cmd, char *path, int null_path)
 {
 	char	**allpath;
 	char	*result;
-	// char	*full_path;
 
 	allpath = ft_split(path, ':');
 	if (!allpath)
@@ -297,7 +296,8 @@ static char	*search_in_path(char *cmd, char *path, int null_path)
 	result = check_command_path(allpath, cmd);
 	if (!result && null_path)
 	{
-		free_split(allpath);
+        if (allpath)
+		    free_split(allpath);
 		print_error(cmd, ": No such file or directory\n");
 	}
 	else if (!result)
@@ -324,7 +324,6 @@ char	*get_path(char *cmd, t_env *env)
         null_path = 1;
         path = ft_strdup(".");
     }
-		// return (handle_no_path(cmd));
 	return (search_in_path(cmd, path, null_path));
 }
 
@@ -348,7 +347,9 @@ static void	try_bash_execution(char **cmd, char *path, t_env *env)
 	{
 		print_error(cmd[0], ": execve failed : ");
 		perror("");
-		free(path);
+        free_split(new_arg);
+        if (path)
+            free(path);
 		exit(1);
 	}
 }
