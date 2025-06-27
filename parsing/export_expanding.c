@@ -3,6 +3,7 @@
 int check_if_export(char *line, t_glob_st *glob_strct)
 {
     char *tmp;
+    char *temp;
     if (!line)
         return (0);
 
@@ -10,7 +11,9 @@ int check_if_export(char *line, t_glob_st *glob_strct)
     tmp = expand(line, glob_strct);
     if (!tmp)
         return (0);
+    temp = tmp;
     tmp = remove_outer_quotes(tmp);
+    free(temp);
     if (!tmp)
         return (0);
     tmp = ft_strtrim(tmp, " \t\n\r\v\f");
