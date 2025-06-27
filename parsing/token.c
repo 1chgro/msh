@@ -4,8 +4,8 @@ int	handle_operator(char *line, int *i, t_token **tokens)
 {
 	char	*op;
 	int		len;
+	t_token	*token;
 
-	(void) tokens;
 	op = NULL;
 	len = 1;
 	if ((line[*i] == '<' && line[*i + 1] == '<') || \
@@ -15,11 +15,32 @@ int	handle_operator(char *line, int *i, t_token **tokens)
 	if (!op)
 		return (0);
 	ft_stringcpy(op, &line[*i], len);
-	t_token *token = new_token(op, get_token_type(op));
+	token = new_token(op, get_token_type(op));
 	if (!add_token(tokens, token))
 		return (free(token->value), free(token), 0);
 	*i += len;
 	return (1);
+}
+
+int	find_word_end(char *line, int start)
+{
+	int		i;
+	char	q;
+
+	i = start;
+	while (line[i])
+	{
+		if (is_quote(line[i]))
+		{
+			q = line[i];
+			skip_quotes(line, &i, q);
+		}
+		else if (!is_space(line[i]) && !is_operator(line[i]))
+			i++;
+		else
+			break ;
+	}
+	return (i);
 }
 
 int	handle_word(char *line, int *i, t_token **tokens)
@@ -27,24 +48,13 @@ int	handle_word(char *line, int *i, t_token **tokens)
 	int		start;
 	int		end;
 	char	*word;
-	char	q;
-	t_token *token;
+	t_token	*token;
 
 	word = NULL;
 	start = *i;
-	while (line[*i])
-	{
-		if (is_quote(line[*i]))
-		{
-			q = line[*i];
-			skip_quotes(line, i, q);
-		}
-		else if (!is_space(line[*i]) && !is_operator(line[*i]))
-			(*i)++;
-		else
-			break ;
-	}
-	(1) && (end = *i, word = malloc(end - start + 1));
+	end = find_word_end(line, start);
+	*i = end;
+	(1) && (word = malloc(end - start + 1));
 	if (!word)
 		return (0);
 	ft_stringcpy(word, &line[start], end - start);

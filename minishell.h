@@ -85,7 +85,7 @@ typedef struct s_glob_st
 
 int check_if_export(char *line, t_glob_st *glob_strct);
 char *expand_export(char *line, t_glob_st *glob_strct);
-
+char *expand(char *line, t_glob_st *glob_strct);
 //----------------- print functions--------///
 void   print_cmd(t_cmd *cmd);
 void print_tokens(t_token *tokens);
@@ -117,6 +117,20 @@ int check_syntax_err(t_glob_st *glob_strct);
 //--------------------- cmd create ----------------------------//
 t_cmd	*create_cmd(t_glob_st *glob_strct);
 char **split_line_to_args(char *line);
+int count_redirections(t_token *tokens);
+int init_cmd(t_cmd **cmd);
+char **split_line_to_args(char *line);
+t_redirection_type get_cmd_red_type(t_token_type type);
+int create_cmd_lst(t_token *tokens, t_cmd **cmd);
+char *space_change(char *str);
+int check_for_ambgu(char *name);
+char *handle_digit_expansion(char *line, int *i, char *result);
+void handle_quotes(char *line, int i, char *quote, int *pos);
+char	**split_key_val(char *str);
+int	should_split_value(int split_all_values, char *key_str, char *value_str);
+char	*expand_key(char *key_str, t_glob_st *glob_strct);
+char	*process_value_expansion(char *value_str, t_glob_st *glob_strct, int split_value);
+char	*handle_exit_status_expansion(int *i, t_glob_st *glob_strct, char *result);
 
 //------------------- env --------------------------------------//
 int		copie_env(t_env **c_env, char **env);
@@ -150,6 +164,7 @@ int		valid_quotes(char *s);
 char	**remove_quotes_arr(char **argv);
 char	*replace_quotes(char *value);
 char	*restore_quotes(char *value);
+char *replace_value_quotes(char *value);
 
 
 //------------------- expanding -------------------//
