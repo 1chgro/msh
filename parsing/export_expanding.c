@@ -110,6 +110,7 @@ char *expand_key_value(char *str, t_glob_st *glob_strct, int split_all_values)
     char **key_val = split_key_val(str);
     if (!key_val)
         return (NULL);
+    char *temp = NULL;
 
     int split_value = 0;
     if (key_val[0])
@@ -126,7 +127,9 @@ char *expand_key_value(char *str, t_glob_st *glob_strct, int split_all_values)
         value = expand(key_val[1], glob_strct);
         if (!split_value)
         {
+            temp = value;
             value = remove_outer_quotes(value);
+            free(temp);
             value = add_quotes(value);
         }
         else

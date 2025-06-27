@@ -127,7 +127,7 @@ char *add_quotes(char *value);
 char	*ft_strtrim(char *s1, char const *set);
 char	*ft_stringcpy(char *dst, const char *src, size_t n);
 char	*ft_strdup(char *str);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strjoin_ws(char const *s1, char const *s2);
 char	*ft_strndup(const char *s, int n);
 int		ft_strcmp(const char *s1, const char *s2);

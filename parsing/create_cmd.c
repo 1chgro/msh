@@ -219,14 +219,18 @@ void fill_cmd_argv(t_cmd *cmd)
 	}
 }
 
-static void	process_token_word(t_token *current, t_token *prev, t_cmd *temp_cmd)
+void	process_token_word(t_token *current, t_token *prev, t_cmd *temp_cmd)
 {
 	if (current->type == TOKEN_WORD && !is_redirection(&prev))
+	{
 		temp_cmd->line = ft_strjoin(temp_cmd->line, current->value);
+	}
 }
 
-static int	process_token_redirection(t_token *current, t_cmd *temp_cmd, int *i, int count_red)
+int	process_token_redirection(t_token *current, t_cmd *temp_cmd, int *i, int count_red)
 {
+	int j;
+
 	if (is_redirection(&current))
 	{
 		if (!temp_cmd->files)
@@ -234,13 +238,20 @@ static int	process_token_redirection(t_token *current, t_cmd *temp_cmd, int *i, 
 			temp_cmd->files = malloc(sizeof(t_red) * (count_red + 1));
 			if (!temp_cmd->files)
 				return (0);
-		temp_cmd->files[count_red].filename = NULL;
-		temp_cmd->files[count_red].type = -1;
-		temp_cmd->files[count_red].fd = -1;
-		temp_cmd->files[count_red].expand_flg = 0;
-		temp_cmd->files[count_red].ambiguous_flg = 0;
+			j = 0;
+			while(j <= count_red)
+			{
+				temp_cmd->files[j].filename = NULL;
+				temp_cmd->files[j].type = -1;
+				temp_cmd->files[j].fd = -1;
+				temp_cmd->files[j].expand_flg = 0;
+				temp_cmd->files[j].ambiguous_flg = 0;
+				j++;
+			}
 		}
 		temp_cmd->files[*i].filename = ft_strdup(current->next->value);
+		if (!temp_cmd->files[*i].filename)
+			return (0);
 		temp_cmd->files[*i].type = get_cmd_red_type(current->type);
 		temp_cmd->files[*i].fd = -1;
 		temp_cmd->files[*i].expand_flg = 1;
@@ -250,7 +261,7 @@ static int	process_token_redirection(t_token *current, t_cmd *temp_cmd, int *i, 
 	return (1);
 }
 
-static int handle_pipe(t_token *current, t_cmd **temp_cmd, int *count_red, int *i)
+int handle_pipe(t_token *current, t_cmd **temp_cmd, int *count_red, int *i)
 {
 	if (is_pipe(&current))
 	{
@@ -274,7 +285,8 @@ t_cmd *create_cmd_lst(t_token *tokens)
 
 	(1) && (cmd = NULL, temp_cmd = NULL, current = tokens, prev = NULL, i = 0);
 	count_red = count_redirections(tokens);
-	init_cmd(&cmd);
+	if (!init_cmd(&cmd))
+		return (NULL);
 	temp_cmd = cmd;
 	while (current)
 	{

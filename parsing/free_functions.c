@@ -47,6 +47,8 @@ void free_cmd(t_cmd *cmd)
 {
     t_cmd *temp;
 
+    if (!cmd)
+        return ;
     while (cmd)
     {
         free(cmd->line);

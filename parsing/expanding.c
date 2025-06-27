@@ -20,11 +20,10 @@ char *ft_strndup(const char *s, int n)
 	
 	if (!s || n < 0)
 		return (NULL);
-	
+
 	dup = malloc(sizeof(char) * (n + 1));
 	if (!dup)
 		return (NULL);
-	
 	i = 0;
 	while (s[i] && i < n)
 	{
@@ -32,7 +31,6 @@ char *ft_strndup(const char *s, int n)
 		i++;
 	}
 	dup[i] = '\0';
-	
 	return (dup);
 }
 
@@ -62,13 +60,11 @@ void handle_quotes(char *line, int i, char *quote, int *pos)
 char *handle_digit_expansion(char *line, int *i, char *result)
 {
 	char tmp[2];
-	// char *temp = NULL;
+
 	(*i)++;
 	tmp[0] = line[*i];
 	tmp[1] = '\0';
-	// temp = result;
 	result = ft_strjoin_ws(result, tmp);
-	// free(temp);
 	(*i)++;
 	return (result);
 }
@@ -76,13 +72,14 @@ char *handle_digit_expansion(char *line, int *i, char *result)
 char *replace_quotes(char *value)
 {
 	char *new_value;
-	// char *temp = NULL;
 	char tmp[2];
+	int i;
+
 	if (!value)
 		return (NULL);
 	tmp[0] = '\0';
 	tmp[1] = '\0';
-	int i = 0;
+	i = 0;
 	new_value = NULL;
 	while (value[i])
 	{
@@ -93,9 +90,7 @@ char *replace_quotes(char *value)
 		else
 			tmp[0] = value[i];
 		tmp[1] = '\0';
-		// temp = new_value;
 		new_value = ft_strjoin_ws(new_value, tmp);
-		// free(temp);
 		i++;
 	}
 	return (free(value), new_value);
@@ -104,15 +99,15 @@ char *replace_quotes(char *value)
 char *restore_quotes(char *value)
 {
 	char *new_value;
-	// char *temp = NULL;
 	char tmp[2];
+	int i;
+
 	if (!value)
 		return (NULL);
-
 	new_value = NULL;
 	tmp[0] = '\0';
 	tmp[1] = '\0';
-	int i = 0;
+	i = 0;
 	while (value[i])
 	{
 		if (value[i] == '\x01')
@@ -133,8 +128,7 @@ char *handle_variable_expansion(char *line, int *i, t_glob_st *glob_strct, char 
 	char *var_value;
 	char *var;
 	int j;
-	// char *temp = NULL;
-	
+
 	(1) && (var_value = NULL, var = NULL, j = 0);
 	(*i)++;
 	if (ft_isdigit(line[*i]) && is_valid_char(line[*i + 1]))
@@ -251,9 +245,9 @@ static void expand_cmd_line(t_cmd *cmd, t_glob_st *glob_strct)
 {
 	char *expanded;
 
-	expanded = NULL;
 	if (!cmd->line)
 		return ;
+	expanded = NULL;
 	if (check_if_export(cmd->line, glob_strct))
 	{
 		expanded = expand_export(cmd->line, glob_strct);
@@ -287,6 +281,8 @@ static void expand_cmd_files(t_cmd *cmd, t_glob_st *glob_strct)
 	int i;
 	char *temp_filename;
 
+	if (!cmd->files)
+		return ;
 	i = 0;
 	temp_filename = NULL;
 	while (cmd->files && cmd->files[i].filename)
@@ -299,7 +295,9 @@ static void expand_cmd_files(t_cmd *cmd, t_glob_st *glob_strct)
 		}
 		if (cmd->files[i].type == HEREDOC && check_key(cmd->files[i].filename))
 			cmd->files[i].expand_flg = 0;
-		cmd->files[i].filename = remove_outer_quotes(cmd->files[i].filename);
+		temp_filename = cmd->files[i].filename;
+		cmd->files[i].filename = remove_outer_quotes(temp_filename);
+		free(temp_filename);
 		if (check_for_ambgu(cmd->files[i].filename) && cmd->files[i].type != HEREDOC)
 			cmd->files[i].ambiguous_flg = 1;
 		i++;
