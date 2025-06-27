@@ -199,4 +199,37 @@ char *take_store_pwd(char *path);
 long ft_atoi_(const char *str, int *is_valid);
 void get_terminall(struct termios *termios);
 void set_terminall(struct termios *termios);
+char	*ft_strrchr(const char *s, int c);
+void	update_existing_env(t_env *current, char *value);
+t_env	*create_new_env_node(char *key, char *value);
+t_env	*find_env_key(t_env *env, char *key);
+void	set_env(t_env **env, char *key, char *value);
+char	*get_home(t_env *env);
+int	is_valid_cwd(void);
+int	all(char *path);
+char	*get_old_pwd_or_default(void);
+char	*handle_no_args(t_env *env, char *old_pwd);
+char	*handle_tilde_only(t_env *env, char *old_pwd);
+char	*handle_dash_only(t_env *env, char *old_pwd);
+char	*handle_tilde_path(t_env *env, char *arg, char *old_pwd);
+char	*determine_path(char **s_cmd, t_env *env, char *old_pwd);
+char	*create_logical_dotdot_path(char *old_pwd);
+int	handle_dotdot_logic(char *path, char *old_pwd, char **logical_pwd);
+char	*process_up_navigation(char *temp_path, char *to_rm);
+int	attempt_chdir(char *path, char *old_pwd);
+void	print_numeric_error(char *arg);
+int	handle_invalid_with_multiple_args(char **s_cmd, int is_valid);
+int	handle_too_many_args_exit(char **s_cmd);
+void	print_export(t_env *env, int lst_size);
+int	validate_export_arg(char *key, char *arg, int append);
+t_env	*find_existing_node(t_env *env, char *key);
+int	handle_new_node(t_env **env, char *key, char *value,
+		int have_equal);
+void	print_node_export(t_env *temp);
+int	should_skip_node(t_env *temp);
+int	is_valid_identifier(char *key);
+int	check_append_op(char *str);
+void	make_index(t_env **env);
+int	ft_isalnum(int c);
+
 #endif

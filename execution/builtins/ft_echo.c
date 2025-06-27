@@ -1,8 +1,8 @@
 #include "../../minishell.h"
 
-int check_newline(char  *str)
+int	check_newline(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (str[i] == '-' && str[i + 1])
@@ -20,24 +20,29 @@ int check_newline(char  *str)
 	return (0);
 }
 
-void    ft_handle_echo_arg(char **args)
+static void	write_newline(char **args, int i)
 {
-	int     i;
-	int     new_line;
+	i++;
+	while (args[i])
+	{
+		ft_putstr_fd(args[i], 1);
+		if (args[i + 1])
+			ft_putstr_fd(" ", 1);
+		i++;
+	}
+	printf("\n");
+}
+
+void	ft_handle_echo_arg(char **args)
+{
+	int	i;
+	int	new_line;
 
 	i = 0;
 	new_line = check_newline(args[1]);
 	if (new_line)
 	{
-		i++;
-		while (args[i])
-		{
-			ft_putstr_fd(args[i], 1);
-			if (args[i + 1])
-				ft_putstr_fd(" ", 1);
-			i++;
-		}
-		printf("\n");
+		write_newline(args, i);
 	}
 	else
 	{
@@ -54,7 +59,7 @@ void    ft_handle_echo_arg(char **args)
 	}
 }
 
-int    ft_echo(char    **s_cmd)
+int	ft_echo(char **s_cmd)
 {
 	if (!s_cmd[1])
 	{
@@ -64,5 +69,5 @@ int    ft_echo(char    **s_cmd)
 	{
 		ft_handle_echo_arg(s_cmd);
 	}
-	return(0);
+	return (0);
 }

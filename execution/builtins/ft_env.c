@@ -1,9 +1,10 @@
 #include "../../minishell.h"
 
-int    ft_env(char **s_cmd, t_env *env)
+int	ft_env(char **s_cmd, t_env *env)
 {
-	t_env *temp = NULL;
+	t_env	*temp;
 
+	temp = NULL;
 	if (!env)
 		return (0);
 	temp = env;

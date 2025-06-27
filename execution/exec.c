@@ -200,6 +200,7 @@ static int handle_redirection_only(t_glob_st *glob_strct, int saved_stdout, int 
     status = redirection(glob_strct->cmd);
     if (status != 0)
     {
+        glob_strct->ext_stat = status;
         restore_std_fds(saved_stdout, saved_stdin);
         return (status);
     }
@@ -215,6 +216,7 @@ static int handle_builtin_command(t_glob_st *glob_strct, int saved_stdout, int s
         status = redirection(glob_strct->cmd);
         if (status != 0)
         {
+            glob_strct->ext_stat = status;
             restore_std_fds(saved_stdout, saved_stdin);
             return (status);
         }
