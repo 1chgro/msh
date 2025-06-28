@@ -251,42 +251,10 @@ static char	*handle_absolute_path(char *cmd)
 	return (ft_strdup(cmd));
 }
 
-// static char	*handle_no_path(char *cmd)
-// {
-// 	char	*current_dir;
-
-// 	current_dir = ft_strjoin_("./", cmd);
-// 	if (!current_dir)
-// 	{
-// 		perror("msh: ");
-// 		return (NULL);
-// 	}
-// 	if (access(current_dir, F_OK) != 0)
-// 	{
-// 		print_error(cmd, ": No such file or directory\n");
-// 		free(current_dir);
-// 		return (NULL);
-// 	}
-// 	if (is_directory(current_dir))
-// 	{
-// 		print_error(cmd, ": Is a directory\n");
-// 		free(current_dir);
-// 		exit(126);
-// 	}
-// 	if (access(current_dir, X_OK) != 0)
-// 	{
-// 		print_error(cmd, ": Permission denied\n");
-// 		free(current_dir);
-// 		exit(126);
-// 	}
-// 	return (current_dir);
-// }
-
 static char	*search_in_path(char *cmd, char *path, int null_path)
 {
 	char	**allpath;
 	char	*result;
-	// char	*full_path;
 
 	allpath = ft_split(path, ':');
 	if (!allpath)
@@ -297,7 +265,8 @@ static char	*search_in_path(char *cmd, char *path, int null_path)
 	result = check_command_path(allpath, cmd);
 	if (!result && null_path)
 	{
-		free_split(allpath);
+        if (allpath)
+		    free_split(allpath);
 		print_error(cmd, ": No such file or directory\n");
 	}
 	else if (!result)
@@ -324,7 +293,6 @@ char	*get_path(char *cmd, t_env *env)
         null_path = 1;
         path = ft_strdup(".");
     }
-		// return (handle_no_path(cmd));
 	return (search_in_path(cmd, path, null_path));
 }
 
@@ -348,7 +316,9 @@ static void	try_bash_execution(char **cmd, char *path, t_env *env)
 	{
 		print_error(cmd[0], ": execve failed : ");
 		perror("");
-		free(path);
+        free_split(new_arg);
+        if (path)
+            free(path);
 		exit(1);
 	}
 }
@@ -393,7 +363,7 @@ static int	handle_redirect_in(t_red *file)
 	file->fd = open(file->filename, O_RDONLY);
 	if (file->fd < 0)
 	{
-		perror("open failed");
+		perror("msh: ");
 		return (1);
 	}
 	dup2(file->fd, STDIN_FILENO);
@@ -475,13 +445,14 @@ static void	cleanup_processes(pid_t *pid, int count)
 static int	handle_pipe_error(pid_t *pid, int i)
 {
 	cleanup_processes(pid, i);
-	perror("pipe error");
+	perror("msh: ");
 	return (1);
 }
 
 static int	handle_fork_error(pid_t *pid, int i, t_cmd *cmd, int *p_fd)
 {
 	cleanup_processes(pid, i);
+    perror("msh: ");
 	if (cmd->next)
 	{
 		close(p_fd[0]);

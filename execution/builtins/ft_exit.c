@@ -1,76 +1,89 @@
 #include "../../minishell.h"
 
-long ft_atoi_(const char *str, int *is_valid)
+static int	handle_sign(const char *str, int *i)
 {
-	int         i;
-	long        result;
-	int         sign;
+	int	sign;
 
-	i = 0;
-	result = 0;
 	sign = 1;
-	while (str[i] == ' ')
-		{i++;}
-	if (str[i] == '\0')
-	{
-		return (0);
-	}
-	if (str[i] == '-')
+	if (str[*i] == '-')
 	{
 		sign = -1;
-		i++;
+		(*i)++;
 	}
-	else if (str[i] == '+')
-		{i++;}
-	while (str[i] >= '0' && str[i] <= '9')
+	else if (str[*i] == '+')
+		(*i)++;
+	return (sign);
+}
+
+static int	check_overflow(long result, char digit)
+{
+	if (result > LONG_MAX / 10)
+		return (1);
+	if (result == LONG_MAX / 10 && (digit - '0') > LONG_MAX % 10)
+		return (1);
+	return (0);
+}
+
+static long	parse_digits(const char *str, int *i, int *is_valid)
+{
+	long	result;
+
+	result = 0;
+	while (str[*i] >= '0' && str[*i] <= '9')
 	{
-		if (result > LONG_MAX / 10 || (result == LONG_MAX / 10 && (str[i] - '0') > LONG_MAX % 10))
+		if (check_overflow(result, str[*i]))
 		{
-            return (0);
-        }
-		result = result * 10 + (str[i] - '0');
-		i++;
+			*is_valid = 0;
+			return (0);
+		}
+		result = result * 10 + (str[*i] - '0');
+		(*i)++;
 	}
+	return (result);
+}
+
+long	ft_atoi_(const char *str, int *is_valid)
+{
+	int		i;
+	long	result;
+	int		sign;
+
+	i = 0;
+	*is_valid = 0;
 	while (str[i] == ' ')
-	   { i++;}
-	if (str[i] != '\0')
-	{
+		i++;
+	if (str[i] == '\0')
 		return (0);
-	}
+	sign = handle_sign(str, &i);
+	result = parse_digits(str, &i, is_valid);
+	if (*is_valid == 0)
+		return (0);
+	while (str[i] == ' ')
+		i++;
+	if (str[i] != '\0')
+		return (0);
 	*is_valid = 1;
 	return (result * sign);
 }
-int ft_exit(char **s_cmd, int last_ex)
-{
-	int exit_num = 0;
-	int is_valid = 0;
 
+int	ft_exit(char **s_cmd, int last_ex)
+{
+	int	exit_num;
+	int	is_valid;
+
+	exit_num = 0;
+	is_valid = 0;
 	if (isatty(STDIN_FILENO) && isatty(STDOUT_FILENO))
 		write(STDERR_FILENO, "exit\n", 5);
 	if (!s_cmd[1])
-	{
 		exit(last_ex);
-	}
 	exit_num = (int)ft_atoi_(s_cmd[1], &is_valid);
-    if (s_cmd[2] && !is_valid)
-    {
-        dup2(2, 1);
-		printf("msh: exit: %s: numeric argument required\n", s_cmd[1]);
-		dup2(1, 2);
-		exit(255);
-    }
-	if (s_cmd[2])
-	{
-		dup2(2, 1);
-		printf("bash: exit: too many arguments\n");
-		dup2(1, 2);
-		return(1);
-	}
+	handle_invalid_with_multiple_args(s_cmd, is_valid);
+	if (handle_too_many_args_exit(s_cmd))
+		return (1);
 	if (!is_valid)
 	{
-		dup2(2, 1);
-		printf("msh: exit: %s: numeric argument required\n", s_cmd[1]);
-		dup2(1, 2);
+		print_numeric_error(s_cmd[1]);
 		exit(255);
 	}
 	exit_num = exit_num % 256;

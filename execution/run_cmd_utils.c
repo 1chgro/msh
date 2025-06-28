@@ -56,3 +56,23 @@ void set_terminall(struct termios *termios)
         perror("tcsetattr: ");
     }
 }
+
+char	*ft_strrchr(const char *s, int c)
+{
+	int	i;
+	int	start;
+
+	i = 0;
+	start = -1;
+	while (s[i])
+	{
+		if (s[i] == (char)c)
+			start = i;
+		i++;
+	}
+	if (s[i] == (char)c)
+		return ((char *)s + i);
+	if (start == -1)
+		return (NULL);
+	return ((char *)s + start);
+}
