@@ -35,7 +35,6 @@ $(NAME): $(OBJS) minishell.h
 	@cc $(FLGS) $(READLINE_COMPILE) -c $< -o $@
 clean:
 	@rm -rf $(OBJS)
-
 fclean: clean
 	@rm -rf $(NAME)
 

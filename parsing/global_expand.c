@@ -29,14 +29,23 @@ char	*handle_variable_expansion(char *line, int *i, \
 {
 	(*i)++;
 	if (ft_isdigit(line[*i]) && is_valid_char(line[*i + 1]))
-		return (handle_digit_expansion(line, i, result));
+	{
+		result= handle_digit_expansion(line, i, result);
+		return (result);
+	}
 	if (line[*i] == '?')
-		return (handle_exit_status_expansion(i, glob_strct, result));
-	return (handle_regular_variable_expansion(line, i, glob_strct, result));
+	{
+		result = handle_exit_status_expansion(i, glob_strct, result);
+		return (result);
+	}
+	result = handle_regular_variable_expansion(line, i, glob_strct, result);
+	return (result);
 }
 
 static int	handle_dollar_case(char *line, int *i, char quote)
 {
+	if (ft_strlen(line) == 1 && line[*i] == '$')
+		return 0;
 	if (line[*i] == '$' && line[*i + 1] == '$')
 	{
 		*i += 2;
@@ -84,7 +93,5 @@ char	*expand(char *line, t_glob_st *glob_strct)
 	if (!line)
 		return (NULL);
 	result = expand_core(line, glob_strct);
-	if (result == NULL)
-		return (ft_strdup(""));
 	return (result);
 }

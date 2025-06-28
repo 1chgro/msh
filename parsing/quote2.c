@@ -57,7 +57,6 @@ char	*replace_quotes(char *value)
 
 	if (!value)
 		return (NULL);
-	tmp[0] = '\0';
 	tmp[1] = '\0';
 	i = 0;
 	new_value = NULL;

@@ -9,7 +9,7 @@ char	*read_line(t_glob_st *glob_strct, int ext_stat)
 	if (g_in_heredoc == 2)
 	{
 		glob_strct->ext_stat = 1;
-		g_in_heredoc = 0;		
+		g_in_heredoc = 0;
 	}
 	if (!input)
 	{
@@ -72,6 +72,7 @@ t_cmd	*msh_parse(t_glob_st *glob_strct)
 	glob_strct->cmd = create_cmd(glob_strct);
 	if (!glob_strct->cmd)
 		return (NULL);
+		print_cmd(glob_strct->cmd);
 	return (glob_strct->cmd);
 }
 
