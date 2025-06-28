@@ -95,7 +95,7 @@ void print_tokens(t_token *tokens);
 int	msh_loop(char **envp);
 int   	msh_execute(t_glob_st *glob_strct);
 void	msh_signals();
-t_token		*lexer(char *line);
+t_token		*lexer(char *line, t_glob_st *glob_strct);
 
 
 
