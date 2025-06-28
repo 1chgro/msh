@@ -63,3 +63,34 @@ void	ft_putstr_fd(char *s, int fd)
 		i++;
 	}
 }
+
+char	*ft_strcpy(char *dest, const char *src)
+{
+	char	*ptr;
+
+	ptr = dest;
+	while (*src)
+		*ptr++ = *src++;
+	*ptr = '\0';
+	return (dest);
+}
+
+char	*ft_strndup(const char *s, int n)
+{
+	char	*dup;
+	int		i;
+
+	if (!s || n < 0)
+		return (NULL);
+	dup = malloc(sizeof(char) * (n + 1));
+	if (!dup)
+		return (NULL);
+	i = 0;
+	while (s[i] && i < n)
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
+}

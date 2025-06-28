@@ -15,48 +15,52 @@ void	free_tokens(t_token *tokens)
 	}
 }
 
-void free_arr(char **arr)
+void	free_arr(char **arr)
 {
-    int i = 0;
-    if (!arr)
-        return ;
-    while (arr[i])
-    {
-        free(arr[i]);
-        i++;
-    }
-    free(arr);
-    arr = NULL;
+	int	i;
+
+	if (!arr)
+		return ;
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+	arr = NULL;
 }
 
-void free_cmd_files(t_red *files)
+void	free_cmd_files(t_red *files)
 {
-    int i = 0;
-    if (!files)
-        return ;
-    while (files[i].filename)
-    {
-        free(files[i].filename);
-        i++;
-    }
-    free(files);
-    files = NULL;
+	int	i;
+
+	if (!files)
+		return ;
+	i = 0;
+	while (files[i].filename)
+	{
+		free(files[i].filename);
+		i++;
+	}
+	free(files);
+	files = NULL;
 }
 
-void free_cmd(t_cmd *cmd)
+void	free_cmd(t_cmd *cmd)
 {
-    t_cmd *temp;
+	t_cmd	*temp;
 
-    if (!cmd)
-        return ;
-    while (cmd)
-    {
-        free(cmd->line);
-        free_arr(cmd->argv);
-        free_cmd_files(cmd->files);
-        temp = cmd;
-        cmd = cmd->next;
-        free(temp);
-        temp = NULL;
-    }
+	if (!cmd)
+		return ;
+	while (cmd)
+	{
+		free(cmd->line);
+		free_arr(cmd->argv);
+		free_cmd_files(cmd->files);
+		temp = cmd;
+		cmd = cmd->next;
+		free(temp);
+		temp = NULL;
+	}
 }

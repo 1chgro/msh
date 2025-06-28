@@ -6,6 +6,11 @@ char	*read_line(t_glob_st *glob_strct, int ext_stat)
 
 	input = NULL;
 	input = readline("$ ");
+	if (g_in_heredoc == 2)
+	{
+		glob_strct->ext_stat = 1;
+		g_in_heredoc = 0;		
+	}
 	if (!input)
 	{
 		rl_clear_history();
@@ -21,7 +26,7 @@ char	*read_line(t_glob_st *glob_strct, int ext_stat)
 	return (input);
 }
 
-t_token	*lexer(char *line)
+t_token	*lexer(char *line, t_glob_st *glob_strct)
 {
 	t_token	*tokens;
 
@@ -34,6 +39,7 @@ t_token	*lexer(char *line)
 	if (!valid_quotes(line))
 	{
 		free(line);
+		glob_strct->ext_stat = 1;
 		write(2, "msh: syntax error near unexpected token `quotes'\n", 50);
 		return (NULL);
 	}
@@ -54,7 +60,7 @@ t_cmd	*msh_parse(t_glob_st *glob_strct)
 	line = read_line(glob_strct, glob_strct->ext_stat);
 	if (line == NULL)
 		return (NULL);
-	glob_strct->tokens = lexer(line);
+	glob_strct->tokens = lexer(line, glob_strct);
 	if (!glob_strct->tokens)
 		return (NULL);
 	if (check_syntax_err(glob_strct))
@@ -93,7 +99,7 @@ int	msh_loop(char **envp)
 		return (perror("msh: error allocating memory"), 0);
 	if (!copie_env(&glob_strct->env, envp))
 		return (perror("msh: env failed"), 0);
-	msh_signals();
+	msh_signals(glob_strct);
 	while (1 && glob_strct)
 	{
 		glob_strct->cmd = msh_parse(glob_strct);

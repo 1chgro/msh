@@ -1,0 +1,57 @@
+$ >> $L
+msh: : ambiguous redirect
+$ echo $?
+0
+---------------------------------
+---------------------------------
+ctrl-c 
+$ 
+$ 
+$ 
+$ 
+$ 
+$ echo $?
+0
+---------------------------------
+$ export >> l < o > l
+open failed: No such file or directory
+$ echo $?
+0
+$ 
+---------------------------------
+leaks in : 
+cd /bin/
+---------------------------------
+ >> FOLDER
+msh: Is a directory
+$ echo $?
+0
+$ 
+---------------------------------
+---------------------------------
+leaks in :
+env -i ./minishell 
+$ env
+PWD=/mnt/homes/olachgue/Desktop/msh
+SHLVL=1
+_=/usr/bin/env
+---------------------------------
+$ export x="yassine"
+$ export x="+="
+$ echo $x
+yassine+=
+$ export x="+=yassine"
+$ echo $x
+yassine+=+=yassine
+$ 
+---------------------------------
+$ unset +=
+$ bash
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+bash-3.2$ unset +=
+bash: unset: `+=': not a valid identifier
+bash-3.2$ 
+---------------------------------

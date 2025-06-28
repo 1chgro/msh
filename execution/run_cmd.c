@@ -590,7 +590,6 @@ int	run_single_cmd(t_cmd *cmd, t_env *env)
 	int		status;
 
 	status = 0;
-	msh_signals();
 	pid = fork();
 	if (pid == -1)
 	{
