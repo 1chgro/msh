@@ -28,35 +28,32 @@ int	count_redirections(t_token *tokens)
 	return (count);
 }
 
-static void	create_empty_argv(t_cmd *temp_cmd)
-{
-	temp_cmd->argv = malloc(sizeof(char *) * 2);
-	temp_cmd->argv[0] = ft_strdup("");
-	temp_cmd->argv[1] = NULL;
-}
+// void	create_empty_argv(char *argv)
+// {
+// 	argv = malloc(sizeof(char *) * 2);
+// 	argv[0] = ft_strdup("");
+// 	argv[1] = NULL;
+// }
 
 static void	fill_cmd_argv(t_cmd *cmd)
 {
 	t_cmd	*temp_cmd;
 	int		i;
 
+	if (cmd == NULL)
+		return ;
 	temp_cmd = cmd;
 	while (temp_cmd)
 	{
 		i = 0;
 		temp_cmd->argv = split_line_to_args(temp_cmd->line);
-		if (!temp_cmd->argv && !temp_cmd->files)
-		{
-			create_empty_argv(temp_cmd);
-		}
 		temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
 		while (temp_cmd->argv && temp_cmd->argv[i])
 		{
 			temp_cmd->argv[i] = restore_quotes(temp_cmd->argv[i]);
 			if (!temp_cmd->argv[i])
 			{
-				free_arr(temp_cmd->argv);
-				create_empty_argv(temp_cmd);
+				temp_cmd->argv[i] = ft_strdup("");/* create_empty_argv(&temp_cmd->argv) */;
 			}
 			i++;
 		}
@@ -68,7 +65,12 @@ t_cmd	*create_cmd(t_glob_st *glob_strct)
 {
 	if (!glob_strct->tokens)
 		return (NULL);
-	init_cmd(&glob_strct->cmd);
+	if (!init_cmd(&glob_strct->cmd))
+	{
+		free_tokens(glob_strct->tokens);
+		glob_strct->tokens = NULL;
+		return (NULL);
+	}
 	if (!create_cmd_lst(glob_strct->tokens, &glob_strct->cmd))
 	{
 		free_cmd(glob_strct->cmd);

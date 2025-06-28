@@ -50,7 +50,7 @@ void	expand_cmd_files(t_cmd *cmd, t_glob_st *glob_strct)
 	int		i;
 	char	*temp_filename;
 
-	if (!cmd->files)
+	if (!cmd || !cmd->files)
 		return ;
 	(1) && (i = 0, temp_filename = NULL);
 	while (cmd->files && cmd->files[i].filename)
@@ -78,6 +78,8 @@ void	expand_env_vars(t_glob_st *glob_strct)
 {
 	t_cmd	*current;
 
+	if (!glob_strct || !glob_strct->cmd)
+		return ;
 	current = glob_strct->cmd;
 	while (current)
 	{

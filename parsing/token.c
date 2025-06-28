@@ -6,6 +6,8 @@ int	handle_operator(char *line, int *i, t_token **tokens)
 	int		len;
 	t_token	*token;
 
+	if (!line || !tokens)
+		return (0);
 	op = NULL;
 	len = 1;
 	if ((line[*i] == '<' && line[*i + 1] == '<') || \
@@ -50,6 +52,8 @@ int	handle_word(char *line, int *i, t_token **tokens)
 	char	*word;
 	t_token	*token;
 
+	if (!line || !tokens)
+		return (0);
 	word = NULL;
 	start = *i;
 	end = find_word_end(line, start);
@@ -71,8 +75,9 @@ t_token	*tokenize(char *line)
 	t_token	*tokens;
 	int		i;
 
-	tokens = NULL;
-	i = 0;
+	if (!line)
+		return (NULL);
+	(1) && (tokens = NULL, i = 0);
 	while (line[i])
 	{
 		if (is_space(line[i]))

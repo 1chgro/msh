@@ -19,7 +19,7 @@ t_token	*new_token(char *value, t_token_type type)
 {
 	t_token	*token;
 
-	if (!value || !*value)
+	if (!value)
 		return (NULL);
 	token = malloc(sizeof(t_token));
 	if (!token)
