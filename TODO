@@ -3,10 +3,6 @@ msh: : ambiguous redirect
 $ echo $?
 0
 ---------------------------------
- l''s'
-msh: syntax error near unexpected token `quotes'
-$ echo $?
-0
 ---------------------------------
 ctrl-c 
 $ 
@@ -32,12 +28,6 @@ $ echo $?
 0
 $ 
 ---------------------------------
-$ export y="'"
-$ ls >> $x
-$ echo $x
-"
-$ ls >> $x
-$ 
 ---------------------------------
 leaks in :
 env -i ./minishell 

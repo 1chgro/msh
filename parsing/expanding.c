@@ -66,6 +66,7 @@ void	expand_cmd_files(t_cmd *cmd, t_glob_st *glob_strct)
 		temp_filename = cmd->files[i].filename;
 		cmd->files[i].filename = remove_outer_quotes(temp_filename);
 		free(temp_filename);
+		cmd->files[i].filename = restore_quotes(cmd->files[i].filename);
 		if (check_for_ambgu(cmd->files[i].filename) && \
 				cmd->files[i].type != HEREDOC)
 			cmd->files[i].ambiguous_flg = 1;
