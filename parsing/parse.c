@@ -72,7 +72,6 @@ t_cmd	*msh_parse(t_glob_st *glob_strct)
 	glob_strct->cmd = create_cmd(glob_strct);
 	if (!glob_strct->cmd)
 		return (NULL);
-		print_cmd(glob_strct->cmd);
 	return (glob_strct->cmd);
 }
 

@@ -69,6 +69,16 @@ char	**split_key_val(char *str)
 	equal_sign = ft_strchr(str, '=');
 	if (equal_sign)
 	{
+		if (equal_sign == str)
+		{
+			result = malloc(sizeof(char *) * 2);
+			if (!result)
+				return (NULL);
+			result[0] = ft_strdup(equal_sign);
+			result[1] = NULL;
+			free(str);
+			return (result);
+		}
 		result = malloc(sizeof(char *) * 3);
 		if (!result)
 			return (NULL);
