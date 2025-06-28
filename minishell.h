@@ -131,6 +131,7 @@ int	should_split_value(int split_all_values, char *key_str, char *value_str);
 char	*expand_key(char *key_str, t_glob_st *glob_strct);
 char	*process_value_expansion(char *value_str, t_glob_st *glob_strct, int split_value);
 char	*handle_exit_status_expansion(int *i, t_glob_st *glob_strct, char *result);
+int	check_value(char *value);
 
 //------------------- env --------------------------------------//
 int		copie_env(t_env **c_env, char **env);

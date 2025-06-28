@@ -28,33 +28,6 @@ void free_split(char **split)
 	free(split);
 }
 
-char    *check_dolar(char *str)
-{
-	int i;
-	int size;
-	char *key;
-
-	i = 0;
-	size = 0;
-	if (ft_strchr(str, '$'))
-	{
-		while (str[size] && str[size] != '$')
-			size++;
-		key = malloc(size + 1);
-		if (!key)
-			return (NULL);
-		while (str[i] && str[i] != '$')
-		{
-			key[i] = str[i];
-			i++;
-		}
-		key[i] = '\0';
-		free(str);
-		return (key);
-	}
-	return(str);
-}
-
 char *get_key(char *str)
 {
 	char *key;
@@ -74,8 +47,7 @@ char *get_key(char *str)
 		j++;
 	}
 	key[j] = '\0';
-
-	return (check_dolar(key));
+	return (key);
 }
 
 char *get_value(char *str)
@@ -126,7 +98,7 @@ t_env *create_node(char *key, char *value, int have_equal)
 	else
 		node->value = value;
     if (have_equal)
-	    node->flag = 1;
+		node->flag = 1;
     else
         node->flag = 0;
 	node->index = -1;

@@ -28,13 +28,6 @@ int	count_redirections(t_token *tokens)
 	return (count);
 }
 
-// void	create_empty_argv(char *argv)
-// {
-// 	argv = malloc(sizeof(char *) * 2);
-// 	argv[0] = ft_strdup("");
-// 	argv[1] = NULL;
-// }
-
 static void	fill_cmd_argv(t_cmd *cmd)
 {
 	t_cmd	*temp_cmd;
@@ -53,7 +46,7 @@ static void	fill_cmd_argv(t_cmd *cmd)
 			temp_cmd->argv[i] = restore_quotes(temp_cmd->argv[i]);
 			if (!temp_cmd->argv[i])
 			{
-				temp_cmd->argv[i] = ft_strdup("");/* create_empty_argv(&temp_cmd->argv) */;
+				temp_cmd->argv[i] = ft_strdup("");
 			}
 			i++;
 		}

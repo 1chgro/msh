@@ -36,3 +36,11 @@ char	*process_value_expansion(char *value_str, \
 	}
 	return (free(value_arr), value);
 }
+
+int	should_split_value(int split_all_values, char *key_str, char *value_str)
+{
+	if (split_all_values || (check_key(key_str) == 1 \
+		&& check_value(value_str) == 1))
+		return (1);
+	return (0);
+}
