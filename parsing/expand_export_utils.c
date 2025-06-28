@@ -61,88 +61,48 @@ int	check_value(char *value)
 	return (0);
 }
 
-// char	**split_key_val(char *str)
-// {
-// 	char	**result;
-// 	char	*equal_sign;
-
-// 	if (!str)
-// 		return (NULL);
-// 	equal_sign = ft_strchr(str, '=');
-// 	if (equal_sign)
-// 	{
-// 		if (equal_sign == str)
-// 		{
-// 			result = malloc(sizeof(char *) * 2);
-// 			if (!result)
-// 				return (NULL);
-// 			result[0] = ft_strdup(equal_sign);
-// 			result[1] = NULL;
-// 			free(str);
-// 			return (result);
-// 		}
-// 		result = malloc(sizeof(char *) * 3);
-// 		if (!result)
-// 			return (NULL);
-// 		result[0] = ft_strndup(str, equal_sign - str);
-// 		result[1] = ft_strdup(equal_sign + 1);
-// 		result[2] = NULL;
-// 	}
-// 	else
-// 	{
-// 		result = malloc(sizeof(char *) * 2);
-// 		if (!result)
-// 			return (NULL);
-// 		result[0] = ft_strdup(str);
-// 		result[1] = NULL;
-// 	}
-// 	free(str);
-// 	return (result);
-// }
-
-
-char **handle_equal_sign_case(char *str, char *equal_sign)
+char	**handle_equal_sign_case(char *str, char *equal_sign)
 {
-    char **result;
-    
-    if (equal_sign == str)
-    {
-        result = malloc(sizeof(char *) * 2);
-        if (!result)
-            return (NULL);
-        result[0] = ft_strdup(equal_sign);
-        result[1] = NULL;
-        return (result);
-    }
-    result = malloc(sizeof(char *) * 3);
-    if (!result)
-        return (NULL);
-    result[0] = ft_strndup(str, equal_sign - str);
-    result[1] = ft_strdup(equal_sign + 1);
-    result[2] = NULL;
-    return (result);
+	char	**result;
+
+	if (equal_sign == str)
+	{
+		result = malloc(sizeof(char *) * 2);
+		if (!result)
+			return (NULL);
+		result[0] = ft_strdup(equal_sign);
+		result[1] = NULL;
+		return (result);
+	}
+	result = malloc(sizeof(char *) * 3);
+	if (!result)
+		return (NULL);
+	result[0] = ft_strndup(str, equal_sign - str);
+	result[1] = ft_strdup(equal_sign + 1);
+	result[2] = NULL;
+	return (result);
 }
 
-char **split_key_val(char *str)
+char	**split_key_val(char *str)
 {
-    char **result;
-    char *equal_sign;
-    
-    if (!str)
-        return (NULL);
-    equal_sign = ft_strchr(str, '=');
-    if (equal_sign)
-    {
-        result = handle_equal_sign_case(str, equal_sign);
-    }
-    else
-    {
-        result = malloc(sizeof(char *) * 2);
-        if (!result)
-            return (NULL);
-        result[0] = ft_strdup(str);
-        result[1] = NULL;
-    }
-    free(str);
-    return (result);
+	char	**result;
+	char	*equal_sign;
+
+	if (!str)
+		return (NULL);
+	equal_sign = ft_strchr(str, '=');
+	if (equal_sign)
+	{
+		result = handle_equal_sign_case(str, equal_sign);
+	}
+	else
+	{
+		result = malloc(sizeof(char *) * 2);
+		if (!result)
+			return (NULL);
+		result[0] = ft_strdup(str);
+		result[1] = NULL;
+	}
+	free(str);
+	return (result);
 }
