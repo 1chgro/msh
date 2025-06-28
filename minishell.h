@@ -85,7 +85,7 @@ typedef struct s_glob_st
 
 int check_if_export(char *line, t_glob_st *glob_strct);
 char *expand_export(char *line, t_glob_st *glob_strct);
-
+char *expand(char *line, t_glob_st *glob_strct);
 //----------------- print functions--------///
 void   print_cmd(t_cmd *cmd);
 void print_tokens(t_token *tokens);
@@ -95,7 +95,7 @@ void print_tokens(t_token *tokens);
 int	msh_loop(char **envp);
 int   	msh_execute(t_glob_st *glob_strct);
 void	msh_signals();
-t_token		*lexer(char *line);
+t_token		*lexer(char *line, t_glob_st *glob_strct);
 
 
 
@@ -117,6 +117,21 @@ int check_syntax_err(t_glob_st *glob_strct);
 //--------------------- cmd create ----------------------------//
 t_cmd	*create_cmd(t_glob_st *glob_strct);
 char **split_line_to_args(char *line);
+int count_redirections(t_token *tokens);
+int init_cmd(t_cmd **cmd);
+char **split_line_to_args(char *line);
+t_redirection_type get_cmd_red_type(t_token_type type);
+int create_cmd_lst(t_token *tokens, t_cmd **cmd);
+char *space_change(char *str);
+int check_for_ambgu(char *name);
+char *handle_digit_expansion(char *line, int *i, char *result);
+void handle_quotes(char *line, int i, char *quote, int *pos);
+char	**split_key_val(char *str);
+int	should_split_value(int split_all_values, char *key_str, char *value_str);
+char	*expand_key(char *key_str, t_glob_st *glob_strct);
+char	*process_value_expansion(char *value_str, t_glob_st *glob_strct, int split_value);
+char	*handle_exit_status_expansion(int *i, t_glob_st *glob_strct, char *result);
+int	check_value(char *value);
 
 //------------------- env --------------------------------------//
 int		copie_env(t_env **c_env, char **env);
@@ -127,7 +142,7 @@ char *add_quotes(char *value);
 char	*ft_strtrim(char *s1, char const *set);
 char	*ft_stringcpy(char *dst, const char *src, size_t n);
 char	*ft_strdup(char *str);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strjoin_ws(char const *s1, char const *s2);
 char	*ft_strndup(const char *s, int n);
 int		ft_strcmp(const char *s1, const char *s2);
@@ -150,6 +165,7 @@ int		valid_quotes(char *s);
 char	**remove_quotes_arr(char **argv);
 char	*replace_quotes(char *value);
 char	*restore_quotes(char *value);
+char *replace_value_quotes(char *value);
 
 
 //------------------- expanding -------------------//
@@ -199,4 +215,37 @@ char *take_store_pwd(char *path);
 long ft_atoi_(const char *str, int *is_valid);
 void get_terminall(struct termios *termios);
 void set_terminall(struct termios *termios);
+char	*ft_strrchr(const char *s, int c);
+void	update_existing_env(t_env *current, char *value);
+t_env	*create_new_env_node(char *key, char *value);
+t_env	*find_env_key(t_env *env, char *key);
+void	set_env(t_env **env, char *key, char *value);
+char	*get_home(t_env *env);
+int	is_valid_cwd(void);
+int	all(char *path);
+char	*get_old_pwd_or_default(void);
+char	*handle_no_args(t_env *env, char *old_pwd);
+char	*handle_tilde_only(t_env *env, char *old_pwd);
+char	*handle_dash_only(t_env *env, char *old_pwd);
+char	*handle_tilde_path(t_env *env, char *arg, char *old_pwd);
+char	*determine_path(char **s_cmd, t_env *env, char *old_pwd);
+char	*create_logical_dotdot_path(char *old_pwd);
+int	handle_dotdot_logic(char *path, char *old_pwd, char **logical_pwd);
+char	*process_up_navigation(char *temp_path, char *to_rm);
+int	attempt_chdir(char *path, char *old_pwd);
+void	print_numeric_error(char *arg);
+int	handle_invalid_with_multiple_args(char **s_cmd, int is_valid);
+int	handle_too_many_args_exit(char **s_cmd);
+void	print_export(t_env *env, int lst_size);
+int	validate_export_arg(char *key, char *arg, int append);
+t_env	*find_existing_node(t_env *env, char *key);
+int	handle_new_node(t_env **env, char *key, char *value,
+		int have_equal);
+void	print_node_export(t_env *temp);
+int	should_skip_node(t_env *temp);
+int	is_valid_identifier(char *key);
+int	check_append_op(char *str);
+void	make_index(t_env **env);
+int	ft_isalnum(int c);
+
 #endif

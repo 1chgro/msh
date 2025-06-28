@@ -30,7 +30,7 @@ char	*ft_stringcpy(char *dst, const char *src, size_t n)
 {
 	size_t	i;
 
-	if (!dst || !src)
+	if (!dst || !src || n == 0)
 		return (NULL);
 	i = 0;
 	while (i < n && src[i])
@@ -58,13 +58,13 @@ char	*ft_strtrim(char *s1, char const *set)
 		end--;
 	trimmed_str = (char *)malloc(sizeof(char) * (end - start + 1));
 	if (!trimmed_str)
-		return (NULL);
+		return (free(s1), NULL);
 	ft_stringcpy(trimmed_str, s1 + start, end - start);
 	free((char *)s1);
 	return (trimmed_str);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char		*jnd_str;
 	size_t		total_len;
@@ -72,9 +72,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t		j;
 
 	if (!s1)
-		return (ft_strdup((char *)s2));
+		return (ft_strdup(s2));
 	if (!s2)
-		return (ft_strdup((char *)s1));
+		return (ft_strdup(s1));
 	(1) && (i = -1, j = 0);
 	total_len = ft_strlen(s1) + ft_strlen(s2);
 	jnd_str = malloc(sizeof(char) * (total_len + 2));
@@ -87,7 +87,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (s2[j] && i <= total_len)
 		jnd_str[i++] = s2[j++];
 	jnd_str[i] = '\0';
-	free((char *)s1);
+	free(s1);
 	return (jnd_str);
 }
-

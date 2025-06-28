@@ -19,16 +19,17 @@ t_token	*new_token(char *value, t_token_type type)
 {
 	t_token	*token;
 
-	if (!value || !*value)
+	if (!value)
 		return (NULL);
 	token = malloc(sizeof(t_token));
 	if (!token)
-		return (NULL);
+		return (free(token), free(value), NULL);
 	token->value = ft_strdup(value);
 	if (!token->value)
-		return (free(token), NULL);
+		return (free(token), free(value), NULL);
 	token->type = type;
 	token->next = NULL;
+	free(value);
 	return (token);
 }
 
@@ -49,4 +50,3 @@ int	add_token(t_token **head, t_token *new_token)
 	tmp->next = new_token;
 	return (1);
 }
-
