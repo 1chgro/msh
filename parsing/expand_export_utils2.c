@@ -28,7 +28,7 @@ char	*process_value_expansion(char *value_str, \
 	}
 	else
 	{
-		value_arr = ft_split(value, ' ');
+		value_arr = split_line_to_args(value);
 		free(value);
 		value = NULL;
 		while (value_arr && value_arr[k])

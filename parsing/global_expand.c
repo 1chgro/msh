@@ -44,8 +44,8 @@ char	*handle_variable_expansion(char *line, int *i, \
 
 static int	handle_dollar_case(char *line, int *i, char quote)
 {
-	if (ft_strlen(line) == 1 && line[*i] == '$')
-		return 0;
+	if (line[*i] == '$' && !is_valid_char(line[*i + 1]))
+		return (0);
 	if (line[*i] == '$' && line[*i + 1] == '$')
 	{
 		*i += 2;
