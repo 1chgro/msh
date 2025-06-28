@@ -45,6 +45,8 @@ int	check_key(char *key)
 			if (key[i] == quote)
 				return (1);
 		}
+		if (key[i] == '$')
+			return (1);
 		i++;
 	}
 	return (0);
