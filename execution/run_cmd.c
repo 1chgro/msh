@@ -395,7 +395,14 @@ int	redirection(t_cmd *cmd)
 	int	result;
 
 	i = 0;
-	while (cmd->files[i].filename || cmd->files)
+    int size  = 0;
+    while (cmd->files[i].filename || cmd->files[i].ambiguous_flg)
+    {
+        size++;
+        i++;
+    }
+    i= 0;
+	while (i < size)
 	{
         if (cmd->files[i].ambiguous_flg)
         {
