@@ -35,31 +35,52 @@ static void	remove_variable(char *key, t_env **env)
 	free_current(current);
 }
 
+int	check_and_remove_varible(char *arg, t_env **env)
+{
+	int		flag;
+	t_env	*temp;
+
+	flag = 0;
+	temp = NULL;
+
+	if (!is_valid_identifier(arg))
+	{
+		dup2(2, 1);
+		printf("unset: `%s':not a valid identifier\n", arg);
+		dup2(1, 2);
+		return (1);
+	}
+	temp = *env;
+	while (temp)
+	{
+		if (ft_strcmp(arg, temp->key) == 0)
+		{
+			flag = 1;
+			break ;
+		}
+		temp = temp->next;
+	}
+	if (flag == 1)
+		remove_variable(arg, env);
+	return (0);
+}
+
 int	ft_unset(char **s_cmd, t_env **env)
 {
 	t_env	*temp;
 	int		flag;
 	int		i;
+	int		status;
 
 	if (!env || !*env)
 		return (1);
-	(1) && (i = -1, flag = 0);
+	(1) && (i = -1, flag = 0, status = 0, temp = NULL);
 	if (!s_cmd[1])
 		return (0);
 	while (s_cmd[++i])
 	{
-		temp = *env;
-		while (temp)
-		{
-			if (ft_strcmp(s_cmd[i], temp->key) == 0)
-			{
-				flag = 1;
-				break ;
-			}
-			temp = temp->next;
-		}
-		if (flag == 1)
-			remove_variable(s_cmd[i], env);
+		if (check_and_remove_varible(s_cmd[i], env))
+			status = 1;
 	}
-	return (0);
+	return (status);
 }

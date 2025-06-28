@@ -5,7 +5,7 @@ int	check_append_op(char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] && str[i] != '+')
+	while (str[i] && str[i] != '+' && str[i] != '=')
 		i++;
 	if (i > 0 && str[i] == '+' && str[i + 1] == '+')
 		return (2);

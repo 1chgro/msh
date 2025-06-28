@@ -40,7 +40,7 @@ int	validate_export_arg(char *key, char *arg, int append)
 	if (!is_valid_identifier(key) || append == 2)
 	{
 		dup2(2, 1);
-		printf("export: %s:not a valid identifier\n", arg);
+		printf("export: `%s':not a valid identifier\n", arg);
 		dup2(1, 2);
 		free(key);
 		return (0);

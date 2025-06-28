@@ -148,16 +148,19 @@ void append_node(t_env **head, t_env *node)
 char    **fill_env()
 {
 	char    **env;
+    char    *pwd;
 
 	env = malloc(sizeof(char *) * 6);
 	if (!env)
 		return (NULL);
+    pwd = get_current_pwd();
 	env[0] = ft_strdup("OLDPWD=");
-	env[1] = ft_strjoin_("PWD=", get_current_pwd());
+	env[1] = ft_strjoin_("PWD=", pwd);
 	env[2] = ft_strdup("SHLVL=1");
 	env[3] = ft_strdup("_=/usr/bin/env");
 	env[4] = ft_strdup("PATH=/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:.");
 	env[5] = NULL;
+    free(pwd);
 	return(env);
 }
 int copie_env(t_env **c_env, char **env)
@@ -211,5 +214,7 @@ int copie_env(t_env **c_env, char **env)
 		append_node(c_env, node);
 		i++;
 	}
+    if (empty)
+        free_split(env);
 	return (1);
 }
