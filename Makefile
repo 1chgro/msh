@@ -19,8 +19,6 @@ SRCS_EXEC=execution/ft_strcmp.c execution/exec.c execution/run_cmd.c  execution/
 
 OBJS=$(SRCS_PARSE:.c=.o) $(SRCS_EXEC:.c=.o)
 
-INC=parse.h execution/exec.h
-
 
 READLINE_COMPILE = -I$(shell brew --prefix readline)/include
 READLINE_LINK = -lreadline -L$(shell brew --prefix readline)/lib

@@ -72,6 +72,7 @@ t_cmd	*msh_parse(t_glob_st *glob_strct)
 	glob_strct->cmd = create_cmd(glob_strct);
 	if (!glob_strct->cmd)
 		return (NULL);
+	print_cmd(glob_strct->cmd);
 	return (glob_strct->cmd);
 }
 
@@ -103,18 +104,19 @@ int	msh_loop(char **envp)
 	while (1 && glob_strct)
 	{
 		glob_strct->cmd = msh_parse(glob_strct);
-		if (open_heredoc(glob_strct))
-		{
-			close_heredoc(glob_strct);
-			free_cmd(glob_strct->cmd);
-			continue ;
-		}
-		if (glob_strct->cmd)
-		{
-			glob_strct->ext_stat = msh_execute(glob_strct);
-			free_cmd(glob_strct->cmd);
-		}
-		set_terminall(&glob_strct->origin);
+		// if (open_heredoc(glob_strct))
+		// {
+		// 	close_heredoc(glob_strct);
+		// 	free_cmd(glob_strct->cmd);
+		// 	continue ;
+		// }
+		// if (glob_strct->cmd)
+		// {
+		// 	glob_strct->ext_stat = msh_execute(glob_strct);
+		// 	free_cmd(glob_strct->cmd);
+		// }
+		// set_terminall(&glob_strct->origin);
+		free_cmd(glob_strct->cmd);
 	}
 	return (free_env(glob_strct->env), free(glob_strct), 1);
 }

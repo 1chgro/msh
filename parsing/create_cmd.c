@@ -28,7 +28,7 @@ int	count_redirections(t_token *tokens)
 	return (count);
 }
 
-static void	fill_cmd_argv(t_cmd *cmd)
+void	fill_cmd_argv(t_cmd *cmd)
 {
 	t_cmd	*temp_cmd;
 	int		i;
@@ -73,6 +73,6 @@ t_cmd	*create_cmd(t_glob_st *glob_strct)
 	if (!glob_strct->cmd)
 		return (NULL);
 	expand_env_vars(glob_strct);
-	fill_cmd_argv(glob_strct->cmd);
+	// fill_cmd_argv(glob_strct->cmd);
 	return (glob_strct->cmd);
 }

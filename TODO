@@ -107,4 +107,159 @@ x="export    x='"
 ---------------------------------------------------------------------------------------------------
 
 
+$ >> $l >> k
+msh: : ambiguous redirect
+----------------------------------------------------------
+
+leaks Report Version: 4.0
+Process 36441: 514 nodes malloced for 339 KB
+Process 36441: 1 leak for 16 total leaked bytes.
+
+    1 (16 bytes) ROOT LEAK: 0x7fc070004110 [16]  length: 1  "k"
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+---------------------------------------------------------------------------------
+
+ls | ls ...
+
+msh: : Resource temporarily unavailable
+&&
+630 /usr/lib/dyld
+minishell 29963 olachgue    0u   CHR               16,3 0t986935                 697 /dev/ttys003
+minishell 29963 olachgue    1u   CHR               16,3 0t986935                 697 /dev/ttys003
+minishell 29963 olachgue    2u   CHR               16,3 0t986935                 697 /dev/ttys003
+minishell 29963 olachgue    5   PIPE 0xa8cc01c30d041fd0    16384                     
+                            ^
+                            |
+
+------------------------------------------------------------------------------
+
+-----------------------------------------------------------------
+
+$ export 4=$a
+khasha tspita
+
+---------------------------------------------------------------------
+
+bash updates the exit status when an empty expanded prompt is entered
+
+bash-3.2$ $fdfgdfg
+bash-3.2$ $?
+bash: 0: command not found
+
+your minishell:
+
+$ dsff
+msh: dsff: command not found
+$ $gdfggdfg
+$ $?
+msh: 127: command not found
+
+
+
+-------------------------------------------------------------------------\
+
+
+static void	wait_for_remaining_processes(void)
+{
+	while (waitpid(-1, NULL, 0) > 0) // ?, try this :
+	/*
+	while(wait(NULL) != -1) {
+	}
+	*/
+		;
+}
+-------------------------------------------------------
+
+$ >>$k>>l should be ambigious redirect
+$ << dsfdsf > $sdfsf
+> 
+msh: : ambiguous redirect
+$ 
+
+
+        && 
+
+minishell 67033 olachgue    0u   CHR   16,3 0t1424989                 697 /dev/ttys003
+minishell 67033 olachgue    1u   CHR   16,3 0t1424989                 697 /dev/ttys003
+minishell 67033 olachgue    2u   CHR   16,3 0t1424989                 697 /dev/ttys003
+minishell 67033 olachgue    4r   REG    1,4         0            39726885 /private/tmp/file_tmp
+
+--------------------------------------------------------------------------------------------
+
+➜  msh git:(lfe) ✗ env -i ./minishell
+$ env
+PWD=/mnt/homes/olachgue/Desktop/msh
+SHLVL=1
+_=/usr/bin/env
+$ unset PATH PWD SHLVL _
+$ env
+$ export
+declare -x OLDPWD
+$ unset OLWPWD
+$ export
+declare -x OLDPWD
+$ unset OLDPWD
+$ export
+$ env
+$ ls
+msh: ls: No such file or directory
+$ export a
+$ export
+$ export a=p
+$ export
+$ 
+
+&& env khawya
+
+$ pwd
+/mnt/homes/olachgue/Desktop/msh
+$ cd ..
+$ pwd
+/mnt/homes/olachgue/Desktop/msh
+$ cd ..
+$ pwd
+/mnt/homes/olachgue/Desktop/msh
+$ cd ..
+$ pwd
+/mnt/homes/olachgue/Desktop/msh
+$  cd .. 
+$ pwd
+/mnt/homes/olachgue/Desktop/msh
+
+
+cd makhdamach
+
+
+---------------------------------------------------------------------------------
 

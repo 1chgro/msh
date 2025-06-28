@@ -83,8 +83,9 @@ char	*restore_quotes(char *value)
 
 	if (!value)
 		return (NULL);
+	if (!*value)
+		return (free(value), ft_strdup(""));
 	new_value = NULL;
-	tmp[0] = '\0';
 	tmp[1] = '\0';
 	i = 0;
 	while (value[i])
