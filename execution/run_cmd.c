@@ -159,6 +159,14 @@ static int	is_file(const char *path)
 	return (S_ISREG(statbuf.st_mode));
 }
 
+static void	print_error_exit(char *cmd, char *msg, int exit_num)
+{
+	ft_putstr_fd("msh: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(msg, 2);
+	exit(exit_num);
+}
+
 static char	*build_exec_path(char *path_part, char *cmd)
 {
 	char	*exec;
@@ -191,17 +199,9 @@ static char	*check_command_path(char **allpath, char *cmd)
 				continue;
 			}
 			if (access(exec, X_OK) == 0)
-			{
-				free_split(allpath);
-				return (exec);
-			}
-            else if (is_file(cmd) && access(exec, X_OK) != 0)
-            {
-                ft_putstr_fd("msh: ", 2);
-                ft_putstr_fd(exec, 2);
-                ft_putstr_fd(": Permission denied\n", 2);
-                exit(126);
-            }
+				return (free_split(allpath), exec);
+			else if (is_file(cmd) && access(exec, X_OK) != 0)
+				print_error_exit(exec, ": Permission denied\n", 126);
 		}
 		free(exec);
 	}
@@ -218,36 +218,26 @@ static void	print_error(char *cmd, char *msg)
 static char	*handle_absolute_path(char *cmd)
 {
 	if (access(cmd, F_OK) != 0)
-        {
-            ft_putstr_fd("msh: ", 2);
-            ft_putstr_fd(cmd, 2);
-            ft_putstr_fd(": ", 2);
-            
-            if (errno == ENOTDIR)
-            {
-                ft_putstr_fd("Not a directory\n", 2);
-                exit(126);
-            }
-            else if (errno == ENOENT)
-                ft_putstr_fd("No such file or directory\n", 2);
-            else
-                perror("");
-            exit(127);
-        }
-        if (is_directory(cmd))
-        {
-            ft_putstr_fd("msh: ", 2);
-            ft_putstr_fd(cmd, 2);
-            ft_putstr_fd(": is a directory\n", 2);
-            exit(126);
-        }
-        if (access(cmd, X_OK) != 0)
-        {
-            ft_putstr_fd("msh: ", 2);
-            ft_putstr_fd(cmd, 2);
-            ft_putstr_fd(": Permission denied\n", 2);
-            exit(126);
-        }
+	{
+		ft_putstr_fd("msh: ", 2);
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": ", 2);
+		
+		if (errno == ENOTDIR)
+		{
+			ft_putstr_fd("Not a directory\n", 2);
+			exit(126);
+		}
+		else if (errno == ENOENT)
+			ft_putstr_fd("No such file or directory\n", 2);
+		else
+			perror("");
+		exit(127);
+	}
+	if (is_directory(cmd))
+		print_error_exit(cmd, ": is a directory\n", 126);
+	if (access(cmd, X_OK) != 0)
+		print_error_exit(cmd, ": Permission denied\n", 126);
 	return (ft_strdup(cmd));
 }
 
@@ -265,8 +255,8 @@ static char	*search_in_path(char *cmd, char *path, int null_path)
 	result = check_command_path(allpath, cmd);
 	if (!result && null_path)
 	{
-        if (allpath)
-		    free_split(allpath);
+		if (allpath)
+			free_split(allpath);
 		print_error(cmd, ": No such file or directory\n");
 	}
 	else if (!result)
@@ -280,19 +270,19 @@ static char	*search_in_path(char *cmd, char *path, int null_path)
 char	*get_path(char *cmd, t_env *env)
 {
 	char	*path;
-    int     null_path;
+	int     null_path;
 
-    null_path = 0;
+	null_path = 0;
 	if (!cmd)
 		return (NULL);
 	if (ft_strchr(cmd, '/'))
 		return (handle_absolute_path(cmd));
 	path = my_getenv("PATH", env);
 	if (!path)
-    {
-        null_path = 1;
-        path = ft_strdup(".");
-    }
+	{
+		null_path = 1;
+		path = ft_strdup(".");
+	}
 	return (search_in_path(cmd, path, null_path));
 }
 
@@ -316,9 +306,9 @@ static void	try_bash_execution(char **cmd, char *path, t_env *env)
 	{
 		print_error(cmd[0], ": execve failed : ");
 		perror("");
-        free_split(new_arg);
-        if (path)
-            free(path);
+		free_split(new_arg);
+		if (path)
+			free(path);
 		exit(1);
 	}
 }
@@ -452,7 +442,7 @@ static int	handle_pipe_error(pid_t *pid, int i)
 static int	handle_fork_error(pid_t *pid, int i, t_cmd *cmd, int *p_fd)
 {
 	cleanup_processes(pid, i);
-    perror("msh: ");
+	perror("msh: ");
 	if (cmd->next)
 	{
 		close(p_fd[0]);
@@ -583,7 +573,24 @@ int	run_pipeline(t_cmd *cmd, t_env *env, int last_ex)
 	wait_for_remaining_processes();
 	return (get_exit_status(status));
 }
+// static void	single_child(t_cmd *cmd, t_env *env)
+// {
+// 	int	status;
 
+// 	status = 0;
+// 	setup_child_signals();
+// 	if (cmd->files)
+// 	{
+// 		status = redirection(cmd);
+// 		if (status != 0)
+// 			exit(status);
+// 	}
+// 	if (cmd->argv)
+// 	{
+// 		exec(cmd->argv, env);
+// 	}
+// 	exit(0);
+// }
 int	run_single_cmd(t_cmd *cmd, t_env *env)
 {
 	pid_t	pid;
@@ -601,17 +608,17 @@ int	run_single_cmd(t_cmd *cmd, t_env *env)
 	{
 		setup_child_signals();
 		if (cmd->files)
-		{
-			status = redirection(cmd);
-			if (status != 0)
-				exit(status);
-		}
+        {
+            status = redirection(cmd);
+            if (status != 0)
+                exit(status);
+        }
         if (cmd->argv)
         {
             exec(cmd->argv, env);
         }
-		exit(0);
-	}
+        exit(0);
+    }
 	waitpid(pid, &status, 0);
 	return (get_exit_status(status));
 }
