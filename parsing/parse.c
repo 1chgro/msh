@@ -6,6 +6,11 @@ char	*read_line(t_glob_st *glob_strct, int ext_stat)
 
 	input = NULL;
 	input = readline("$ ");
+	if (g_in_heredoc == 2)
+	{
+		glob_strct->ext_stat = 1;
+		g_in_heredoc = 0;		
+	}
 	if (!input)
 	{
 		rl_clear_history();

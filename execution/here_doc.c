@@ -27,15 +27,13 @@ int here_doc(char *limiter, int *fd, int *expnd_flg, t_glob_st *glob_strct)
         return (1);
     }
     unlink("/tmp/file_tmp");
-    // write(STDOUT_FILENO, "> ", 2);
     signal(SIGINT, handel_sigint);
-    // printf("expanding flggg: %d\n", *expnd_flg);
     while (1)
     {
         line = readline("> ");
         if (!line || g_in_heredoc)
         {
-            if (g_in_heredoc)
+            if (g_in_heredoc == 1)
                 glob_strct->ext_stat = 1;
             free(line);
             break ;
@@ -54,7 +52,7 @@ int here_doc(char *limiter, int *fd, int *expnd_flg, t_glob_st *glob_strct)
         write(write_fd, "\n", 1);
         free(line1);
     }
-    msh_signals();
+    msh_signals(glob_strct);
     if (g_in_heredoc)
     {
         g_in_heredoc = 0;
