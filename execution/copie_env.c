@@ -31,13 +31,16 @@ void free_split(char **split)
 char    *check_dolar(char *str)
 {
 	int i;
+	int size;
 	char *key;
 
 	i = 0;
-
+	size = 0;
 	if (ft_strchr(str, '$'))
 	{
-		key = ft_strdup("");
+		while (str[size] && str[size] != '$')
+			size++;
+		key = malloc(size + 1);
 		if (!key)
 			return (NULL);
 		while (str[i] && str[i] != '$')
@@ -45,11 +48,13 @@ char    *check_dolar(char *str)
 			key[i] = str[i];
 			i++;
 		}
+		key[i] = '\0';
 		free(str);
 		return (key);
 	}
 	return(str);
 }
+
 char *get_key(char *str)
 {
 	char *key;
