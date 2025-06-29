@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_export_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 14:11:02 by olachgue          #+#    #+#             */
+/*   Updated: 2025/06/29 14:19:53 by olachgue         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	check_if_export(char *line, t_glob_st *glob_strct)
@@ -79,7 +91,7 @@ char	**handle_equal_sign_case(char *str, char *equal_sign)
 	result = malloc(sizeof(char *) * 3);
 	if (!result)
 		return (NULL);
-	result[0] = ft_strndup(str, equal_sign - str);
+	result[0] = ft_strndup(str, equal_sign - str + 1);
 	result[1] = ft_strdup(equal_sign + 1);
 	result[2] = NULL;
 	return (result);
@@ -95,6 +107,7 @@ char	**split_key_val(char *str)
 	equal_sign = ft_strchr(str, '=');
 	if (equal_sign)
 	{
+		printf("equal_sign: %s\n", equal_sign);
 		result = handle_equal_sign_case(str, equal_sign);
 	}
 	else
