@@ -37,12 +37,10 @@ static void	remove_variable(char *key, t_env **env)
 
 int	check_and_remove_varible(char *arg, t_env **env)
 {
-	int		flag;
 	t_env	*temp;
+	int		flag;
 
-	flag = 0;
-	temp = NULL;
-
+	(1) && (flag = 0, temp = NULL);
 	if (!is_valid_identifier(arg))
 	{
 		dup2(2, 1);

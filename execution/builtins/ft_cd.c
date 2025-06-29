@@ -75,8 +75,6 @@ int	ft_cd(char **s_cmd, t_env **env)
 {
 	char	*old_pwd;
 
-	if (!env || !*env)
-		return (1);
 	old_pwd = get_old_pwd_or_default();
 	if (!old_pwd)
 		return (1);
