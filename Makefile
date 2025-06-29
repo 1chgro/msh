@@ -6,7 +6,7 @@ SRCS_PARSE= main.c\
 	parsing/parse.c parsing/signals.c parsing/token.c parsing/quotes.c parsing/ft_utils.c parsing/ft_utils_2.c\
 	parsing/is_funs.c parsing/token_utils.c parsing/syntax.c parsing/create_cmd.c\
 	execution/copie_env.c execution/ft_split.c parsing/expanding.c parsing/expand_heredoc.c parsing/free_functions.c\
-	parsing/print_functions.c parsing/export_expanding.c parsing/creat_cmd_lst.c parsing/fill_cmd.c parsing/quote2.c\
+	parsing/export_expanding.c parsing/creat_cmd_lst.c parsing/fill_cmd.c parsing/quote2.c \
 	parsing/create_cmd_utils.c parsing/expand_vars_utils.c parsing/global_expand.c parsing/expand_export_utils.c \
 	parsing/expand_export_utils2.c
 
