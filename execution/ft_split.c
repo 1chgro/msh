@@ -1,5 +1,3 @@
-
-
 #include "../minishell.h"
 
 size_t	len_words(char const *str, char c)
