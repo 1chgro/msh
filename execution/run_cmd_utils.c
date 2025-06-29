@@ -44,17 +44,18 @@ char	*ft_itoa(int n)
 	return (res);
 }
 
-void get_terminall(struct termios *termios)
+void	get_terminall(struct termios *termios)
 {
-    if (tcgetattr(STDIN_FILENO, termios) == -1 )
-        perror("tcgetattr: ");
+	if (tcgetattr(STDIN_FILENO, termios) == -1)
+		perror("tcgetattr: ");
 }
-void set_terminall(struct termios *termios)
+
+void	set_terminall(struct termios *termios)
 {
-    if (tcsetattr(STDIN_FILENO, TCSANOW, termios) == -1)
-    {
-        perror("tcsetattr: ");
-    }
+	if (tcsetattr(STDIN_FILENO, TCSANOW, termios) == -1)
+	{
+		perror("tcsetattr: ");
+	}
 }
 
 char	*ft_strrchr(const char *s, int c)

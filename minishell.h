@@ -20,10 +20,9 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
-
+# define AMBIG ": ambiguous redirect\n"
 
 extern int g_in_heredoc;
-
 typedef enum
 {
 	REDIRECT_IN,
@@ -247,5 +246,33 @@ int	is_valid_identifier(char *key);
 int	check_append_op(char *str);
 void	make_index(t_env **env);
 int	ft_isalnum(int c);
+t_env	*get_shlvl(t_env *env);
+int	count_env_size(t_env *env);
+void	fill_env_array(char **arr, t_env *env, int *i);
+char	**struct_to_array(t_env *env);
+void	handle_shell_level(t_env *env);
+int	is_directory(const char *path);
+int	is_file(const char *path);
+void	print_error_exit(char *cmd, char *msg, int exit_num);
+char	*check_command_path(char **allpath, char *cmd);
+void	print_error(char *cmd, char *msg);
+char	*get_path(char *cmd, t_env *env);
+void	handle_minishell_exec(char *path, t_env *env);
+void	try_bash_execution(char **cmd, char *path, t_env *env);
+void	exec(char **cmd, t_env *env);
+int	handle_pipe_error(pid_t *pid, int i);
+int	handle_fork_error(pid_t *pid, int i);
+void	setup_child_signals(void);
+void	setup_child_pipes(int prev_fd, t_cmd *cmd, int *p_fd);
+void	execute_child_command(t_cmd *cmd, t_env *env, int last_ex);
+int	get_exit_status(int status);
+void	wait_for_remaining_processes(void);
+int	setup_pipes(t_cmd *cmd, int *p_fd, int prev_fd);
+int process_cmd_heredocs(t_cmd *cmd, t_glob_st *glob_strct);
+void close_cmd_heredocs(t_cmd *cmd);
+int save_std_fds(int *saved_stdout, int *saved_stdin);
+int	handle_redirection_only(t_glob_st *glob_strct,
+	int saved_stdout, int saved_stdin);
+void	restore_std_fds(int saved_stdout, int saved_stdin);
 
 #endif
