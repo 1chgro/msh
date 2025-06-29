@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:51:39 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 21:03:44 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/29 21:30:35 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void				expand_env_vars(t_glob_st *glob_strct);
 char				*expand(char *line, t_glob_st *glob_strct);
 char				*expand_heredoc(char *line, t_glob_st *glob_strct);
 char				*expand_export(char *line, t_glob_st *glob_strct);
-int					check_key(char *key);
+int					check_key(char *key, int flg);
 int					run_cmd(t_cmd *cmd, t_env *env, int last_ex);
 int					copie_env(t_env **c_env, char **env);
 char				*ft_strchr(const char *s, int c);

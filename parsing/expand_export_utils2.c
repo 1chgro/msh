@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:48:02 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 20:48:06 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/29 21:30:23 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*process_value_expansion(char *value_str, \
 
 int	should_split_value(int split_all_values, char *key_str, char *value_str)
 {
-	if (split_all_values || (check_key(key_str) == 1 \
+	if (split_all_values || (check_key(key_str, 0) == 1 \
 		&& check_value(value_str) == 1))
 		return (1);
 	return (0);

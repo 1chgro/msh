@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:47:49 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 20:47:52 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/29 21:30:00 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	check_if_export(char *line, t_glob_st *glob_strct)
 	return (0);
 }
 
-int	check_key(char *key)
+int	check_key(char *key, int flg)
 {
 	int		i;
 	char	quote;
@@ -46,13 +46,13 @@ int	check_key(char *key)
 	quote = 0;
 	if (!key || !*key)
 		return (0);
-	if (ft_isdigit(key[0]))
+	if (ft_isdigit(key[0]) && !flg)
 		return (1);
 	while (key[i])
 	{
 		if (is_quote(key[i]))
 			return (1);
-		if (key[i] == '$')
+		if (key[i] == '$' && !flg)
 			return (1);
 		i++;
 	}
