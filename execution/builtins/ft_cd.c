@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:48:52 by noel-baz          #+#    #+#             */
+/*   Updated: 2025/06/29 20:52:21 by noel-baz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 static void	set_pwd_fallback(t_env **env, char *logical_pwd, char *path,
@@ -39,7 +51,6 @@ static int	update_pwd_env(t_env **env, char *logical_pwd, char *path,
 
 static void	cleanup_and_exit(char *old_pwd, char *logical_pwd, char *path)
 {
-	// (void )path; // path is not used in this function, so we can ignore it
 	if (old_pwd)
 		free(old_pwd);
 	if (logical_pwd)
