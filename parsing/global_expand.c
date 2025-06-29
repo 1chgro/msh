@@ -41,14 +41,15 @@ char	*handle_variable_expansion(char *line, int *i, \
 
 static int	handle_dollar_case(char *line, int *i, char quote)
 {
-	if (line[*i] == '$' && !is_valid_char(line[*i + 1]))
+	if (line[*i] == '$' && line[*i + 1] == '\0')
 		return (0);
 	if (line[*i] == '$' && line[*i + 1] == '$')
 	{
 		*i += 2;
 		return (1);
 	}
-	else if (line[*i] == '$' && !is_valid_char(line[*i + 1]) && quote == 0)
+	else if (line[*i] == '$' && !is_valid_char(line[*i + 1]) && \
+			!is_space(line[*i + 1]) && quote == 0)
 	{
 		(*i)++;
 		return (1);
