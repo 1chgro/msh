@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 14:11:02 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 14:52:23 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/29 15:26:41 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ char	**handle_equal_sign_case(char *str, char *equal_sign)
 		if (!result)
 			return (NULL);
 		result[0] = ft_strdup(equal_sign);
+		if (!result[0])
+			return (free_arr(result), NULL);
 		result[1] = NULL;
 		return (result);
 	}
@@ -108,13 +110,17 @@ char	**split_key_val(char *str)
 	if (equal_sign)
 	{
 		result = handle_equal_sign_case(str, equal_sign);
+		if (!result)
+			return (free(str), NULL);
 	}
 	else
 	{
 		result = malloc(sizeof(char *) * 2);
 		if (!result)
-			return (NULL);
+			return (free(str), NULL);
 		result[0] = ft_strdup(str);
+		if (!result[0])
+			return (free_arr(result), free(str), NULL);
 		result[1] = NULL;
 	}
 	free(str);

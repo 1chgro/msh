@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 14:40:37 by noel-baz          #+#    #+#             */
-/*   Updated: 2025/06/29 14:41:21 by noel-baz         ###   ########.fr       */
+/*   Updated: 2025/06/29 15:13:59 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static size_t	len_words(char const *str, char c)
+size_t	len_words(char const *str, char c)
 {
 	size_t	i;
 	size_t	len;

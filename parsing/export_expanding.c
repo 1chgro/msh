@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 14:10:48 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 14:24:45 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/29 15:20:40 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,10 +112,11 @@ char	*expand_export(char *line, t_glob_st *glob_strct)
 	while (arr[i])
 	{
 		expanded = expand_key_value(arr[i], glob_strct, split_all_values);
+		if (!expanded)
+			return (free_arr(arr), NULL);
 		result = ft_strjoin(result, expanded);
 		free(expanded);
 		i++;
 	}
-	free(arr);
-	return (result);
+	return (free(arr), result);
 }
