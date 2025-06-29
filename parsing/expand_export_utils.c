@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 14:11:02 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 14:19:53 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:52:23 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,6 @@ char	**split_key_val(char *str)
 	equal_sign = ft_strchr(str, '=');
 	if (equal_sign)
 	{
-		printf("equal_sign: %s\n", equal_sign);
 		result = handle_equal_sign_case(str, equal_sign);
 	}
 	else
