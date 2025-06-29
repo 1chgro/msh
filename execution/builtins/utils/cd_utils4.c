@@ -5,6 +5,7 @@ char	*handle_tilde_path(t_env *env, char *arg, char *old_pwd)
 	char	*home;
 	char	*path;
 
+	path = NULL;
 	home = get_home(env);
 	if (!home)
 	{
@@ -33,7 +34,7 @@ char	*determine_path(char **s_cmd, t_env *env, char *old_pwd)
 	else if (s_cmd[1][0] == '~' && ft_strlen(s_cmd[1]) > 1)
 		return (handle_tilde_path(env, s_cmd[1], old_pwd));
 	else
-		return (s_cmd[1]);
+		return (ft_strdup(s_cmd[1]));
 }
 
 char	*create_logical_dotdot_path(char *old_pwd)

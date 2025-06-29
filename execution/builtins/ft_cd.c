@@ -39,6 +39,7 @@ static int	update_pwd_env(t_env **env, char *logical_pwd, char *path,
 
 static void	cleanup_and_exit(char *old_pwd, char *logical_pwd, char *path)
 {
+	// (void )path; // path is not used in this function, so we can ignore it
 	if (old_pwd)
 		free(old_pwd);
 	if (logical_pwd)
@@ -55,6 +56,7 @@ static int	process_cd_logic(char **s_cmd, t_env **env, char *old_pwd)
 	int		status;
 
 	logical_pwd = NULL;
+	path = NULL;
 	path = determine_path(s_cmd, *env, old_pwd);
 	if (!path)
 		return (1);
