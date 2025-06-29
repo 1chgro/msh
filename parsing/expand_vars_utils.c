@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expand_vars_utils.c                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/29 14:10:53 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 14:10:54 by olachgue         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "../minishell.h"
 
@@ -48,6 +37,8 @@ char	*space_change(char *str)
 			tmp[0] = str[i];
 		tmp[1] = '\0';
 		new_str = ft_strjoin_ws(new_str, tmp);
+		if (!new_str)
+			return (free(str), NULL);
 		i++;
 	}
 	return (free(str), new_str);

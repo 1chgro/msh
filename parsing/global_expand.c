@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   global_expand.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/29 14:10:35 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 14:10:36 by olachgue         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "../minishell.h"
 
@@ -91,6 +80,8 @@ char	*expand_core(char *line, t_glob_st *glob_strct)
 			if (line[i])
 				tmp[0] = line[i++];
 			result = ft_strjoin_ws(result, tmp);
+			if (!result)
+				return (NULL);
 		}
 	}
 	return (result);

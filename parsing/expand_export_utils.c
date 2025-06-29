@@ -1,14 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expand_export_utils.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/29 14:11:02 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 15:26:41 by olachgue         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 #include "../minishell.h"
 
@@ -44,21 +34,14 @@ int	check_key(char *key)
 
 	i = 0;
 	quote = 0;
+	if (!key || !*key)
+		return (0);
 	if (ft_isdigit(key[0]))
 		return (1);
 	while (key[i])
 	{
 		if (is_quote(key[i]))
-		{
-			if (quote == 0)
-				quote = key[i];
-			while (key[i] && key[i] != quote)
-				i++;
-			if (key[i] == '\0')
-				return (0);
-			if (key[i] == quote)
-				return (1);
-		}
+			return (1);
 		if (key[i] == '$')
 			return (1);
 		i++;
@@ -94,7 +77,11 @@ char	**handle_equal_sign_case(char *str, char *equal_sign)
 	if (!result)
 		return (NULL);
 	result[0] = ft_strndup(str, equal_sign - str + 1);
+	if (!result[0])
+		return (free_arr(result), NULL);
 	result[1] = ft_strdup(equal_sign + 1);
+	if (!result[1])
+		return (free(result[0]), free_arr(result), NULL);
 	result[2] = NULL;
 	return (result);
 }
@@ -111,18 +98,17 @@ char	**split_key_val(char *str)
 	{
 		result = handle_equal_sign_case(str, equal_sign);
 		if (!result)
-			return (free(str), NULL);
+			return (NULL);
 	}
 	else
 	{
 		result = malloc(sizeof(char *) * 2);
 		if (!result)
-			return (free(str), NULL);
+			return (NULL);
 		result[0] = ft_strdup(str);
 		if (!result[0])
-			return (free_arr(result), free(str), NULL);
+			return (free_arr(result), NULL);
 		result[1] = NULL;
 	}
-	free(str);
 	return (result);
 }

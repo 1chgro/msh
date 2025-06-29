@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/29 14:10:29 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 15:14:57 by olachgue         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "../minishell.h"
 
@@ -84,6 +73,7 @@ t_cmd	*msh_parse(t_glob_st *glob_strct)
 	glob_strct->cmd = create_cmd(glob_strct);
 	if (!glob_strct->cmd)
 		return (NULL);
+	print_cmd(glob_strct->cmd);
 	return (glob_strct->cmd);
 }
 

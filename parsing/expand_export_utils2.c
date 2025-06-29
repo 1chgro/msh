@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expand_export_utils2.c                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/29 14:10:59 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 14:11:00 by olachgue         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "../minishell.h"
 
@@ -42,6 +31,8 @@ char	*process_value_expansion(char *value_str, \
 	{
 		value_arr = split_line_to_args(value);
 		free(value);
+		if (!value_arr)
+			return (NULL);
 		value = NULL;
 		while (value_arr && value_arr[k])
 			value = ft_strjoin(value, value_arr[k++]);

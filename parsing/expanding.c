@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expanding.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/29 14:10:51 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 14:10:52 by olachgue         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "../minishell.h"
 
@@ -32,6 +21,8 @@ char	*handle_digit_expansion(char *line, int *i, char *result)
 	tmp[0] = line[*i];
 	tmp[1] = '\0';
 	result = ft_strjoin_ws(result, tmp);
+	if (!result)
+		return (NULL);
 	(*i)++;
 	return (result);
 }
