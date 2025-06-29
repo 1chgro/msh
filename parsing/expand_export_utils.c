@@ -1,5 +1,4 @@
 
-
 #include "../minishell.h"
 
 int	check_if_export(char *line, t_glob_st *glob_strct)
