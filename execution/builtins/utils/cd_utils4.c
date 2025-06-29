@@ -6,7 +6,7 @@
 /*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 14:36:38 by noel-baz          #+#    #+#             */
-/*   Updated: 2025/06/29 14:36:40 by noel-baz         ###   ########.fr       */
+/*   Updated: 2025/06/29 15:31:43 by noel-baz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*handle_tilde_path(t_env *env, char *arg, char *old_pwd)
 		free(old_pwd);
 		return (NULL);
 	}
-	path = ft_strjoin(home, arg + 1);
+	path = ft_strjoin_(home, arg + 1);
 	if (!path)
 	{
 		ft_putstr_fd("msh: cd: cannot allocate memory\n", 2);
