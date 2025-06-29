@@ -41,8 +41,6 @@ void	fill_cmd_argv(t_cmd *cmd)
 	{
 		i = 0;
 		temp_cmd->argv = split_line_to_args(temp_cmd->line);
-		if (!temp_cmd->argv)
-			return ;
 		temp_cmd->argv = remove_quotes_arr(temp_cmd->argv);
 		while (temp_cmd->argv && temp_cmd->argv[i])
 		{
