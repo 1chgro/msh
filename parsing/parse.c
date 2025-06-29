@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:49:12 by olachgue          #+#    #+#             */
+/*   Updated: 2025/06/29 20:52:55 by olachgue         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	*read_line(t_glob_st *glob_strct, int ext_stat)
@@ -72,7 +84,6 @@ t_cmd	*msh_parse(t_glob_st *glob_strct)
 	glob_strct->cmd = create_cmd(glob_strct);
 	if (!glob_strct->cmd)
 		return (NULL);
-	print_cmd(glob_strct->cmd);
 	return (glob_strct->cmd);
 }
 
@@ -100,7 +111,7 @@ int	msh_loop(char **envp)
 		return (perror("msh: error allocating memory"), 0);
 	if (!copie_env(&glob_strct->env, envp))
 		return (perror("msh: env failed"), 0);
-	msh_signals(glob_strct);
+	msh_signals();
 	while (1 && glob_strct)
 	{
 		glob_strct->cmd = msh_parse(glob_strct);

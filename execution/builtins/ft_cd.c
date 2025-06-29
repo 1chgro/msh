@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:48:52 by noel-baz          #+#    #+#             */
+/*   Updated: 2025/06/29 20:52:21 by noel-baz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 static void	set_pwd_fallback(t_env **env, char *logical_pwd, char *path,
@@ -37,12 +49,14 @@ static int	update_pwd_env(t_env **env, char *logical_pwd, char *path,
 	return (0);
 }
 
-static void	cleanup_and_exit(char *old_pwd, char *logical_pwd)
+static void	cleanup_and_exit(char *old_pwd, char *logical_pwd, char *path)
 {
 	if (old_pwd)
 		free(old_pwd);
 	if (logical_pwd)
 		free(logical_pwd);
+	if (path)
+		free(path);
 }
 
 static int	process_cd_logic(char **s_cmd, t_env **env, char *old_pwd)
@@ -53,6 +67,7 @@ static int	process_cd_logic(char **s_cmd, t_env **env, char *old_pwd)
 	int		status;
 
 	logical_pwd = NULL;
+	path = NULL;
 	path = determine_path(s_cmd, *env, old_pwd);
 	if (!path)
 		return (1);
@@ -64,10 +79,10 @@ static int	process_cd_logic(char **s_cmd, t_env **env, char *old_pwd)
 	else
 		logical_dotdot = 0;
 	if (attempt_chdir(path, old_pwd) != 0)
-		return (cleanup_and_exit(old_pwd, logical_pwd), 1);
+		return (cleanup_and_exit(old_pwd, logical_pwd, NULL), 1);
 	set_env(env, "OLDPWD", old_pwd);
 	status = update_pwd_env(env, logical_pwd, path, logical_dotdot);
-	cleanup_and_exit(old_pwd, logical_pwd);
+	cleanup_and_exit(old_pwd, logical_pwd, path);
 	return (status);
 }
 
@@ -75,8 +90,6 @@ int	ft_cd(char **s_cmd, t_env **env)
 {
 	char	*old_pwd;
 
-	if (!env || !*env)
-		return (1);
 	old_pwd = get_old_pwd_or_default();
 	if (!old_pwd)
 		return (1);

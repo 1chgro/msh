@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   create_cmd.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:47:46 by olachgue          #+#    #+#             */
+/*   Updated: 2025/06/29 20:47:56 by olachgue         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	init_cmd(t_cmd **cmd)
@@ -45,9 +57,7 @@ void	fill_cmd_argv(t_cmd *cmd)
 		{
 			temp_cmd->argv[i] = restore_quotes(temp_cmd->argv[i]);
 			if (!temp_cmd->argv[i])
-			{
 				temp_cmd->argv[i] = ft_strdup("");
-			}
 			i++;
 		}
 		temp_cmd = temp_cmd->next;

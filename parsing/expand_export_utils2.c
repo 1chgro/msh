@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_export_utils2.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:48:02 by olachgue          #+#    #+#             */
+/*   Updated: 2025/06/29 21:30:23 by olachgue         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	*expand_key(char *key_str, t_glob_st *glob_strct)
@@ -22,7 +34,7 @@ char	*process_value_expansion(char *value_str, \
 	if (!split_value)
 	{
 		temp = value;
-		value = remove_outer_quotes(value);
+		value = remove_outer_quotes(temp);
 		free(temp);
 		value = add_quotes(value);
 	}
@@ -30,16 +42,18 @@ char	*process_value_expansion(char *value_str, \
 	{
 		value_arr = split_line_to_args(value);
 		free(value);
+		if (!value_arr)
+			return (NULL);
 		value = NULL;
 		while (value_arr && value_arr[k])
 			value = ft_strjoin(value, value_arr[k++]);
 	}
-	return (free(value_arr), value);
+	return (free_arr(value_arr), value);
 }
 
 int	should_split_value(int split_all_values, char *key_str, char *value_str)
 {
-	if (split_all_values || (check_key(key_str) == 1 \
+	if (split_all_values || (check_key(key_str, 0) == 1 \
 		&& check_value(value_str) == 1))
 		return (1);
 	return (0);

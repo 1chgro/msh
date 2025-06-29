@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:49:19 by noel-baz          #+#    #+#             */
+/*   Updated: 2025/06/29 20:49:20 by noel-baz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 static void	free_current(t_env *current)
@@ -37,12 +49,10 @@ static void	remove_variable(char *key, t_env **env)
 
 int	check_and_remove_varible(char *arg, t_env **env)
 {
-	int		flag;
 	t_env	*temp;
+	int		flag;
 
-	flag = 0;
-	temp = NULL;
-
+	(1) && (flag = 0, temp = NULL);
 	if (!is_valid_identifier(arg))
 	{
 		dup2(2, 1);

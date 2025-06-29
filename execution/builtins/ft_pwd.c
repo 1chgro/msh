@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:49:15 by noel-baz          #+#    #+#             */
+/*   Updated: 2025/06/29 20:59:10 by noel-baz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 int	ft_pwd(t_env *env)
 {
-	char	buff[8192000];
 	char	*pwd;
 
 	(void)env;
@@ -20,8 +31,9 @@ int	ft_pwd(t_env *env)
 		free(pwd);
 		return (0);
 	}
-	getcwd(buff, 8192000);
-	take_store_pwd(buff);
-	printf("%s\n", buff);
+	pwd = getcwd(NULL, 0);
+	take_store_pwd(pwd);
+	printf("%s\n", pwd);
+	free(pwd);
 	return (0);
 }

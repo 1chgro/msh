@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_utils.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:48:53 by olachgue          #+#    #+#             */
+/*   Updated: 2025/06/29 20:48:56 by olachgue         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 size_t	ft_strlen(const char *str)
@@ -30,7 +42,7 @@ char	*ft_stringcpy(char *dst, const char *src, size_t n)
 {
 	size_t	i;
 
-	if (!dst || !src || n == 0)
+	if (!dst || !src)
 		return (NULL);
 	i = 0;
 	while (i < n && src[i])
@@ -60,8 +72,9 @@ char	*ft_strtrim(char *s1, char const *set)
 	if (!trimmed_str)
 		return (free(s1), NULL);
 	ft_stringcpy(trimmed_str, s1 + start, end - start);
-	free((char *)s1);
-	return (trimmed_str);
+	if (!trimmed_str)
+		return (free(s1), NULL);
+	return (free(s1), trimmed_str);
 }
 
 char	*ft_strjoin(char *s1, char *s2)

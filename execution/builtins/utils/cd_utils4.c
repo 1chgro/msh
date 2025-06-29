@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd_utils4.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:48:32 by noel-baz          #+#    #+#             */
+/*   Updated: 2025/06/29 20:48:33 by noel-baz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../minishell.h"
 
 char	*handle_tilde_path(t_env *env, char *arg, char *old_pwd)
@@ -5,6 +17,7 @@ char	*handle_tilde_path(t_env *env, char *arg, char *old_pwd)
 	char	*home;
 	char	*path;
 
+	path = NULL;
 	home = get_home(env);
 	if (!home)
 	{
@@ -12,7 +25,7 @@ char	*handle_tilde_path(t_env *env, char *arg, char *old_pwd)
 		free(old_pwd);
 		return (NULL);
 	}
-	path = ft_strjoin(home, arg + 1);
+	path = ft_strjoin_(home, arg + 1);
 	if (!path)
 	{
 		ft_putstr_fd("msh: cd: cannot allocate memory\n", 2);
@@ -33,7 +46,7 @@ char	*determine_path(char **s_cmd, t_env *env, char *old_pwd)
 	else if (s_cmd[1][0] == '~' && ft_strlen(s_cmd[1]) > 1)
 		return (handle_tilde_path(env, s_cmd[1], old_pwd));
 	else
-		return (s_cmd[1]);
+		return (ft_strdup(s_cmd[1]));
 }
 
 char	*create_logical_dotdot_path(char *old_pwd)

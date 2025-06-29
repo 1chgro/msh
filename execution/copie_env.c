@@ -1,197 +1,108 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   copie_env.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:50:44 by noel-baz          #+#    #+#             */
+/*   Updated: 2025/06/29 20:50:45 by noel-baz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-void free_env(t_env *env)
+void	append_node(t_env **head, t_env *node)
 {
-	t_env *tmp;
-    if (!env)
-        return ;
-	while (env)
-	{
-		tmp = env;
-		env = env->next;
-		free(tmp->key);
-		free(tmp->value);
-		free(tmp);
-	}
-}
-
-void free_split(char **split)
-{
-	int i = 0;
-	if (!split)
-		return;
-	while (split[i])
-	{
-		free(split[i]);
-		i++;
-	}
-	free(split);
-}
-
-char *get_key(char *str)
-{
-	char *key;
-	int i;
-	int j;
-
-	i = 0;
-	while (str[i] && str[i] != '=' && str[i] != '+')
-		i++;
-	key = malloc(i + 1);
-	if (!key)
-		return (NULL);
-	j = 0;
-	while (j < i)
-	{
-		key[j] = str[j];
-		j++;
-	}
-	key[j] = '\0';
-	return (key);
-}
-
-char *get_value(char *str)
-{
-	char *value;
-	int i;
-	int len;
-	int j;
-
-	i = 0;
-    if (!str)
-        return (NULL);
-	while (str[i] && str[i] != '=')
-		i++;
-	if (str[i] == '=')
-		i++;
-    else
-        return (NULL);
-	len = 0;
-	while (str[i + len])
-		len++;
-	value = malloc(len + 1);
-	if (!value)
-		return (NULL);
-	j = 0;
-	while (str[i])
-	{
-		value[j] = str[i];
-		i++;
-		j++;
-	}
-	value[j] = '\0';
-	return (value);
-}
-
-t_env *create_node(char *key, char *value, int have_equal)
-{
-	t_env *node = malloc(sizeof(t_env));
-	if (!node)
-		return (NULL);
-	node->key = key;
-	if ((!value || value[0] == '\0') && have_equal)
-	{
-		if (value)
-			free(value);
-		node->value = ft_strdup("");
-	}
-	else
-		node->value = value;
-    if (have_equal)
-		node->flag = 1;
-    else
-        node->flag = 0;
-	node->index = -1;
-	node->next = NULL;
-	return (node);
-}
-
-void append_node(t_env **head, t_env *node)
-{
-	t_env *tail;
+	t_env	*tail;
 
 	if (!node)
 		return ;
 	if (!*head)
 	{
 		*head = node;
-		return;
+		return ;
 	}
 	tail = *head;
 	while (tail->next)
 		tail = tail->next;
 	tail->next = node;
 }
-char    **fill_env()
+
+char	**fill_env(void)
 {
-	char    **env;
-    char    *pwd;
+	char	**env;
+	char	*pwd;
 
 	env = malloc(sizeof(char *) * 6);
 	if (!env)
 		return (NULL);
-    pwd = get_current_pwd();
+	pwd = get_current_pwd();
 	env[0] = ft_strdup("OLDPWD=");
 	env[1] = ft_strjoin_("PWD=", pwd);
 	env[2] = ft_strdup("SHLVL=1");
 	env[3] = ft_strdup("_=/usr/bin/env");
 	env[4] = ft_strdup("PATH=/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:.");
 	env[5] = NULL;
-    free(pwd);
-	return(env);
+	free(pwd);
+	return (env);
 }
-int copie_env(t_env **c_env, char **env)
+
+static void	creat_apend_node(int empty, t_env *node, t_env **c_env)
 {
-	t_env *node;
-	char *key;
-	char *value;
-    int have_equal = 0;
-    int empty = 0;
-	int i = 0;
+	if (empty && ft_strcmp(node->key, "PATH") == 0)
+		node->flag = 2;
+	append_node(c_env, node);
+}
+
+static int	process_env_entry(t_env **c_env, char *env_str, int empty)
+{
+	t_env	*node;
+	char	*key;
+	char	*value;
+	int		have_equal;
+
+	have_equal = 0;
+	if (ft_strchr(env_str, '='))
+		have_equal = 1;
+	key = get_key(env_str);
+	if (!key)
+		return (0);
+	if (ft_strcmp(key, "OLDPWD") == 0)
+		(1) && (have_equal = 0, value = NULL);
+	else
+	{
+		value = get_value(env_str);
+		if (!value)
+			return (free(key), 0);
+	}
+	node = create_node(key, value, have_equal);
+	if (!node)
+		return (free(key), free(value), 0);
+	creat_apend_node(empty, node, c_env);
+	return (1);
+}
+
+int	copie_env(t_env **c_env, char **env)
+{
+	int	empty;
+	int	i;
 
 	*c_env = NULL;
+	empty = 0;
 	if (!*env)
 	{
-        empty = 1;
+		empty = 1;
 		env = fill_env();
 	}
+	i = 0;
 	while (env[i])
 	{
-        if (ft_strchr(env[i], '='))
-            have_equal = 1;
-		key = get_key(env[i]);
-		if (!key)
+		if (!process_env_entry(c_env, env[i], empty))
 			return (0);
-        if (ft_strcmp(key, "OLDPWD") == 0)
-        {
-            have_equal = 0;
-            value = NULL;
-        }
-        else
-        {
-            value = get_value(env[i]);
-            if (!value)
-            {
-                free(key);
-                return (0);
-            }
-        }
-		node = create_node(key, value, have_equal);
-		if (!node)
-		{
-			free(key);
-			free(value);
-			return (0);
-		}
-        if (empty)
-        {
-            if (ft_strcmp(node->key, "PATH") == 0)
-				node->flag = 2;
-        }
-		append_node(c_env, node);
 		i++;
 	}
-    if (empty)
-        free_split(env);
+	if (empty)
+		free_split(env);
 	return (1);
 }

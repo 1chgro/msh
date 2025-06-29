@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_export.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:49:03 by noel-baz          #+#    #+#             */
+/*   Updated: 2025/06/29 20:49:04 by noel-baz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 static int	process_export_arg(char *arg, t_env **env)
@@ -69,8 +81,6 @@ static int	process_all_args(char **s_cmd, t_env **env)
 
 int	ft_export(char **s_cmd, t_env **env)
 {
-	if (!env || !*env)
-		return (1);
 	make_index(env);
 	if (!s_cmd[1])
 		return (handle_no_args_export(*env));

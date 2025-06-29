@@ -1,31 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   copie_env_utils1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/29 20:48:57 by noel-baz          #+#    #+#             */
-/*   Updated: 2025/06/29 20:48:58 by noel-baz         ###   ########.fr       */
+/*   Created: 2025/06/29 20:50:09 by noel-baz          #+#    #+#             */
+/*   Updated: 2025/06/29 20:50:10 by noel-baz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	ft_env(char **s_cmd, t_env *env)
+void	free_env(t_env *env)
 {
-	t_env	*temp;
+	t_env	*tmp;
 
-	temp = NULL;
 	if (!env)
-		return (0);
-	temp = env;
-	(void)s_cmd;
-	while (temp)
+		return ;
+	while (env)
 	{
-		if (temp->flag == 1)
-			printf("%s=%s\n", temp->key, temp->value);
-		temp = temp->next;
+		tmp = env;
+		env = env->next;
+		free(tmp->key);
+		free(tmp->value);
+		free(tmp);
 	}
-	return (0);
+}
+
+void	free_split(char **split)
+{
+	int	i;
+
+	i = 0;
+	if (!split)
+		return ;
+	while (split[i])
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
 }

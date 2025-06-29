@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expanding.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:48:22 by olachgue          #+#    #+#             */
+/*   Updated: 2025/06/29 21:29:14 by olachgue         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	handle_quotes(char *line, int i, char *quote, int *pos)
@@ -12,7 +24,7 @@ void	handle_quotes(char *line, int i, char *quote, int *pos)
 		*quote = 0;
 }
 
-char	*handle_digit_expansion(char *line, int *i, char *result)
+char	*digit_expanding(char *line, int *i, char *result)
 {
 	char	tmp[2];
 
@@ -20,6 +32,8 @@ char	*handle_digit_expansion(char *line, int *i, char *result)
 	tmp[0] = line[*i];
 	tmp[1] = '\0';
 	result = ft_strjoin_ws(result, tmp);
+	if (!result)
+		return (NULL);
 	(*i)++;
 	return (result);
 }
@@ -61,7 +75,7 @@ void	expand_cmd_files(t_cmd *cmd, t_glob_st *glob_strct)
 			cmd->files[i].filename = expand(temp_filename, glob_strct);
 			free(temp_filename);
 		}
-		if (cmd->files[i].type == HEREDOC && check_key(cmd->files[i].filename))
+		if (cmd->files[i].type == HEREDOC && check_key(cmd->files[i].filename, 1))
 			cmd->files[i].expand_flg = 0;
 		temp_filename = cmd->files[i].filename;
 		cmd->files[i].filename = remove_outer_quotes(temp_filename);

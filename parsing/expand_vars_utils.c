@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_vars_utils.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:48:17 by olachgue          #+#    #+#             */
+/*   Updated: 2025/06/29 21:02:29 by olachgue         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	check_for_ambgu(char *name)
@@ -36,12 +48,14 @@ char	*space_change(char *str)
 			tmp[0] = str[i];
 		tmp[1] = '\0';
 		new_str = ft_strjoin_ws(new_str, tmp);
+		if (!new_str)
+			return (free(str), NULL);
 		i++;
 	}
 	return (free(str), new_str);
 }
 
-char	*handle_exit_status_expansion(int *i, \
+char	*ext_stat_expanding(int *i, \
 		t_glob_st *glob_strct, char *result)
 {
 	char	*var_value;

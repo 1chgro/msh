@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   run_cmd_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:51:00 by noel-baz          #+#    #+#             */
+/*   Updated: 2025/06/29 20:51:01 by noel-baz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static int	get_num(int n)
@@ -44,17 +56,18 @@ char	*ft_itoa(int n)
 	return (res);
 }
 
-void get_terminall(struct termios *termios)
+void	get_terminall(struct termios *termios)
 {
-    if (tcgetattr(STDIN_FILENO, termios) == -1 )
-        perror("tcgetattr: ");
+	if (tcgetattr(STDIN_FILENO, termios) == -1)
+		perror("tcgetattr: ");
 }
-void set_terminall(struct termios *termios)
+
+void	set_terminall(struct termios *termios)
 {
-    if (tcsetattr(STDIN_FILENO, TCSANOW, termios) == -1)
-    {
-        perror("tcsetattr: ");
-    }
+	if (tcsetattr(STDIN_FILENO, TCSANOW, termios) == -1)
+	{
+		perror("tcsetattr: ");
+	}
 }
 
 char	*ft_strrchr(const char *s, int c)

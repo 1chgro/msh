@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_expanding.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:48:26 by olachgue          #+#    #+#             */
+/*   Updated: 2025/06/29 20:48:29 by olachgue         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-static char	*build_key_value_result(char *key, char *value)
+char	*build_key_value_result(char *key, char *value)
 {
 	char	*result;
 
@@ -10,7 +22,6 @@ static char	*build_key_value_result(char *key, char *value)
 	result = ft_strjoin(result, key);
 	if (value)
 	{
-		result = ft_strjoin_ws(result, "=");
 		result = ft_strjoin_ws(result, value);
 	}
 	return (result);
@@ -101,10 +112,13 @@ char	*expand_export(char *line, t_glob_st *glob_strct)
 	while (arr[i])
 	{
 		expanded = expand_key_value(arr[i], glob_strct, split_all_values);
+		if (!expanded)
+			return (free_arr(arr), NULL);
 		result = ft_strjoin(result, expanded);
 		free(expanded);
+		if (!result)
+			return (free_arr(arr), NULL);
 		i++;
 	}
-	free(arr);
-	return (result);
+	return (free_arr(arr), result);
 }

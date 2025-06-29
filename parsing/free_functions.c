@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_functions.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/29 20:48:39 by olachgue          #+#    #+#             */
+/*   Updated: 2025/06/29 20:48:42 by olachgue         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	free_tokens(t_token *tokens)
@@ -55,7 +67,8 @@ void	free_cmd(t_cmd *cmd)
 		return ;
 	while (cmd)
 	{
-		free(cmd->line);
+		if (cmd->line)
+			free(cmd->line);
 		free_arr(cmd->argv);
 		free_cmd_files(cmd->files);
 		temp = cmd;
