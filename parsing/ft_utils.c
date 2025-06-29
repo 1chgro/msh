@@ -30,7 +30,7 @@ char	*ft_stringcpy(char *dst, const char *src, size_t n)
 {
 	size_t	i;
 
-	if (!dst || !src || n == 0)
+	if (!dst || !src)
 		return (NULL);
 	i = 0;
 	while (i < n && src[i])
@@ -59,8 +59,8 @@ char	*ft_strtrim(char *s1, char const *set)
 	trimmed_str = (char *)malloc(sizeof(char) * (end - start + 1));
 	if (!trimmed_str)
 		return (free(s1), NULL);
-	ft_stringcpy(trimmed_str, s1 + start, end - start + 1);
-	free((char *)s1);
+	ft_stringcpy(trimmed_str, s1 + start, end - start);
+	free(s1);
 	return (trimmed_str);
 }
 
