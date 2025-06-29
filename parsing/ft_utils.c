@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 14:10:38 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 14:12:46 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:37:49 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,9 @@ char	*ft_strtrim(char *s1, char const *set)
 	if (!trimmed_str)
 		return (free(s1), NULL);
 	ft_stringcpy(trimmed_str, s1 + start, end - start);
-	free(s1);
-	return (trimmed_str);
+	if (!trimmed_str)
+		return (free(s1), NULL);
+	return (free(s1), trimmed_str);
 }
 
 char	*ft_strjoin(char *s1, char *s2)

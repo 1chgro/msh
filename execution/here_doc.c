@@ -1,7 +1,5 @@
 #include "../minishell.h"
 
-int	g_in_heredoc = 0;
-
 void	handel_sigint(int sig)
 {
 	if (sig == SIGINT)
