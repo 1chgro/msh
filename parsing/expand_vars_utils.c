@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:48:17 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 20:48:20 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/29 21:02:29 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*space_change(char *str)
 	return (free(str), new_str);
 }
 
-char	*handle_exit_status_expansion(int *i, \
+char	*ext_stat_expanding(int *i, \
 		t_glob_st *glob_strct, char *result)
 {
 	char	*var_value;

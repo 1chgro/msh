@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:48:22 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 20:48:25 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/29 21:03:22 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	handle_quotes(char *line, int i, char *quote, int *pos)
 		*quote = 0;
 }
 
-char	*handle_digit_expansion(char *line, int *i, char *result)
+char	*digit_expanding(char *line, int *i, char *result)
 {
 	char	tmp[2];
 

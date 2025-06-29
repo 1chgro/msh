@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:51:39 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 20:51:42 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/29 21:03:44 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ t_redirection_type	get_cmd_red_type(t_token_type type);
 int					create_cmd_lst(t_token *tokens, t_cmd **cmd);
 char				*space_change(char *str);
 int					check_for_ambgu(char *name);
-char				*handle_digit_expansion(char *line, int *i, char *result);
+char				*digit_expanding(char *line, int *i, char *result);
 void				handle_quotes(char *line, int i, char *quote, int *pos);
 char				**split_key_val(char *str);
 int					should_split_value(int split_all_values, \
@@ -125,7 +125,7 @@ int					should_split_value(int split_all_values, \
 char				*expand_key(char *key_str, t_glob_st *glob_strct);
 char				*process_value_expansion(char *value_str, \
 						t_glob_st *glob_strct, int split_value);
-char				*handle_exit_status_expansion(int *i, \
+char				*ext_stat_expanding(int *i, \
 						t_glob_st *glob_strct, char *result);
 int					check_value(char *value);
 int					copie_env(t_env **c_env, char **env);
