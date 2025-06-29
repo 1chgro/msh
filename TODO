@@ -190,7 +190,7 @@ msh: 127: command not found
 -------------------------------------------------------------------------\
 
 
-static void	wait_for_remaining_processes(void)
+static void	 (void)
 {
 	while (waitpid(-1, NULL, 0) > 0) // ?, try this :
 	/*
