@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-static char	*build_key_value_result(char *key, char *value)
+char	*build_key_value_result(char *key, char *value)
 {
 	char	*result;
 

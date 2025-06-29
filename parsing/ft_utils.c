@@ -59,7 +59,7 @@ char	*ft_strtrim(char *s1, char const *set)
 	trimmed_str = (char *)malloc(sizeof(char) * (end - start + 1));
 	if (!trimmed_str)
 		return (free(s1), NULL);
-	ft_stringcpy(trimmed_str, s1 + start, end - start);
+	ft_stringcpy(trimmed_str, s1 + start, end - start + 1);
 	free((char *)s1);
 	return (trimmed_str);
 }

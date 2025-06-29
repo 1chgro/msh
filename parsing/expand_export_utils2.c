@@ -22,7 +22,7 @@ char	*process_value_expansion(char *value_str, \
 	if (!split_value)
 	{
 		temp = value;
-		value = remove_outer_quotes(value);
+		value = remove_outer_quotes(temp);
 		free(temp);
 		value = add_quotes(value);
 	}
@@ -34,7 +34,7 @@ char	*process_value_expansion(char *value_str, \
 		while (value_arr && value_arr[k])
 			value = ft_strjoin(value, value_arr[k++]);
 	}
-	return (free(value_arr), value);
+	return (free_arr(value_arr), value);
 }
 
 int	should_split_value(int split_all_values, char *key_str, char *value_str)
