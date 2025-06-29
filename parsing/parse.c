@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 14:10:29 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 14:10:30 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:24:59 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ t_cmd	*msh_parse(t_glob_st *glob_strct)
 	glob_strct->cmd = create_cmd(glob_strct);
 	if (!glob_strct->cmd)
 		return (NULL);
-	print_cmd(glob_strct->cmd);
 	return (glob_strct->cmd);
 }
 

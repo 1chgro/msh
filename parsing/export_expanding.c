@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 14:10:48 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 14:23:20 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:24:45 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ char	*expand_key_value(char *str, t_glob_st *glob_strct, \
 	key_val = split_key_val(str);
 	if (!key_val)
 		return (NULL);
-	// printf("key: %s\n", key);
-	printf("key_val: %s\n", key_val[0]);
 	if (key_val[0])
 	{
 		split_value = should_split_value(split_all_values, \
