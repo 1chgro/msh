@@ -32,6 +32,8 @@ int	check_key(char *key)
 
 	i = 0;
 	quote = 0;
+	if (ft_isdigit(key[0]))
+		return (1);
 	while (key[i])
 	{
 		if (is_quote(key[i]))

@@ -28,7 +28,7 @@ int	count_redirections(t_token *tokens)
 	return (count);
 }
 
-static void	fill_cmd_argv(t_cmd *cmd)
+void	fill_cmd_argv(t_cmd *cmd)
 {
 	t_cmd	*temp_cmd;
 	int		i;
