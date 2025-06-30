@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:48:22 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/30 09:35:51 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/30 19:52:19 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	expand_cmd_line(t_cmd *cmd, t_glob_st *glob_strct)
 	{
 		expanded = expand(cmd->line, glob_strct);
 		free(cmd->line);
-		expanded = space_change(expanded);
 	}
 	cmd->line = expanded;
 }
