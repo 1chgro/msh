@@ -6,7 +6,7 @@
 /*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:48:52 by noel-baz          #+#    #+#             */
-/*   Updated: 2025/06/29 20:52:21 by noel-baz         ###   ########.fr       */
+/*   Updated: 2025/06/30 19:26:36 by noel-baz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static int	process_cd_logic(char **s_cmd, t_env **env, char *old_pwd)
 	else
 		logical_dotdot = 0;
 	if (attempt_chdir(path, old_pwd) != 0)
-		return (cleanup_and_exit(old_pwd, logical_pwd, NULL), 1);
+		return (cleanup_and_exit(old_pwd, logical_pwd, path), 1);
 	set_env(env, "OLDPWD", old_pwd);
 	status = update_pwd_env(env, logical_pwd, path, logical_dotdot);
 	cleanup_and_exit(old_pwd, logical_pwd, path);

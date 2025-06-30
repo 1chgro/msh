@@ -6,7 +6,7 @@
 /*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:48:29 by noel-baz          #+#    #+#             */
-/*   Updated: 2025/06/29 20:48:30 by noel-baz         ###   ########.fr       */
+/*   Updated: 2025/06/30 19:23:34 by noel-baz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	*handle_no_args(t_env *env, char *old_pwd)
 {
 	char	*path;
 
-	path = get_home(env);
+	path = ft_strdup(get_home(env));
 	if (!path)
 	{
 		ft_putstr_fd("msh: cd: HOME not set\n", 2);
@@ -75,7 +75,7 @@ char	*handle_tilde_only(t_env *env, char *old_pwd)
 {
 	char	*path;
 
-	path = get_home(env);
+	path = ft_strdup(get_home(env));
 	if (!path)
 	{
 		ft_putstr_fd("msh: cd: HOME not set\n", 2);
@@ -91,7 +91,7 @@ char	*handle_dash_only(t_env *env, char *old_pwd)
 {
 	char	*path;
 
-	path = my_getenv("OLDPWD", env);
+	path = ft_strdup(my_getenv("OLDPWD", env));
 	if (!path)
 	{
 		ft_putstr_fd("msh: cd: OLDPWD not set\n", 2);
