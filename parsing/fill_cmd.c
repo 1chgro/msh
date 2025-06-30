@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:48:31 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 20:48:33 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/30 19:52:01 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	skip_argument(const char *str, int i)
 			else if (str[i] == quote_char)
 				in_quotes = 0;
 		}
-		else if (str[i] == ' ' && !in_quotes)
+		else if (is_space(str[i]) && !in_quotes)
 			break ;
 		i++;
 	}
@@ -51,7 +51,7 @@ int	count_args(char *str)
 	count = 0;
 	while (str[i])
 	{
-		if (str[i] == ' ')
+		if (is_space(str[i]))
 		{
 			i++;
 			continue ;
@@ -82,7 +82,7 @@ static char	*extract_arg(const char *str, int *i)
 			else if (str[*i] == quote_char)
 				in_quotes = 0;
 		}
-		else if (str[*i] == ' ' && !in_quotes)
+		else if (is_space(str[*i]) && !in_quotes)
 			break ;
 		(*i)++;
 	}
@@ -94,11 +94,11 @@ static char	*process_single_arg(char *line, int *i)
 {
 	char	*arg;
 
-	while (line[*i] == ' ')
+	while (is_space(line[*i]))
 		(*i)++;
 	arg = extract_arg(line, i);
 	arg = replace_value_quotes(arg);
-	if (line[*i] == ' ')
+	if (is_space(line[*i]))
 		(*i)++;
 	return (arg);
 }
@@ -120,6 +120,7 @@ char	**split_line_to_args(char *line)
 	j = 0;
 	while (line && j < arg_count)
 	{
+		printf("line: %s\n", line);
 		args[j] = process_single_arg(line, &i);
 		if (!args[j])
 			return (free_arr(args), NULL);
