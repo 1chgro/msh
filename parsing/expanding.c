@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:48:22 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 21:29:14 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/30 09:35:51 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ void	expand_cmd_files(t_cmd *cmd, t_glob_st *glob_strct)
 			cmd->files[i].filename = expand(temp_filename, glob_strct);
 			free(temp_filename);
 		}
-		if (cmd->files[i].type == HEREDOC && check_key(cmd->files[i].filename, 1))
-			cmd->files[i].expand_flg = 0;
 		temp_filename = cmd->files[i].filename;
+		if (cmd->files[i].type == HEREDOC && check_key(temp_filename, 1))
+			cmd->files[i].expand_flg = 0;
 		cmd->files[i].filename = remove_outer_quotes(temp_filename);
 		free(temp_filename);
 		cmd->files[i].filename = restore_quotes(cmd->files[i].filename);
