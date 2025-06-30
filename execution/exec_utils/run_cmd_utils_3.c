@@ -6,7 +6,7 @@
 /*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:50:24 by noel-baz          #+#    #+#             */
-/*   Updated: 2025/06/29 20:50:25 by noel-baz         ###   ########.fr       */
+/*   Updated: 2025/06/30 09:02:45 by noel-baz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static void	handle_missing_shlvl(t_env *env)
 	t_env	*shlvl_node;
 
 	shlvl_node = create_node("SHLVL", "1", 1);
+	if (!shlvl_node)
+		return ;
 	append_node(&env, shlvl_node);
 }
 

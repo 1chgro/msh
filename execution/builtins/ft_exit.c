@@ -6,7 +6,7 @@
 /*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:49:00 by noel-baz          #+#    #+#             */
-/*   Updated: 2025/06/29 20:49:01 by noel-baz         ###   ########.fr       */
+/*   Updated: 2025/06/30 09:00:47 by noel-baz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ long	ft_atoi_(const char *str, int *is_valid)
 		return (0);
 	sign = handle_sign(str, &i);
 	result = parse_digits(str, &i, is_valid);
-	if (*is_valid == 0)
+	if (*is_valid == 0 && !result)
 		return (0);
 	while (str[i] == ' ')
 		i++;
