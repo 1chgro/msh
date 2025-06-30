@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:51:39 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 21:30:35 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/30 09:55:17 by noel-baz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,8 +166,8 @@ t_env				*create_node(char *key, char *value, int have_equal);
 void				append_node(t_env **head, t_env *node);
 int					are_builtin(char *cmd);
 int					run_builtin(char **s_cmd, t_env **env, int last_ex);
-int					ft_pwd(t_env *env);
-int					ft_env(char **s_cmd, t_env *env);
+int					ft_pwd(void);
+int					ft_env(t_env *env);
 int					ft_exit(char **s_cmd, int last_ex);
 int					ft_export(char **s_cmd, t_env **env);
 int					ft_unset(char **s_cmd, t_env **env);

@@ -6,17 +6,16 @@
 /*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:49:15 by noel-baz          #+#    #+#             */
-/*   Updated: 2025/06/29 20:59:10 by noel-baz         ###   ########.fr       */
+/*   Updated: 2025/06/30 09:55:59 by noel-baz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	ft_pwd(t_env *env)
+int	ft_pwd(void)
 {
 	char	*pwd;
 
-	(void)env;
 	if (!is_valid_cwd())
 	{
 		pwd = take_store_pwd(NULL);

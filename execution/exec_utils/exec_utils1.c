@@ -6,7 +6,7 @@
 /*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:50:15 by noel-baz          #+#    #+#             */
-/*   Updated: 2025/06/29 20:50:16 by noel-baz         ###   ########.fr       */
+/*   Updated: 2025/06/30 09:55:34 by noel-baz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ static int	execute_builtin(char *cmd, char **s_cmd, t_env **env, int last_ex)
 	if (ft_strcmp(cmd, "echo") == 0)
 		return (ft_echo(s_cmd));
 	if (ft_strcmp(cmd, "pwd") == 0)
-		return (ft_pwd(*env));
+		return (ft_pwd());
 	if (ft_strcmp(cmd, "export") == 0)
 		return (ft_export(s_cmd, env));
 	if (ft_strcmp(cmd, "unset") == 0)
 		return (ft_unset(s_cmd, env));
 	if (ft_strcmp(cmd, "env") == 0)
-		return (ft_env(s_cmd, *env));
+		return (ft_env(*env));
 	if (ft_strcmp(cmd, "exit") == 0)
 		return (ft_exit(s_cmd, last_ex));
 	return (127);

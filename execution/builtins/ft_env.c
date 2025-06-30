@@ -6,13 +6,13 @@
 /*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:48:57 by noel-baz          #+#    #+#             */
-/*   Updated: 2025/06/29 20:48:58 by noel-baz         ###   ########.fr       */
+/*   Updated: 2025/06/30 09:52:40 by noel-baz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	ft_env(char **s_cmd, t_env *env)
+int	ft_env(t_env *env)
 {
 	t_env	*temp;
 
@@ -20,7 +20,6 @@ int	ft_env(char **s_cmd, t_env *env)
 	if (!env)
 		return (0);
 	temp = env;
-	(void)s_cmd;
 	while (temp)
 	{
 		if (temp->flag == 1)
