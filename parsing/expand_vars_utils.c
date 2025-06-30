@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:48:17 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 21:02:29 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/30 20:09:01 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,33 +26,6 @@ int	check_for_ambgu(char *name)
 		i++;
 	}
 	return (0);
-}
-
-char	*space_change(char *str)
-{
-	char	*new_str;
-	int		i;
-	char	tmp[2];
-
-	if (!str)
-		return (NULL);
-	i = 0;
-	tmp[0] = '\0';
-	tmp[1] = '\0';
-	new_str = NULL;
-	while (str[i])
-	{
-		if (is_space(str[i]))
-			tmp[0] = ' ';
-		else
-			tmp[0] = str[i];
-		tmp[1] = '\0';
-		new_str = ft_strjoin_ws(new_str, tmp);
-		if (!new_str)
-			return (free(str), NULL);
-		i++;
-	}
-	return (free(str), new_str);
 }
 
 char	*ext_stat_expanding(int *i, \
