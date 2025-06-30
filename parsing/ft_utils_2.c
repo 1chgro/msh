@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:48:44 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/29 20:48:49 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/06/30 13:49:25 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,6 @@ void	ft_putstr_fd(char *s, int fd)
 		write(fd, &s[i], 1);
 		i++;
 	}
-}
-
-char	*ft_strcpy(char *dest, const char *src)
-{
-	char	*ptr;
-
-	ptr = dest;
-	while (*src)
-		*ptr++ = *src++;
-	*ptr = '\0';
-	return (dest);
 }
 
 char	*ft_strndup(const char *s, int n)
