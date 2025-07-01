@@ -6,7 +6,7 @@
 /*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:50:44 by noel-baz          #+#    #+#             */
-/*   Updated: 2025/06/29 20:50:45 by noel-baz         ###   ########.fr       */
+/*   Updated: 2025/07/01 08:41:53 by noel-baz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,24 @@ char	**fill_env(void)
 	if (!env)
 		return (NULL);
 	pwd = get_current_pwd();
+	if (!pwd)
+		return (NULL);
 	env[0] = ft_strdup("OLDPWD=");
+	if (!env[0])
+		return (free(pwd), NULL);
 	env[1] = ft_strjoin_("PWD=", pwd);
+	if (!env[1])
+		return (free(pwd), free_arr(env), NULL);
 	env[2] = ft_strdup("SHLVL=1");
+	if (!env[2])
+		return (free(pwd), free_arr(env), NULL);
 	env[3] = ft_strdup("_=/usr/bin/env");
+	if (!env[3])
+		return (free(pwd), free_arr(env), NULL);
 	env[4] = ft_strdup("PATH=/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:.");
-	env[5] = NULL;
-	free(pwd);
-	return (env);
+	if (!env[4])
+		return (free(pwd), free_arr(env), NULL);
+	return (env[5] = NULL, free(pwd), env);
 }
 
 static void	creat_apend_node(int empty, t_env *node, t_env **c_env)
@@ -94,6 +104,8 @@ int	copie_env(t_env **c_env, char **env)
 	{
 		empty = 1;
 		env = fill_env();
+		if (!env)
+			return (0);
 	}
 	i = 0;
 	while (env[i])
