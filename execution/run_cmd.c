@@ -6,7 +6,7 @@
 /*   By: noel-baz <noel-baz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:51:03 by noel-baz          #+#    #+#             */
-/*   Updated: 2025/06/29 20:51:04 by noel-baz         ###   ########.fr       */
+/*   Updated: 2025/07/01 08:49:27 by noel-baz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ int	run_single_cmd(t_cmd *cmd, t_env *env)
 	pid = fork();
 	if (pid == -1)
 	{
-		kill(pid, SIGKILL);
 		perror("fork");
 		return (1);
 	}
