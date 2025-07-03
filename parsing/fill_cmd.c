@@ -6,7 +6,7 @@
 /*   By: olachgue <olachgue@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 20:48:31 by olachgue          #+#    #+#             */
-/*   Updated: 2025/06/30 19:52:01 by olachgue         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:27:31 by olachgue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,6 @@ char	**split_line_to_args(char *line)
 	j = 0;
 	while (line && j < arg_count)
 	{
-		printf("line: %s\n", line);
 		args[j] = process_single_arg(line, &i);
 		if (!args[j])
 			return (free_arr(args), NULL);
